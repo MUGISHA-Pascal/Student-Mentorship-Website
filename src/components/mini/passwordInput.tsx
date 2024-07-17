@@ -1,0 +1,38 @@
+import React, { useState } from 'react';
+
+interface PasswordInputProps {
+    placeholder: string;
+    value: string;
+    onChangeText: (text: string) => void;
+}
+
+const PasswordInput: React.FC<PasswordInputProps> = ({ placeholder, value, onChangeText }) => {
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+    const togglePasswordVisibility = () => {
+        setIsPasswordVisible(!isPasswordVisible);
+    };
+
+    return (
+        <div className="w-full mt-6">
+            <div className="w-full flex items-center rounded-lg p-4">
+                <input
+                    className="flex-1 w-full bg-gray-200 text-gray-400 font-semibold"
+                    value={value}
+                    onChange={(e) => onChangeText(e.target.value)}
+                    placeholder={placeholder}
+                    type={isPasswordVisible ? 'text' : 'password'}
+                />
+                <button onClick={togglePasswordVisibility} className="ml-2">
+                    {isPasswordVisible ? (
+                        <img src="/svgs/eye-off.svg" alt="Hide" width={24} height={24} />
+                    ) : (
+                        <img src="/svgs/eye.svg" alt="Show" width={24} height={24} />
+                    )}
+                </button>
+            </div>
+        </div>
+    );
+};
+
+export default PasswordInput;
