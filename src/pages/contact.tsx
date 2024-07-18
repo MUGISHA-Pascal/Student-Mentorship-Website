@@ -9,12 +9,12 @@ const contactMethods = [
   },
   {
     title: "Email us",
-    details: ["support@goya.io", "contact@goya.io"],
+    details: ["goya@gmail.com", "contact@goya.io"],
     icon: faEnvelope
   },
   {
     title: "Visit us",
-    details: ["34 KK Street, Kicukiro, Kigali"],
+    details: ["KN 78 St, Kigali Norrsken House Kigali"],
     icon: faMapMarkerAlt
   }
 ];
@@ -39,7 +39,7 @@ const Contact = () => {
                 <h2 className="text-lg font-semibold">{method.title}</h2>
               </div>
               {method.details.map((detail, idx) => (
-                <p key={idx}>{detail}</p>
+                <p key={idx} className='w-40'>{detail}</p>
               ))}
             </div>
           </div>
@@ -67,8 +67,8 @@ const Contact = () => {
             <label className="block text-gray-700">Message</label>
             <textarea placeholder="Type your message" className="mt-1 block w-full border border-gray-300 rounded-md p-2 h-32"></textarea>
           </div>
-          <div className="sm:col-span-2 text-center">
-            <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700">
+          <div className="w-full mt-10 sm:col-span-2">
+            <button type="submit" className="w-[20%] bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700">
               Send
             </button>
           </div>

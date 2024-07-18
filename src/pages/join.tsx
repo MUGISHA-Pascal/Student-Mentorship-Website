@@ -1,3 +1,5 @@
+import { FaArrowRight } from "react-icons/fa";
+
 const facts = [
   {
     title: 'Personal growth',
@@ -29,7 +31,15 @@ const facts = [
     subtitle: 'Leverage agile frameworks to provide a robust synopsis for high level overviews.',
     svg: '/svgs/fact1.svg'
   },
-]
+];
+
+const jobs = [
+  { title: 'Account Manager', type: 'Full Time', location: 'New York' },
+  { title: 'Full Stack Developer', type: 'Full Time', location: 'Remote' },
+  { title: 'Senior Project Manager', type: 'Full Time', location: 'New York' },
+  { title: 'UX Designer', type: 'Full Time', location: 'Remote' },
+  // { title: 'Software Engineer', type: 'Full Time', location: 'Remote' },
+];
 
 const Join = () => {
   return (
@@ -66,6 +76,21 @@ const Join = () => {
       <div className="bg-blue-50 h-96 w-full">
         <div className="text-center my-12 px-4">
           <h1 className="text-4xl font-bold mb-4">Current offers at GOYA</h1>
+        </div>
+      </div>
+
+      <div className="w-full px-48 mt-14">
+        <h2 className="text-3xl font-bold mb-8 text-center">Current job openings</h2>
+        <div className="space-y-4">
+          {jobs.map((job, index) => (
+            <button key={index} className="w-full bg-white shadow-md rounded-lg p-4 flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-bold">{job.title}</h3>
+                <p className="text-gray-600">{`${job.type}, ${job.location}`}</p>
+              </div>
+              <FaArrowRight />
+            </button>
+          ))}
         </div>
       </div>
     </div>
