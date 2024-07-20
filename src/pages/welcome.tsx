@@ -9,7 +9,7 @@ const Welcome = () => {
           Thank you for joining our waitlist. We're thrilled to have you on board!
         </p>
         <p className="mb-6 text-center text-gray-700">
-          Please check your email for further instructions. Fill out the form we sent to complete your registration.
+          Please check your email for further instructions. Fill out the form we sent to elaborate the process!
         </p>
         <Link to="/">
           <button className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition duration-300">

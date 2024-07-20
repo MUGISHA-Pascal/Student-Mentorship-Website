@@ -7,8 +7,8 @@ import Login from './pages/login';
 import Register from './pages/register';
 import Navbar from './components/navbar';
 import Join from './pages/join';
-import Welcome from './pages/welcome';
 import Footer from './components/footer';
+import Welcome from './pages/welcome';
 
 
 interface LayoutProps {
