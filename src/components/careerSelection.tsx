@@ -10,7 +10,7 @@ interface CareerSelectionProps {
 const CareerSelection: React.FC<CareerSelectionProps> = ({ onCareerSelect, isSubmitting }) => {
   const [career, setCareer] = useState('');
   const [selectedCareer, setSelectedCareer] = useState<string | null>(null);
-  const [suggestions, setSuggestions] = useState<string[]>([
+  const [suggestions] = useState<string[]>([
     'Software engineer',
     'Football player',
     'Data scientist',

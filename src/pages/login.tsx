@@ -54,7 +54,7 @@ const Login = () => {
   const handleLogin = async () => {
     setIsSubmitting(true)
     try {
-      const response = await axios.post('http://localhost:3000/api/v1/auth/login', { email, password });
+      await axios.post('http://localhost:3000/api/v1/auth/login', { email, password });
       toast.success('Login successful!', {
         position: "top-right",
         autoClose: 5000,
