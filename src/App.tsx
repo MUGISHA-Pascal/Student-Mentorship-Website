@@ -7,7 +7,9 @@ import Login from './pages/login';
 import Register from './pages/register';
 import Navbar from './components/navbar';
 import Join from './pages/join';
+import Welcome from './pages/welcome';
 import Footer from './components/footer';
+
 
 interface LayoutProps {
   children: ReactNode;
@@ -29,6 +31,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
+        <Route path="welcome" element={<Welcome />} />
         <Route
           path="*"
           element={

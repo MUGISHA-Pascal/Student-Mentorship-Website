@@ -85,8 +85,7 @@ const Register: React.FC = () => {
         role: roleMap[selectedRole],
         career
       };
-      await axios.post('http://localhost:3000/api/v1/auth/register', payload);
-      navigate('/login');
+      await axios.post('https://ge-iutg.onrender.com/api/v1/auth/register', payload);
       toast.success('You have been registered successfully!', {
         position: "top-right",
         autoClose: 5000,
@@ -97,6 +96,7 @@ const Register: React.FC = () => {
         progress: undefined,
         theme: "colored",
       });
+      navigate('/login');
       // Navigate to another page or reset state as needed
     } catch (error) {
       toast.error('Error during registration. Please try again.', {

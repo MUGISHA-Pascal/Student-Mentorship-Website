@@ -124,7 +124,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister }) => {
                     Register
                 </button>
                 <div className="flex justify-center items-center mb-8">
-                    <p className="text-gray-600 font-semibold">Don't have an account?</p>
+                    <p className="text-gray-600 font-semibold">Already have an account?</p>
                     <Link to="/login">
                         <a className="text-blue-600 font-bold ml-1">
                             Sign In

@@ -54,7 +54,7 @@ const Login = () => {
   const handleLogin = async () => {
     setIsSubmitting(true)
     try {
-      await axios.post('http://localhost:3000/api/v1/auth/login', { email, password });
+      await axios.post('https://ge-iutg.onrender.com/api/v1/auth/login', { email, password });
       toast.success('Login successful!', {
         position: "top-right",
         autoClose: 5000,
@@ -65,7 +65,7 @@ const Login = () => {
         progress: undefined,
         theme: "colored",
       });
-      navigate('/home');
+      navigate('/welcome');
     } catch (error) {
       toast.error('Login failed. Incorrect email or password.', {
         position: "top-right",
