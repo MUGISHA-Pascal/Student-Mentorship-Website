@@ -52,6 +52,7 @@ const Join = () => {
       </div>
       <div className="w-full my-10">
         <img src="/images/join1.png" className="w-full h-[70%]" />
+        {/* <video src="/videos/video2.mp4" className="" autoPlay muted loop /> */}
       </div>
       <div className="text-center mt-5 mb-10 px-4">
         <h1 className="text-3xl font-semibold mb-4">Why you should join us?</h1>

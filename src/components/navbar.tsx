@@ -4,10 +4,10 @@ import logo from '../assets/icons/logo.svg'
 const Navbar = () => {
     return (
         <nav className="bg-white shadow-sm">
-            <div className="container mx-auto px-4 py-2 flex justify-between items-center">
+            <div className="container mx-auto px-4 py-3 flex justify-between items-center">
                 <Link to="/">
                     <div className="flex items-center">
-                        <img src={logo} alt="Logo" className="h-8 w-8 mr-2" />
+                        <img src={logo} alt="Logo" className="h-10 w-10 mr-2" />
                         <span className="font-bold text-xl">GOYA</span>
                     </div>
                 </Link>
