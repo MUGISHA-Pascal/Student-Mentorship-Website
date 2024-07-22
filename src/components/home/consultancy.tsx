@@ -1,0 +1,110 @@
+import React, { useEffect, useState } from 'react';
+import careersData from '../..//utils/json/careers.json';
+
+
+const Consultancy = () => {
+    const [careers, setCareers] = useState<string[]>([]);
+
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        phone: '',
+        career: '',
+    });
+
+    useEffect(() => {
+        return setCareers(careersData);
+    }, []);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+    };
+
+    return (
+        <div
+            className="w-full relative flex flex-col md:flex-row items-center justify-between py-12 bg-center bg-cover"
+            style={{ backgroundImage: `url('/images/image1.png')` }}
+        >
+            <div className="bg-gray-700 w-full h-full absolute opacity-60 z-0"></div>
+            <div className="w-full flex flex-col md:flex-row px-7 md:px-28 z-50">
+                <div className="w-full md:w-1/2 py-10 px-10 md:px-36 flex flex-col gap-y-5">
+                    <img src="/images/chat.png" alt="chat" className="w-20" />
+                    <h2 className="text-2xl font-bold text-white">
+                        Unlock Expert Guidance for Your Reading Journey!
+                    </h2>
+                    <p className="text-white font-semibold">
+                        Dive into personalized book mentorship with our seasoned experts. Whether you're a student seeking knowledge, a mentor expanding your repertoire, or an employer enhancing team skills!
+                    </p>
+                </div>
+                <div className="w-full md:w-1/3 bg-white p-5 rounded-lg">
+                    <form className="flex flex-col gap-y-3" onSubmit={handleSubmit}>
+                        <div className="mb-4">
+                            <input
+                                type="text"
+                                name="name"
+                                placeholder="Name"
+                                className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none"
+                                value={formData.name}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="Email"
+                                className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none"
+                                value={formData.email}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <input
+                                type="text"
+                                name="phone"
+                                placeholder="Phone"
+                                className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none"
+                                value={formData.phone}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="mb-6">
+                            <select
+                                name="career"
+                                className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none"
+                                value={formData.career}
+                                onChange={handleChange}
+                                required
+                            >
+                                <option value="">Select a Career</option>
+                                {careers.map((career, index) => (
+                                    <option key={index} value={career}>
+                                        {career}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <button
+                            type="submit"
+                            className="w-full bg-blue-600 text-white py-3 rounded-lg"
+                        >
+                            Get Consultancy
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Consultancy;

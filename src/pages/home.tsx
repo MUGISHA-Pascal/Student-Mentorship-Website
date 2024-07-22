@@ -1,18 +1,9 @@
 import { FaArrowRight } from "react-icons/fa"
 import Services from "../components/home/services";
-import { useEffect, useState } from "react";
-// import careersData from '../utils/json/careers.json';
+import Partners from "../components/home/partners";
+import Consultancy from "../components/home/consultancy";
 const Home = () => {
 
-  const [careers, setCareers] = useState([]);
-
-  useEffect(() => {
-    fetch('../utils/json/careers.json')
-    // fetch(careersData)
-      .then(response => response.json())
-      .then(data => setCareers(data))
-      .catch(error => console.error('Error fetching careers:', error));
-  }, []);
   const stats = [
     { value: "100K+", description: "Targeted Students to enroll in courses" },
     { value: "10K+", description: "Expected Employers looking for skilled workers" },
@@ -95,24 +86,24 @@ const Home = () => {
           </div>
           <div className="md:w-1/2 px-20 flex flex-col py-10 gap-8">
             <div className="flex items-center gap-x-5">
-              <div className="text-blue-600 font-bold h-10 w-10 flex items-center justify-center p-2 bg-blue-100  rounded-full">1</div>
+              <div className="text-blue-600 font-bold h-10 w-10 flex items-center justify-center p-2 bg-blue-100 rounded-full">1</div>
               <div className="w-[70%] md:w-[55%] gap-y-5 text-start">
-                <h3 className="text-xl font-bold mb-2">Easy Booking</h3>
-                <p className="text-gray-500">With lots of unique blocks, you can easily build a page without coding.</p>
+                <h3 className="text-xl font-bold mb-2">Seamless Connection</h3>
+                <p className="text-gray-500">Easily connect with mentors, students, and employers through our platform.</p>
               </div>
             </div>
             <div className="flex items-center gap-x-5">
-              <div className="text-blue-600 font-bold h-10 w-10 flex items-center justify-center p-2 bg-blue-100  rounded-full">2</div>
+              <div className="text-blue-600 font-bold h-10 w-10 flex items-center justify-center p-2 bg-blue-100 rounded-full">2</div>
               <div className="w-[70%] md:w-[55%] gap-y-5 text-start">
-                <h3 className="text-xl font-bold mb-2">Free Expert Opinion</h3>
-                <p className="text-gray-500">With lots of unique blocks, you can easily build a page without coding.</p>
+                <h3 className="text-xl font-bold mb-2">Expert Guidance</h3>
+                <p className="text-gray-500">Receive valuable insights and advice from experienced mentors in your field.</p>
               </div>
             </div>
             <div className="flex items-center gap-x-5">
-              <div className="text-blue-600 font-bold h-10 w-10 flex items-center justify-center p-2 bg-blue-100  rounded-full">3</div>
+              <div className="text-blue-600 font-bold h-10 w-10 flex items-center justify-center p-2 bg-blue-100 rounded-full">3</div>
               <div className="w-[70%] md:w-[55%] gap-y-5 text-start">
-                <h3 className="text-xl font-bold mb-2">Get Your Results</h3>
-                <p className="text-gray-500">With lots of unique blocks, you can easily build a page without coding.</p>
+                <h3 className="text-xl font-bold mb-2">Achieve Your Goals</h3>
+                <p className="text-gray-500">Track your progress and achieve your career goals with personalized coaching.</p>
               </div>
             </div>
           </div>
@@ -141,44 +132,12 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="w-full relative mt-16 flex flex-col md:flex-row items-center justify-between py-12 bg-center bg-cover" style={{ backgroundImage: `url('/images/image1.png')` }}>
-        <div className="bg-gray-700 w-full h-full absolute opacity-60 z-0"></div>
-        <div className="w-full flex flex-col md:flex-row px-7 md:px-28 z-50">
-          <div className="w-full md:w-1/2 py-10 px-10 md:px-36 flex flex-col gap-y-5">
-            <img src="/images/chat.png" alt="chat" className="w-20" />
-            <h2 className="text-2xl font-bold text-white">
-              Unlock Expert Guidance for Your Reading Journey!
-            </h2>
-            <p className="text-white font-semibold">
-              Dive into personalized book mentorship with our seasoned experts. Whether you're a student seeking knowledge, a mentor expanding your repertoire, or an employer enhancing team skills!
-            </p>
-          </div>
-          <div className="w-full md:w-1/3 bg-white p-5 rounded-lg">
-            <form className="flex flex-col gap-y-3">
-              <div className="mb-4">
-                <input type="text" placeholder="Name" className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none" />
-              </div>
-              <div className="mb-4">
-                <input type="email" placeholder="Email" className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none" />
-              </div>
-              <div className="mb-4">
-                <input type="text" placeholder="Phone" className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none" />
-              </div>
-              <div className="mb-6">
-                <select className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none">
-                  <option value="">Select a Career</option>
-                  {careers.map((career, index) => (
-                    <option key={index} value={career}>
-                      {career}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <button
-                className="w-full bg-blue-600 text-white py-3 rounded-lg">Get Free Consultancy</button>
-            </form>
-          </div>
-        </div>
+      <div className="bg-blue-50">
+        <Partners />
+      </div>
+
+      <div>
+        <Consultancy />
       </div>
     </div>
   )
