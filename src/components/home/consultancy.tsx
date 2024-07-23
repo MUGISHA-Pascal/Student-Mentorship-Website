@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import careersData from '../..//utils/json/careers.json';
-
+import { toast, ToastContainer } from "react-toastify"
+import careersData from '../../utils/json/careers.json';
 
 const Consultancy = () => {
     const [careers, setCareers] = useState<string[]>([]);
-
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -13,7 +12,7 @@ const Consultancy = () => {
     });
 
     useEffect(() => {
-        return setCareers(careersData);
+        setCareers(careersData);
     }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -25,6 +24,41 @@ const Consultancy = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        try {
+            const response = await fetch('https://formspree.io/f/xnnajdlp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (response.ok) {
+                console.log('Form submitted successfully!');
+                setFormData({
+                    name: '',
+                    email: '',
+                    phone: '',
+                    career: '',
+                });
+                toast.success('email sent!', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
+            } else {
+                console.error('Form submission error:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Network error:', error);
+        }
     };
 
     return (
@@ -32,6 +66,7 @@ const Consultancy = () => {
             className="w-full relative flex flex-col md:flex-row items-center justify-between py-12 bg-center bg-cover"
             style={{ backgroundImage: `url('/images/image1.png')` }}
         >
+            <ToastContainer />
             <div className="bg-gray-700 w-full h-full absolute opacity-60 z-0"></div>
             <div className="w-full flex flex-col md:flex-row px-7 md:px-28 z-50">
                 <div className="w-full md:w-1/2 py-10 px-10 md:px-36 flex flex-col gap-y-5">
@@ -96,7 +131,7 @@ const Consultancy = () => {
                         </div>
                         <button
                             type="submit"
-                            className="w-full bg-blue-600 text-white py-3 rounded-lg"
+                            className="w-4/5 bg-blue-600 text-white py-3 px-9 rounded-lg"
                         >
                             Get Consultancy
                         </button>

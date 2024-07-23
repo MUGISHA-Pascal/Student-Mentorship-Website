@@ -1,9 +1,24 @@
 import { FaCopyright, FaFacebookMessenger, FaInstagram, FaLinkedinIn, FaTwitter } from "react-icons/fa"
 import { Link } from "react-router-dom"
+import { toast, ToastContainer } from 'react-toastify';
 
 const Footer = () => {
+    const handleSubscrition = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        toast.success('Subscription request sent!', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "colored",
+        });
+    };
     return (
         <div className="bg-gray-800  pt-16 pb-2">
+            <ToastContainer />
             <div className="grid grid-cols-2 md:grid-cols-4 sm:grid-cols-1 px-24 gap-y-7 gap-x-32">
                 <div className="flex flex-col text-white">
                     <h1 className="mb-3 font-bold text-xl">Learn more</h1>
@@ -30,10 +45,12 @@ const Footer = () => {
                 <div className="flex flex-col text-white">
                     <h1 className="mb-3 font-bold text-xl">Our newsletter</h1>
                     <div className="my-1">Subscribe to our newsletter to get our news <br /> & deals delivered to you.</div>
-                    <div className="flex">
-                        <input type="email" placeholder="Email address" className="py-2 px-5 mt-3" />
-                        <button className="bg-blue-700 py-2 px-5 mt-3">Submit</button>
-                    </div>
+                    <form onSubmit={handleSubscrition}>
+                        <div className="flex">
+                            <input type="email" placeholder="Email address" className="py-2 px-5 mt-3 text-black focus:outline-none" required/>
+                            <button type="submit" className="bg-blue-700 py-2 px-5 mt-3">Submit</button>
+                        </div>
+                    </form>
                 </div>
                 <div className="flex flex-col text-white">
                     <h1 className="mb-3 font-bold text-xl">Social links</h1>
@@ -55,7 +72,7 @@ const Footer = () => {
             </div>
             <div className="mx-5 mt-5 mb-2 border"></div>
             <p className="flex text-white items-center gap-x-4 px-24">
-                <FaCopyright color="white"/>
+                <FaCopyright color="white" />
                 2024 Copyright, All Right Reserved
             </p>
         </div>

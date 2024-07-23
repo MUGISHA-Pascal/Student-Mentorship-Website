@@ -2,6 +2,8 @@ import { FaArrowRight } from "react-icons/fa"
 import Services from "../components/home/services";
 import Partners from "../components/home/partners";
 import Consultancy from "../components/home/consultancy";
+import FAQ from "../components/join/faq";
+import { Link } from "react-router-dom";
 const Home = () => {
 
   const stats = [
@@ -47,10 +49,13 @@ const Home = () => {
             <p className="mb-8 hidden md:block text-start mix-blend-difference">
               Unlock endless possibilities with our unique modules. Effortlessly create your next consultancy platform in minutes, no coding required. Elevate your career with top-notch guidance and support.
             </p>
+            <h1></h1>
+            <Link to="/register">
             <button className="flex items-center justify-center gap-x-5 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-4 rounded-md">
               Get started now
               <FaArrowRight className="" />
             </button>
+            </Link>
           </div>
         </div>
         <div className="w-full flex flex-col md:flex-row md:justify-between items-center mt-4 md:mt-8 md:text-center md:px-28 shadow">
@@ -82,7 +87,7 @@ const Home = () => {
         </div>
         <div className="w-full flex flex-col md:flex-row gap-x-12">
           <div className="flex md:w-1/2 justify-center mb-12">
-            <img src="/svgs/what.svg" alt="Why Choose Us" className="h-full rounded-lg shadow-lg" />
+            <img src="/images/what.png" alt="Why Choose Us" className="h-full rounded-lg shadow-lg" />
           </div>
           <div className="md:w-1/2 px-20 flex flex-col py-10 gap-8">
             <div className="flex items-center gap-x-5">
@@ -135,7 +140,9 @@ const Home = () => {
       <div className="bg-blue-50">
         <Partners />
       </div>
-
+      <div>
+        <FAQ />
+      </div>
       <div>
         <Consultancy />
       </div>

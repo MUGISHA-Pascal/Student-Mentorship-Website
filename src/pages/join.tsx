@@ -1,62 +1,68 @@
-import { FaArrowRight } from "react-icons/fa";
+// import { FaArrowRight } from "react-icons/fa";
+import FAQ from "../components/join/faq";
 
 const facts = [
   {
-    title: 'Personal growth',
-    subtitle: 'Leverage agile frameworks to provide a robust synopsis for high level overviews.',
+    title: 'High-Class Mentorship',
+    subtitle: 'Access to experienced mentors who will guide you through real-world projects and provide valuable industry insights.',
     svg: '/svgs/fact1.svg'
   },
   {
-    title: 'Personal growth',
-    subtitle: 'Leverage agile frameworks to provide a robust synopsis for high level overviews.',
+    title: 'Professional Development',
+    subtitle: 'Workshops and training sessions to enhance your skills and prepare you for the job market.',
     svg: '/svgs/fact1.svg'
   },
   {
-    title: 'Personal growth',
-    subtitle: 'Leverage agile frameworks to provide a robust synopsis for high level overviews.',
+    title: 'Networking Opportunities',
+    subtitle: 'Connect with industry professionals, potential employers, and like-minded peers through various networking events.',
     svg: '/svgs/fact1.svg'
   },
   {
-    title: 'Personal growth',
-    subtitle: 'Leverage agile frameworks to provide a robust synopsis for high level overviews.',
+    title: 'Project-Based Learning',
+    subtitle: 'Engage in hands-on projects that allow you to apply your knowledge and gain practical experience.',
     svg: '/svgs/fact1.svg'
   },
   {
-    title: 'Personal growth',
-    subtitle: 'Leverage agile frameworks to provide a robust synopsis for high level overviews.',
+    title: 'Career Support',
+    subtitle: 'Assistance with resume building, interview preparation, and job placement through our e-connects platform.',
     svg: '/svgs/fact1.svg'
   },
   {
-    title: 'Personal growth',
-    subtitle: 'Leverage agile frameworks to provide a robust synopsis for high level overviews.',
+    title: 'Investment Opportunities',
+    subtitle: 'Potential for investment in your innovative ideas and projects, helping you bring them to fruition.',
     svg: '/svgs/fact1.svg'
   },
 ];
 
-const jobs = [
-  { title: 'Account Manager', type: 'Full Time', location: 'New York' },
-  { title: 'Full Stack Developer', type: 'Full Time', location: 'Remote' },
-  { title: 'Senior Project Manager', type: 'Full Time', location: 'New York' },
-  { title: 'UX Designer', type: 'Full Time', location: 'Remote' },
-  // { title: 'Software Engineer', type: 'Full Time', location: 'Remote' },
-];
+// const jobs = [
+//   { title: 'Account Manager', type: 'Full Time', location: 'New York' },
+//   { title: 'Full Stack Developer', type: 'Full Time', location: 'Remote' },
+//   { title: 'Senior Project Manager', type: 'Full Time', location: 'New York' },
+//   { title: 'UX Designer', type: 'Full Time', location: 'Remote' },
+//   // { title: 'Software Engineer', type: 'Full Time', location: 'Remote' },
+// ];
 
 const Join = () => {
   return (
     <div className="min-h-screen flex flex-col items-center py-12">
       <div className="text-center mb-12 px-4">
-        <h1 className="text-4xl font-bold mb-4">Join GOYA</h1>
-        <p className="text-gray-600">
-          By accessing and placing an order with UXTheme, you confirm that you are <br /> in agreement with and bound by the terms and conditions
+        <h1 className="text-4xl font-bold mb-4 text-center">Become a Part of GOYA</h1>
+        <p className="text-gray-600 text-center">
+          Ready to unlock your potential and make a meaningful impact? <br />
+          Join GOYA and embark on a journey filled with growth, mentorship, and endless opportunities. <br />
+          Together, we’ll transform your aspirations into achievements and shape the future of Africa.
         </p>
+
       </div>
-      <div className="w-full my-10">
+      <div className="w-full  my-10 bg-red-200">
         <img src="/images/join1.png" className="w-full h-[70%]" />
-        {/* <video src="/videos/video2.mp4" className="" autoPlay muted loop /> */}
+        {/* <video src="/videos/video2.mp4" className="h-full w-full" autoPlay muted loop /> */}
       </div>
-      <div className="text-center mt-5 mb-10 px-4">
+      <div className="text-center mt-5 mb-16 px-4">
         <h1 className="text-3xl font-semibold mb-4">Why you should join us?</h1>
-        <p className="text-gray-600">With lots of unique blocks, you can easily build a page without coding. <br /> Build your next consultancy website within few minutes.
+        <p className="text-gray-600 font-semibold">
+          To gain access to unparalleled mentorship, professional development opportunities, and a network of industry professionals.
+          <br /> Empower your future with real-world project experience and career support.
         </p>
       </div>
       <div className="grid grid-cols-1 gap-10 md:grid-cols-3 pl-12 pr-28 md:px-36">
@@ -74,25 +80,8 @@ const Join = () => {
           </div>
         ))}
       </div>
-      <div className="bg-blue-50 h-96 w-full">
-        <div className="text-center my-12 px-4">
-          <h1 className="text-4xl font-bold mb-4">Current offers at GOYA</h1>
-        </div>
-      </div>
-
       <div className="w-full px-48 mt-14">
-        <h2 className="text-3xl font-bold mb-8 text-center">Current job openings</h2>
-        <div className="space-y-4">
-          {jobs.map((job, index) => (
-            <button key={index} className="w-full bg-white shadow-md rounded-lg p-4 flex items-center justify-between">
-              <div>
-                <h3 className="text-xl font-bold">{job.title}</h3>
-                <p className="text-gray-600">{`${job.type}, ${job.location}`}</p>
-              </div>
-              <FaArrowRight />
-            </button>
-          ))}
-        </div>
+        <FAQ />
       </div>
     </div>
   )

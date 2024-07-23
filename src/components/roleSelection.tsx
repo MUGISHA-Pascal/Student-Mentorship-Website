@@ -66,7 +66,7 @@ const RoleSelection: React.FC<RoleSelectionProps> = ({ onRoleSelect }) => {
         </button>
       ))}
       <button
-        className={`mt-14 w-full p-4 rounded-full ${selectedRole ? 'bg-blue-600' : 'bg-gray-500 opacity-50'}`}
+        className={`mt-14 text-center w-full p-4 rounded-full ${selectedRole ? 'bg-blue-600' : 'bg-gray-500 opacity-50'}`}
         disabled={!selectedRole}
         onClick={handleContinue}
       >

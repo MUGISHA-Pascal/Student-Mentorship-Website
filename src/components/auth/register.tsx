@@ -61,6 +61,10 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister }) => {
         });
     }
 
+    const handleGenderChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setGender(e.target.value);
+      };
+
     return (
         <div className="flex">
             <ToastContainer />
@@ -99,12 +103,24 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister }) => {
                         value={age}
                         onChangeText={setAge}
                     />
-                    <AuthTextInput
+                    {/* <AuthTextInput
                         placeholder="Gender"
                         width="50%"
                         value={gender}
                         onChangeText={setGender}
-                    />
+                    /> */}
+                    <select
+                        className="mt-6 block w-1/2 bg-gray-200 text-gray-400 font-semibold rounded-md px-2"
+                        value={gender}
+                        onChange={handleGenderChange}
+                    >
+                        <option value="" disabled>
+                            Select your gender
+                        </option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
                 </div>
                 <PasswordInput
                     placeholder="Password"
@@ -117,7 +133,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister }) => {
                     onChangeText={setConfirmPassword}
                 />
                 <button
-                    className={`w-full p-4 rounded-full mt-10 mb-4 ${isButtonDisabled ? 'bg-gray-400' : 'bg-blue-600'} text-white text-lg font-semibold`}
+                    className={`w-full p-4 text-center rounded-full mt-10 mb-4 ${isButtonDisabled ? 'bg-gray-400' : 'bg-blue-600'} text-white text-lg font-semibold`}
                     onClick={handleRegister}
                     disabled={isButtonDisabled}
                 >
