@@ -105,7 +105,7 @@ const Login = () => {
             onChangeText={setPassword}
           />
           <button
-            className={`w-full p-4 text-center rounded-full mt-10 mb-4 ${isButtonDisabled ? 'bg-gray-400' : 'bg-blue-600'} text-white text-lg font-semibold`}
+            className={`w-4/5 py-4 px-[10%] text-center rounded-full mt-10 mb-4 ${isButtonDisabled ? 'bg-gray-400' : 'bg-blue-600'} text-white text-lg font-semibold`}
             onClick={handleLogin}
             disabled={isButtonDisabled || isSubmitting}
 

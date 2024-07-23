@@ -133,11 +133,11 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister }) => {
                     onChangeText={setConfirmPassword}
                 />
                 <button
-                    className={`w-full p-4 text-center rounded-full mt-10 mb-4 ${isButtonDisabled ? 'bg-gray-400' : 'bg-blue-600'} text-white text-lg font-semibold`}
+                    className={`w-4/5 py-4 px-[10%] text-center rounded-full mt-10 mb-4 ${isButtonDisabled ? 'bg-gray-400' : 'bg-blue-600'} text-white text-lg font-semibold`}
                     onClick={handleRegister}
                     disabled={isButtonDisabled}
                 >
-                    Register
+                    Continue
                 </button>
                 <div className="flex justify-center items-center mb-8">
                     <p className="text-gray-600 font-semibold">Already have an account?</p>
