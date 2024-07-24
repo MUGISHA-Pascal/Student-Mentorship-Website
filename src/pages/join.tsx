@@ -18,7 +18,7 @@ const facts = [
     svg: '/svgs/fact1.svg'
   },
   {
-    title: 'Project-Based Learning',
+    title: 'Project-Based Experience',
     subtitle: 'Engage in hands-on projects that allow you to apply your knowledge and gain practical experience.',
     svg: '/svgs/fact1.svg'
   },

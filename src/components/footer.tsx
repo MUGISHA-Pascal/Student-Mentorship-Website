@@ -47,7 +47,7 @@ const Footer = () => {
                     <div className="my-1">Subscribe to our newsletter to get our news <br /> & deals delivered to you.</div>
                     <form onSubmit={handleSubscrition}>
                         <div className="flex">
-                            <input type="email" placeholder="Email address" className="py-2 px-5 mt-3 text-black focus:outline-none" required/>
+                            <input type="email" placeholder="Email address" className="py-2 px-5 mt-3 text-black focus:outline-none" required />
                             <button type="submit" className="bg-blue-700 py-2 px-5 mt-3">Submit</button>
                         </div>
                     </form>
@@ -55,18 +55,18 @@ const Footer = () => {
                 <div className="flex flex-col text-white">
                     <h1 className="mb-3 font-bold text-xl">Social links</h1>
                     <div className="flex gap-x-4">
-                        <Link to='#'>
+                        <a href="https://www.linkedin.com/in/"  target="_blank">
                             <FaLinkedinIn size={24} />
-                        </Link>
-                        <Link to='#'>
+                        </a>
+                        <a href="https://x.com/GOYAFRICA"  target="_blank">
                             <FaTwitter size={24} />
-                        </Link>
-                        <Link to='#'>
+                        </a>
+                        <a href="https://www.facebook.com/profile.php?id=61563176430025"  target="_blank">
                             <FaFacebookMessenger size={24} />
-                        </Link>
-                        <Link to='#'>
+                        </a>
+                        <a href="https://www.instagram.com/goyoungafrica/" target="_blank">
                             <FaInstagram size={24} />
-                        </Link>
+                        </a>
                     </div>
                 </div>
             </div>

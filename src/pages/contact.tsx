@@ -6,7 +6,7 @@ import { useState } from 'react';
 const contactMethods = [
   {
     title: "Call us",
-    details: ["+250788833428", "+250788353061"],
+    details: ["+250780513811"],
     icon: faPhone
   },
   {

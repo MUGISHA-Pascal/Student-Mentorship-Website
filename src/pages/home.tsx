@@ -37,10 +37,10 @@ const Home = () => {
   return (
     <div >
       <div className="relative">
-        <div className="w-full bg-cover bg-center h-[40vh] md:h-[85vh] px-32 relative flex items-center justify-center text-center text-white bg-opacity-75"
+        <div className="w-full bg-cover bg-center h-[40vh] md:h-[100vh] px-32 relative flex items-center justify-center text-center text-white bg-opacity-75"
         >
           <div className="absolute top-[3px] bg-white w-full text-black overflow-hidden h-full">
-            <video src="/videos/video1.mp4" className="" autoPlay muted loop />
+            <video src="/videos/video11.mp4" className="" autoPlay muted loop />
           </div>
           <div className="md:w-[30%] absolute px-7 md:left-24 b0 top-16 md:top-36">
             <h1 className="text-4xl font-bold mb-4 text-start mix-blend-difference">
