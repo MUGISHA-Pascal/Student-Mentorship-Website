@@ -42,16 +42,15 @@ const Home = () => {
           <div className="absolute top-[3px] bg-white w-full text-black overflow-hidden h-full">
             <video src="/videos/video11.mp4" className="" autoPlay loop muted />
           </div>
-          <div className="md:w-[30%] absolute px-7 md:left-24 b0 top-16 md:mt-64">
-            <h1 className="text-4xl font-bold mb-4 text-start mix-blend-difference">
-              Master Your Skills with Expert Mentors
+          <div className="md:w-[30%] absolute px-7 left-0 md:left-24 md:top-16 md:mt-64">
+            <h1 className="text-xl md:text-4xl font-bold mb-1 md:mb-4 text-start mix-blend-difference">
+              Master Your Skills <br /> with Expert Mentors
             </h1>
-            <p className="mb-8 hidden md:block text-start mix-blend-difference">
+            <p className=" mb-5 md:mb-8 text-sm md:text-lg font-semibold text-start mix-blend-difference">
              Connect with experienced professionals
             </p>
-            <h1></h1>
             <Link to="/register">
-            <button className="flex items-center justify-center gap-x-5 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-4 rounded-md">
+            <button className="flex items-center justify-center gap-x-2 md:gap-x-5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm md:text-lg py-2 px-2 md:py-4 md:px-4 rounded-md">
               Get started now
               <FaArrowRight className="" />
             </button>

@@ -80,7 +80,7 @@ const Join = () => {
           </div>
         ))}
       </div>
-      <div className="w-full px-48 mt-14">
+      <div className="w-full px-3 md:px-48 md:mt-14">
         <FAQ />
       </div>
     </div>

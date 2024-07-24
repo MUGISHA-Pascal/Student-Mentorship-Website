@@ -67,7 +67,7 @@ const About = () => {
         />
       </div>
       <div className="mb-10 md:px-44 grid grid-cols-1 sm:grid-cols-2 gap-x-2">
-        <div className="mb-8 md:mb-0">
+        <div className="mb-8 md:mb-0 px-5 md:px-0">
           <h1 className="text-3xl font-bold">
             We are here to help <br /> you achieve your <br /> success.
           </h1>
@@ -105,7 +105,7 @@ const About = () => {
           </p>
         </div>
         <div>
-          <div className="w-full grid grid-cols-1 md:grid-cols-4 px-32 md:px-0 gap-6">
+          <div className="w-full grid grid-cols-1 md:grid-cols-4 px-24 md:px-0 gap-6">
             {team.map((member, index) => (
               <div key={index} className=" w-64 md:w-52 flex flex-col items-center bg-white rounded-lg">
                 <img
@@ -132,7 +132,7 @@ const About = () => {
           </div>
         </div>
       </div>
-      <div className="w-full px-48 mt-14">
+      <div className="w-full px-3 md:px-48 md:mt-14">
         <FAQ />
       </div>
     </div>

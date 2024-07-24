@@ -9,6 +9,7 @@ import Navbar from './components/navbar';
 import Join from './pages/join';
 import Footer from './components/footer';
 import Welcome from './pages/welcome';
+import Blog from './pages/blog';
 
 
 interface LayoutProps {
@@ -41,6 +42,7 @@ const App: React.FC = () => {
                 <Route path="about" element={<About />} />
                 <Route path="contact" element={<Contact />} />
                 <Route path="join" element={<Join />} />
+                <Route path="blog" element={<Blog />} />
               </Routes>
             </Layout>
           }

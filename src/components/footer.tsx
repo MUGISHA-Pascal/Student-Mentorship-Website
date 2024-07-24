@@ -17,9 +17,9 @@ const Footer = () => {
         });
     };
     return (
-        <div className="bg-gray-800  pt-16 pb-2">
+        <div className="bg-gray-800 pt-16 pb-2">
             <ToastContainer />
-            <div className="grid grid-cols-2 md:grid-cols-4 sm:grid-cols-1 px-24 gap-y-7 gap-x-32">
+            <div className="grid grid-cols-1 md:grid-cols-4 sm:grid-cols-1 px-10 md:px-24 gap-y-10 gap-x-32">
                 <div className="flex flex-col text-white">
                     <h1 className="mb-3 font-bold text-xl">Learn more</h1>
                     <Link to="/" className="font-semibold hover:text-blue-900">
@@ -33,6 +33,9 @@ const Footer = () => {
                     </Link>
                     <Link to="/contact" className="font-semibold hover:text-blue-900">
                         Contact
+                    </Link>
+                    <Link to="/blog" className="hover:text-blue-900">
+                        Blogs
                     </Link>
                 </div>
                 <div className="flex flex-col text-white">
@@ -71,7 +74,7 @@ const Footer = () => {
                 </div>
             </div>
             <div className="mx-5 mt-5 mb-2 border"></div>
-            <p className="flex text-white items-center gap-x-4 px-24">
+            <p className="flex text-white items-center gap-x-4 px-10 md:px-24">
                 <FaCopyright color="white" />
                 2024 Copyright, All Right Reserved
             </p>
