@@ -17,7 +17,7 @@ const Footer = () => {
         });
     };
     return (
-        <div className="bg-gray-800 pt-16 pb-2">
+        <div className="bg-gray-800 pt-16 pb-2 overflow-x-hidden">
             <ToastContainer />
             <div className="grid grid-cols-1 md:grid-cols-4 sm:grid-cols-1 px-10 md:px-24 gap-y-10 gap-x-32">
                 <div className="flex flex-col text-white">
@@ -50,8 +50,8 @@ const Footer = () => {
                     <div className="my-1">Subscribe to our newsletter to get our news <br /> & deals delivered to you.</div>
                     <form onSubmit={handleSubscrition}>
                         <div className="flex">
-                            <input type="email" placeholder="Email address" className="py-2 px-5 mt-3 text-black focus:outline-none" required />
-                            <button type="submit" className="bg-blue-700 py-2 px-5 mt-3">Submit</button>
+                            <input type="email" placeholder="Email address" className="w-[70%] py-2 px-5 mt-3 text-black focus:outline-none" required />
+                            <button type="submit" className="w-[20%] bg-blue-700 py-2 px-5 mt-3">Submit</button>
                         </div>
                     </form>
                 </div>

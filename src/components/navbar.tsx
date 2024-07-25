@@ -167,9 +167,9 @@ const Navbar = () => {
                     <Link to="/contact" className="text-gray-600 hover:text-gray-900">
                         Contact
                     </Link>
-                    {/* <Link to="/blog" className="text-gray-600 hover:text-gray-900">
+                    <Link to="/blog" className="text-gray-600 hover:text-gray-900">
                         Blogs
-                    </Link> */}
+                    </Link>
                 </div>
                 <div className="hidden md:flex items-center space-x-4">
                     <Link to="/login" className="text-gray-600 hover:text-gray-900">
@@ -202,9 +202,9 @@ const Navbar = () => {
                         <Link to="/contact" className="block text-gray-600 hover:text-gray-900">
                             Contact
                         </Link>
-                        {/* <Link to="/blog" className="block text-gray-600 hover:text-gray-900">
+                        <Link to="/blog" className="block text-gray-600 hover:text-gray-900">
                             Blogs
-                        </Link> */}
+                        </Link>
                         <Link to="/login" className="block text-gray-600 hover:text-gray-900">
                             Sign In
                         </Link>

@@ -72,7 +72,7 @@ const Home = () => {
           <h2 className="text-3xl font-bold mb-8 text-white">Services we offer for you</h2>
           <p className="mb-12 px-2 md:px-0 md:w-[40%] text-center font-semibold text-white">With lots of unique blocks, you can easily build a page without coding. Build your next landing page.</p>
         </div>
-        <div className="px-[20%] md:px-40">
+        <div className="px-[10%] md:px-40 overflow-x-hidden">
           <Services />
         </div>
       </div>
@@ -88,7 +88,7 @@ const Home = () => {
           <div className="flex md:w-1/2 justify-center mb-12">
             <img src="/images/what.png" alt="Why Choose Us" className="h-full rounded-lg shadow-lg" />
           </div>
-          <div className="md:w-1/2 px-20 flex flex-col py-10 gap-8">
+          <div className="md:w-1/2 px-[5%] flex flex-col py-10 gap-8">
             <div className="flex items-center gap-x-5">
               <div className="text-blue-600 font-bold h-10 w-10 flex items-center justify-center p-2 bg-blue-100 rounded-full">1</div>
               <div className="w-[70%] md:w-[55%] gap-y-5 text-start">
