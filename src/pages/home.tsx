@@ -57,7 +57,7 @@ const Home = () => {
             </Link>
           </div>
         </div>
-        <div className="flex gap-x-5 my-2 px-[20%]">
+        <div className="flex gap-x-5 my-2 px-[20%] md:hidden">
           <Link to="/register" className="">
             <button className="flex items-center justify-center gap-x-2 md:gap-x-5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm md:text-lg py-2 px-2 md:py-4 md:px-4 rounded-md text-nowrap">
               Get started now
