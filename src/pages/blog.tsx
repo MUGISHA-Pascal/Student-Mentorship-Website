@@ -35,7 +35,7 @@ const Blog: React.FC = () => {
       <div className="text-center mb-12 px-4">
         <h1 className="text-4xl font-bold text-black mb-8">Insights & Stories</h1>
         <p className="text-gray-600 px-5 md:px-64 mb-8">
-          Dive into our curated collection of articles and insights from industry experts and passionate learners. Whether you're looking for career advice, the latest trends, or inspiring success stories, our blog has something for everyone. Start exploring and expand your horizons today!
+          Dive into our curated collection of articles and insights from industry experts and passionate learners. Whether you're looking for career advice, the latest trends, or inspiring success stories!
         </p>
       </div>
       <div className="flex overflow-scroll mb-8" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>

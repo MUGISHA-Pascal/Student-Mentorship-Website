@@ -24,7 +24,7 @@ const services = [
 
 const Services = () => {
     return (
-        <div className='relative w-full h-auto py-12 px-0 md:px-10 flex flex-col md:flex-row gap-y-20 gap-x-20'>
+        <div className='relative w-full h-auto pt-20 pb-12 px-0 md:px-10 flex flex-col md:flex-row gap-y-20 gap-x-20 items-center'>
             {services.map((service) => (
                 <div key={service.id} className='group relative w-72 h-[335px] flex flex-col items-center'>
                     <div className='relative'>

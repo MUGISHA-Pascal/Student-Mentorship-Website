@@ -1,4 +1,3 @@
-// import { FaArrowRight } from "react-icons/fa";
 import FAQ from "../components/join/faq";
 
 const facts = [
@@ -33,14 +32,6 @@ const facts = [
     svg: '/svgs/fact1.svg'
   },
 ];
-
-// const jobs = [
-//   { title: 'Account Manager', type: 'Full Time', location: 'New York' },
-//   { title: 'Full Stack Developer', type: 'Full Time', location: 'Remote' },
-//   { title: 'Senior Project Manager', type: 'Full Time', location: 'New York' },
-//   { title: 'UX Designer', type: 'Full Time', location: 'Remote' },
-//   // { title: 'Software Engineer', type: 'Full Time', location: 'Remote' },
-// ];
 
 const Join = () => {
   return (
