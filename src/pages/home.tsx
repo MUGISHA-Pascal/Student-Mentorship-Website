@@ -50,7 +50,7 @@ const Home = () => {
               Connect with experienced professionals
             </p>
             <Link to="/register" className="hidden md:block">
-              <button className="flex items-center justify-center gap-x-2 md:gap-x-5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm md:text-lg py-2 px-2 md:py-4 md:px-4 rounded-md">
+              <button className="flex items-center justify-center gap-x-2 md:gap-x-5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm md:text-lg py-2 px-2 md:py-4 md:px-4 rounded-md text-nowrap">
                 Get started now
                 <FaArrowRight className="" />
               </button>
@@ -59,13 +59,13 @@ const Home = () => {
         </div>
         <div className="flex gap-x-5 my-2 px-[20%]">
           <Link to="/register" className="">
-            <button className="flex items-center justify-center gap-x-2 md:gap-x-5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm md:text-lg py-2 px-2 md:py-4 md:px-4 rounded-md">
+            <button className="flex items-center justify-center gap-x-2 md:gap-x-5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm md:text-lg py-2 px-2 md:py-4 md:px-4 rounded-md text-nowrap">
               Get started now
               <FaArrowRight className="-rotate-45" />
             </button>
           </Link>
           <Link to="/login" className="">
-            <button className="flex items-center justify-center gap-x-2 md:gap-x-5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm md:text-lg py-2 px-2 md:py-4 md:px-4 rounded-md">
+            <button className="flex items-center justify-center gap-x-2 md:gap-x-5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm md:text-lg py-2 px-2 md:py-4 md:px-4 rounded-md text-nowrap">
               Sign in
               <FaArrowRight className="-rotate-45" />
             </button>
