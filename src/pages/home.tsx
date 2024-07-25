@@ -37,7 +37,7 @@ const Home = () => {
   return (
     <div >
       <div className="relative">
-        <div className="w-full bg-cover bg-center h-[40vh] md:h-[120vh] px-32 relative flex items-center justify-center text-center text-white bg-opacity-75"
+        <div className="w-full bg-cover bg-center h-[35vh] md:h-[120vh] px-32 relative flex items-center justify-center text-center text-white bg-opacity-75"
         >
           <div className="absolute top-[3px] bg-white w-full text-black overflow-hidden h-full">
             <video src="/videos/video11.mp4" className="" autoPlay loop muted />
@@ -47,15 +47,29 @@ const Home = () => {
               Master Your Skills <br /> with Expert Mentors
             </h1>
             <p className="mb-3 md:mb-8 text-sm md:text-lg font-semibold text-start mix-blend-difference">
-             Connect with experienced professionals
+              Connect with experienced professionals
             </p>
-            <Link to="/register">
-            <button className="flex items-center justify-center gap-x-2 md:gap-x-5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm md:text-lg py-2 px-2 md:py-4 md:px-4 rounded-md">
-              Get started now
-              <FaArrowRight className="" />
-            </button>
+            <Link to="/register" className="hidden md:block">
+              <button className="flex items-center justify-center gap-x-2 md:gap-x-5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm md:text-lg py-2 px-2 md:py-4 md:px-4 rounded-md">
+                Get started now
+                <FaArrowRight className="" />
+              </button>
             </Link>
           </div>
+        </div>
+        <div className="flex gap-x-5 my-2 px-[20%]">
+          <Link to="/register" className="">
+            <button className="flex items-center justify-center gap-x-2 md:gap-x-5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm md:text-lg py-2 px-2 md:py-4 md:px-4 rounded-md">
+              Get started now
+              <FaArrowRight className="-rotate-45" />
+            </button>
+          </Link>
+          <Link to="/login" className="">
+            <button className="flex items-center justify-center gap-x-2 md:gap-x-5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm md:text-lg py-2 px-2 md:py-4 md:px-4 rounded-md">
+              Sign in
+              <FaArrowRight className="-rotate-45" />
+            </button>
+            </Link>
         </div>
         <div className="w-full flex flex-col md:flex-row md:justify-between items-center mt-4 md:mt-8 md:text-center md:px-28 shadow">
           {stats.map((stat, index) => (
