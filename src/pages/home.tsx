@@ -46,7 +46,7 @@ const Home = () => {
             <h1 className="text-xl md:text-4xl font-bold mb-1 md:mb-4 text-start mix-blend-difference">
               Master Your Skills <br /> with Expert Mentors
             </h1>
-            <p className=" mb-5 md:mb-8 text-sm md:text-lg font-semibold text-start mix-blend-difference">
+            <p className="mb-3 md:mb-8 text-sm md:text-lg font-semibold text-start mix-blend-difference">
              Connect with experienced professionals
             </p>
             <Link to="/register">

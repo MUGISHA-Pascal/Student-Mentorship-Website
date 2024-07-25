@@ -83,7 +83,7 @@ const About = () => {
       <div className="w-full bg-blue-50 grid grid-cols-1 sm:grid-cols-2 px-14 md:px-64 py-20">
         <div>
           <img
-            className="w-4/5 md:w-3/5 h-96"
+            className="w-full md:w-3/5 h-96"
             src="/images/about2.png" alt="team"
           />
         </div>
@@ -105,7 +105,7 @@ const About = () => {
           </p>
         </div>
         <div>
-          <div className="w-full grid grid-cols-1 md:grid-cols-4 px-24 md:px-0 gap-6">
+          <div className="w-full grid grid-cols-1 md:grid-cols-4 px-[15%] md:px-0 gap-6">
             {team.map((member, index) => (
               <div key={index} className=" w-64 md:w-52 flex flex-col items-center bg-white rounded-lg">
                 <img

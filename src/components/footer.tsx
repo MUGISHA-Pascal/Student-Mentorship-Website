@@ -34,7 +34,7 @@ const Footer = () => {
                     <Link to="/contact" className="font-semibold hover:text-blue-900">
                         Contact
                     </Link>
-                    <Link to="/blog" className="hover:text-blue-900">
+                    <Link to="/blog" className="hover:text-blue-900 font-semibold">
                         Blogs
                     </Link>
                 </div>
@@ -58,13 +58,13 @@ const Footer = () => {
                 <div className="flex flex-col text-white">
                     <h1 className="mb-3 font-bold text-xl">Social links</h1>
                     <div className="flex gap-x-4">
-                        <a href="https://www.linkedin.com/in/"  target="_blank">
+                        <a href="https://www.linkedin.com/in/" target="_blank">
                             <FaLinkedinIn size={24} />
                         </a>
-                        <a href="https://x.com/GOYAFRICA"  target="_blank">
+                        <a href="https://x.com/GOYAFRICA" target="_blank">
                             <FaTwitter size={24} />
                         </a>
-                        <a href="https://www.facebook.com/profile.php?id=61563176430025"  target="_blank">
+                        <a href="https://www.facebook.com/profile.php?id=61563176430025" target="_blank">
                             <FaFacebookMessenger size={24} />
                         </a>
                         <a href="https://www.instagram.com/goyoungafrica/" target="_blank">

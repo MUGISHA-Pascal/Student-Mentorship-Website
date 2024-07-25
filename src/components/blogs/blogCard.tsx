@@ -13,9 +13,9 @@ const BlogCard: React.FC<BlogCardProps> = ({ title, content, categories, date })
       <div>
         <img src='/images/blog.png' className='rounded-2xl h-64 w-full' />
       </div>
-      <div className='my-3 grid grid-cols-2 md:grid-cols-3 gap-x-2 px-2'>
+      <div className='my-3 grid grid-cols-2 md:grid-cols-3 gap-x-2 gap-y-2 px-2'>
         {categories.map((category, index) => (
-          <p key={index} className='bg-black text-white py-1 px-3 rounded-full text-nowrap text-center'>
+          <p key={index} className='bg-black text-white text-sm py-1 px-3 rounded-full text-nowrap text-center'>
             {category}
           </p>
         ))}

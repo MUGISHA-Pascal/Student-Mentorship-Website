@@ -65,7 +65,7 @@ const Join = () => {
           <br /> Empower your future with real-world project experience and career support.
         </p>
       </div>
-      <div className="grid grid-cols-1 gap-10 md:grid-cols-3 pl-12 pr-28 md:px-36">
+      <div className="grid grid-cols-1 gap-10 md:grid-cols-3 pr-[20%] md:px-36">
         {facts.map((fact, index) => (
           <div key={index} className="flex gap-x-3 text-center mb-8 w-full sm:w-auto ml-[15%] md:ml-0">
             <div className="w-14 h-14 mb-2">
@@ -80,7 +80,7 @@ const Join = () => {
           </div>
         ))}
       </div>
-      <div className="w-full px-3 md:px-48 md:mt-14">
+      <div className="w-full md:px-48 md:mt-14">
         <FAQ />
       </div>
     </div>
