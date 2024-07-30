@@ -10,6 +10,7 @@ import Join from './pages/join';
 import Footer from './components/footer';
 import Welcome from './pages/welcome';
 import Blog from './pages/blog';
+import './App.css';
 
 
 interface LayoutProps {

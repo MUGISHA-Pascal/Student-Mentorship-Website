@@ -1,8 +1,10 @@
+/* eslint-disable react-refresh/only-export-components */
 import React from 'react';
 import * as Accordion from '@radix-ui/react-accordion';
 import classNames from 'classnames';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import './faq.css';
+import { motion } from 'framer-motion';
 
 const faqData = [
     {
@@ -86,13 +88,29 @@ const faqData = [
 const FAQ = () => {
     return (
         <div className="max-w-4xl mx-auto p-4">
-            <h1 className="text-3xl font-semibold mb-16 text-center">Frequently Asked Questions (FAQs)</h1>
+            <motion.h1
+                className="text-3xl font-semibold mb-16 text-center"
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 1 }}
+                transition={{ duration: 0.6 }}
+            >
+                Frequently Asked Questions (FAQs)
+            </motion.h1>
             <Accordion.Root className="AccordionRoot" type="single" defaultValue="item-1" collapsible>
                 {faqData.map((faq, index) => (
-                    <Accordion.Item className="AccordionItem" key={index} value={`item-${index + 1}`}>
-                        <AccordionTrigger>{faq.title}</AccordionTrigger>
-                        <AccordionContent>{faq.content}</AccordionContent>
-                    </Accordion.Item>
+                    <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: index % 2 === 0 ? -80 : 80 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true, amount: 0.5 }}
+                        transition={{ duration: 0.9, delay: 0.5 }}
+                    >
+                        <Accordion.Item className="AccordionItem" value={`item-${index + 1}`}>
+                            <AccordionTrigger>{faq.title}</AccordionTrigger>
+                            <AccordionContent>{faq.content}</AccordionContent>
+                        </Accordion.Item>
+                    </motion.div>
                 ))}
             </Accordion.Root>
         </div>

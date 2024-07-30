@@ -1,61 +1,36 @@
+import { motion } from 'framer-motion';
 import { FaArrowRight } from "react-icons/fa"
 import Services from "../components/home/services";
 import Partners from "../components/home/partners";
 import Consultancy from "../components/home/consultancy";
 import FAQ from "../components/join/faq";
 import { Link } from "react-router-dom";
+import Video from "../components/home/video";
+import Statistics from "../components/home/statistics";
+import WhyUs from '../components/home/whyUs';
+import Testimonial from '../components/home/testimonial';
+
+
 const Home = () => {
 
-  const stats = [
-    { value: "100K+", description: "Targeted Students to enroll in courses" },
-    { value: "10K+", description: "Expected Employers looking for skilled workers" },
-    { value: "5K+", description: "Mentors will be providing expert guidance" }
-  ];
+  const h2Variants = {
+    hidden: { opacity: 0, y: -50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.4 } },
+  };
 
-  const testimonials = [
-    {
-      company: 'Amazon',
-      quote: 'Partnering with this e-coaching platform was a game-changer. My new skills are sharper, and my career trajectory has skyrocketed!',
-      name: 'Ilya Vasin',
-      position: 'Software Engineer',
-    },
-    {
-      company: 'Google',
-      quote: 'An essential resource for students aiming to excel as Product Designers. The mentorship here is unparalleled.',
-      name: 'Mariano Rosag',
-      position: 'Software Engineer',
-    },
-    {
-      company: 'Amazon',
-      quote: 'This platform transformed my learning experience. It’s faster, more intuitive, and my progress is off the charts!',
-      name: 'Oka Tomoaki',
-      position: 'Software Engineer',
-    },
-  ];
-
+  const pVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0 } },
+  };
 
   return (
     <div >
       <div className="relative">
-        <div className="w-full bg-cover bg-center h-[35vh] md:h-[120vh] px-32 relative flex items-center justify-center text-center text-white bg-opacity-75"
-        >
+        <div className="w-full bg-cover bg-center h-[35vh] md:h-[120vh] px-32 relative flex items-center justify-center text-center text-white bg-opacity-75">
           <div className="absolute top-[3px] bg-white w-full text-black overflow-hidden h-full">
             <video src="/videos/video11.mp4" className="" autoPlay loop muted />
           </div>
-          <div className="md:w-[30%] absolute px-7 left-0 md:left-24 md:top-16 md:mt-64">
-            <h1 className="text-xl md:text-4xl font-bold mb-1 md:mb-4 text-start mix-blend-difference">
-              Master Your Skills <br /> with Expert Mentors
-            </h1>
-            <p className="mb-3 md:mb-8 text-sm md:text-lg font-semibold text-start mix-blend-difference">
-              Connect with experienced professionals
-            </p>
-            <Link to="/register" className="hidden md:block">
-              <button className="flex items-center justify-center gap-x-2 md:gap-x-5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm md:text-lg py-2 px-2 md:py-4 md:px-4 rounded-md text-nowrap">
-                Get started now
-                <FaArrowRight className="" />
-              </button>
-            </Link>
-          </div>
+          <Video />
         </div>
         <div className="flex gap-x-5 sm:my-1 my-2 px-[20%] md:hidden">
           <Link to="/register" className="">
@@ -69,87 +44,103 @@ const Home = () => {
               Sign in
               <FaArrowRight className="-rotate-45" />
             </button>
-            </Link>
+          </Link>
         </div>
-        <div className="w-full flex flex-col md:flex-row md:justify-between items-center mt-4 md:mt-8 md:text-center md:px-28 shadow">
-          {stats.map((stat, index) => (
-            <div key={index} className="flex flex-col md:flex-row items-center gap-x-5 md:w-[25%] pb-10">
-              <h2 className="text-4xl font-bold">{stat.value}</h2>
-              <p>{stat.description}</p>
-            </div>
-          ))}
-        </div>
+        <Statistics />
       </div>
-
       <div className="bg-blue-600 pt-10">
         <div className="flex flex-col items-center justify-center">
-          <h2 className="text-3xl font-bold mb-8 text-white">Services we offer for you</h2>
-          <p className="mb-12 px-2 md:px-0 md:w-[40%] text-center font-semibold text-white">With lots of unique blocks, you can easily build a page without coding. Build your next landing page.</p>
+          <motion.h2
+            className="text-3xl font-bold mb-8 text-white"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.5 }}
+            variants={h2Variants}
+          >
+            Services we offer for you
+          </motion.h2>
+          <motion.p
+            className="mb-12 px-2 md:px-0 md:w-[40%] text-center font-semibold text-white"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.5 }}
+            variants={pVariants}
+          >
+            With lots of unique blocks, you can easily build a page without coding. Build your next landing page.
+          </motion.p>
         </div>
         <div className="px-[10%] md:px-40 overflow-x-hidden">
           <Services />
         </div>
       </div>
-
-      <div className="mt-16 text-center">
+      <div className=" text-center">
+        <div className="flex flex-col items-center justify-center">
+          <motion.h2
+            className="text-3xl font-bold mb-8 text-white"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 1 }}
+            variants={h2Variants}
+          >
+            Services we offer for you
+          </motion.h2>
+          <motion.p
+            className="mb-12 px-2 md:px-0 md:w-[40%] text-center font-semibold text-white"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 1 }}
+            variants={pVariants}
+          >
+            With lots of unique blocks, you can easily build a page without coding. Build your next landing page.
+          </motion.p>
+        </div>
         <div className="px-20 w-full">
-          <h2 className="text-3xl font-bold mb-8">Why Choose Us for Your E-Coaching Journey?</h2>
-          <p className="mb-12 px-0 md:px-60 text-center font-semibold">
+          <motion.h2
+            className="text-3xl font-bold mb-8"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 1 }}
+            variants={h2Variants}
+          >
+            Why Choose Us for Your E-Coaching Journey?
+          </motion.h2>
+          <motion.p
+            className="mb-12 px-0 md:px-60 text-center font-semibold"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 1 }}
+            variants={pVariants}
+          >
             Elevate your skills with personalized guidance from industry experts. Our platform offers unique, interactive sessions that are designed to transform your career.
-          </p>
+          </motion.p>
         </div>
-        <div className="w-full flex flex-col md:flex-row gap-x-12">
-          <div className="flex md:w-1/2 justify-center mb-12">
-            <img src="/images/what.png" alt="Why Choose Us" className="h-full rounded-lg shadow-lg" />
-          </div>
-          <div className="md:w-1/2 px-[5%] flex flex-col py-10 gap-8">
-            <div className="flex items-center gap-x-5">
-              <div className="text-blue-600 font-bold h-10 w-10 flex items-center justify-center p-2 bg-blue-100 rounded-full">1</div>
-              <div className="w-[70%] md:w-[55%] gap-y-5 text-start">
-                <h3 className="text-xl font-bold mb-2">Seamless Connection</h3>
-                <p className="text-gray-500">Easily connect with mentors, students, and employers through our platform.</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-x-5">
-              <div className="text-blue-600 font-bold h-10 w-10 flex items-center justify-center p-2 bg-blue-100 rounded-full">2</div>
-              <div className="w-[70%] md:w-[55%] gap-y-5 text-start">
-                <h3 className="text-xl font-bold mb-2">Expert Guidance</h3>
-                <p className="text-gray-500">Receive valuable insights and advice from experienced mentors in your field.</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-x-5">
-              <div className="text-blue-600 font-bold h-10 w-10 flex items-center justify-center p-2 bg-blue-100 rounded-full">3</div>
-              <div className="w-[70%] md:w-[55%] gap-y-5 text-start">
-                <h3 className="text-xl font-bold mb-2">Achieve Your Goals</h3>
-                <p className="text-gray-500">Track your progress and achieve your career goals with personalized coaching.</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <WhyUs />
         <div className="w-full bg-blue-600 text-white py-4 px-8 my-12">
-          <span className="text-sm font-bold bg-white text-black px-3 py-1 rounded-2xl">HOT</span> Check out our personalized learning paths to reach your career goals faster!
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.6 }}
+            transition={{ duration: 0.5 }}
+          >
+            <motion.span
+              className="text-sm font-bold bg-white text-black px-3 py-1 rounded-2xl"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, scale: [1, 1.2, 1] }}
+              transition={{
+                duration: 1,
+                repeat: Infinity,
+                repeatType: 'mirror',
+                ease: 'easeInOut',
+              }}
+            >
+              HOT
+            </motion.span>
+            {' '}
+            Check out our personalized learning paths to reach your career goals faster!
+          </motion.div>
         </div>
       </div>
-      <div className="max-w-7xl mx-auto text-center">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <div key={index} className="flex flex-col items-center gap-5">
-              <img src="/images/company.png" alt="" className="w-24" />
-              <p className="w-[85%]">"{testimonial.quote}"</p>
-              <div className="mt-4 flex w-full justify-center gap-x-3">
-                <div className="w-14 h-14 rounded-full">
-                  <img src="/images/testimonial.png" alt="" />
-                </div>
-                <div>
-                  <p className="font-bold">{testimonial.name}</p>
-                  <p>{testimonial.position}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
+      <Testimonial />
       <div className="bg-blue-50">
         <Partners />
       </div>
@@ -163,4 +154,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default Home;

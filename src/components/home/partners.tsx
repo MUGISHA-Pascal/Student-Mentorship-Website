@@ -44,7 +44,6 @@ const Partners = () => {
                         className='w-32 h-auto mx-4'
                     />
                 ))}
-                {/* Duplicate the logos for smooth looping */}
                 {partnerLogos.map((logo, index) => (
                     <img
                         key={`duplicate-${index}`}

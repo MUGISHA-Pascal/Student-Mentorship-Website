@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { toast, ToastContainer } from "react-toastify"
 import careersData from '../../utils/json/careers.json';
+import { motion } from 'framer-motion';
 
 const Consultancy = () => {
     const [careers, setCareers] = useState<string[]>([]);
@@ -69,7 +70,13 @@ const Consultancy = () => {
             <ToastContainer />
             <div className="bg-gray-700 w-full h-full absolute opacity-60 z-0"></div>
             <div className="w-full flex flex-col md:flex-row px-7 md:px-28 z-50">
-                <div className="w-full md:w-1/2 py-10 px-10 md:px-36 flex flex-col gap-y-5">
+                <motion.div
+                    className="w-full md:w-1/2 py-10 px-10 md:px-36 flex flex-col gap-y-5"
+                    initial={{ opacity: 0, x: -50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, amount: 1 }}
+                    transition={{ duration: 0.5 }}
+                >
                     <img src="/images/chat.png" alt="chat" className="w-20" />
                     <h2 className="text-2xl font-bold text-white">
                         Unlock Expert Guidance for Your Reading Journey!
@@ -77,8 +84,14 @@ const Consultancy = () => {
                     <p className="text-white font-semibold">
                         Dive into personalized book mentorship with our seasoned experts. Whether you're a student seeking knowledge, a mentor expanding your repertoire, or an employer enhancing team skills!
                     </p>
-                </div>
-                <div className="w-full md:w-1/3 bg-white p-5 rounded-lg">
+                </motion.div>
+                <motion.div
+                    className="w-full md:w-1/3 bg-white p-5 rounded-lg"
+                    initial={{ opacity: 0, x: 50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, amount: 1 }}
+                    transition={{ duration: 0.5 }}
+                >
                     <form className="flex flex-col gap-y-3" onSubmit={handleSubmit}>
                         <div className="mb-4">
                             <input
@@ -136,7 +149,7 @@ const Consultancy = () => {
                             Get Consultancy
                         </button>
                     </form>
-                </div>
+                </motion.div>
             </div>
         </div>
     );
