@@ -2,6 +2,60 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPhone, faEnvelope, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 import { toast, ToastContainer } from 'react-toastify';
 import { useState } from 'react';
+import { motion } from 'framer-motion';
+
+
+const h2Variants = {
+  hidden: { opacity: 0, y: -40 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.4 } },
+};
+
+const pVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0 } },
+};
+
+const spin = {
+  hidden: { rotate: 0 },
+  visible: {
+    rotate: 360,
+    transition: {
+      duration: 1,
+    },
+  },
+};
+
+const fadeIn = {
+  hidden: { opacity: 0, scale: 0.5 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.5,
+      delay: 0.3,
+    },
+  },
+};
+
+const staggerContainer = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.3,
+    },
+  },
+};
+
+const formVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+      opacity: 1,
+      transition: {
+          duration: 0.8,
+          staggerChildren: 0.3,
+      },
+  },
+};
 
 const contactMethods = [
   {
@@ -95,17 +149,41 @@ const Contact = () => {
     <div className="bg-blue-50 min-h-screen flex flex-col items-center py-12">
       <ToastContainer />
       <div className="text-center mb-12 px-4">
-        <h1 className="text-4xl font-bold mb-4">Get in Touch</h1>
-        <p className="text-gray-600 px-5 md:px-64">
+        <motion.h1
+          className="text-4xl font-bold mb-4"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.5 }}
+          variants={h2Variants}
+        >Get in Touch</motion.h1>
+        <motion.p
+          className="text-gray-600 px-5 md:px-64"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.5 }}
+          variants={pVariants}
+        >
           Connect with us to start your journey. Whether you're a student, a mentor or an employer, we're here to assist you every step of the way. Reach out today!
-        </p>
+        </motion.p>
       </div>
-      <div className="flex flex-wrap justify-around w-full max-w-4xl mb-12 px-4 ">
+      <motion.div
+        className="flex flex-wrap justify-around w-full max-w-4xl mb-12 px-4"
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+      >
         {contactMethods.map((method, index) => (
-          <div key={index} className="flex gap-x-3 text-center mb-8 w-full sm:w-auto ml-[15%] md:ml-0">
-            <div className="w-14 h-14 bg-white p-3 rounded-full shadow-md inline-block mb-2">
+          <motion.div
+            key={index}
+            className="flex gap-x-3 text-center mb-8 w-full sm:w-auto ml-[15%] md:ml-0"
+            variants={fadeIn}
+          >
+            <motion.div
+              className="w-14 h-14 bg-white p-3 rounded-full shadow-md inline-block mb-2"
+              variants={spin}
+            >
               <FontAwesomeIcon icon={method.icon} className="w-6 h-6 text-blue-500" />
-            </div>
+            </motion.div>
             <div className="flex-col items-center gap-x-2">
               <div>
                 <h2 className="text-lg font-semibold">{method.title}</h2>
@@ -114,40 +192,10 @@ const Contact = () => {
                 <p key={idx} className='w-40'>{detail}</p>
               ))}
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
-      <div className="bg-white shadow-md rounded-lg p-8 max-w-4xl w-full mx-4">
-        {/* <form className="grid grid-cols-1 gap-6 sm:grid-cols-2"
-          action="https://formspree.io/f/xnnajdlp"
-          method="POST">
-          <div>
-            <label className="block text-gray-700">Full names</label>
-            <input type="text" name="name" placeholder="i.e. John Doe" className="mt-1 block w-full border border-gray-300 rounded-md p-2" required />
-          </div>
-          <div>
-            <label className="block text-gray-700">Email</label>
-            <input type="email" name="email" placeholder="i.e. john@mail.com" className="mt-1 block w-full border border-gray-300 rounded-md p-2" required />
-          </div>
-          <div>
-            <label className="block text-gray-700">Phone Number</label>
-            <input type="text" name="phone" placeholder="i.e. +1-234-567-7890" className="mt-1 block w-full border border-gray-300 rounded-md p-2" />
-          </div>
-          <div>
-            <label className="block text-gray-700">Subject</label>
-            <input type="text" name="subject" placeholder="i.e. Seeking mentorship" className="mt-1 block w-full border border-gray-300 rounded-md p-2" required />
-          </div>
-          <div className="sm:col-span-2">
-            <label className="block text-gray-700">Message</label>
-            <textarea name="message" placeholder="Type your message" className="mt-1 block w-full border border-gray-300 rounded-md p-2 h-32" required></textarea>
-          </div>
-          <div className="w-full mt-10 sm:col-span-2">
-            <button type="submit" className="w-[20%] bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700">
-              Send
-            </button>
-          </div>
-        </form> */}
-
+      </motion.div>
+      {/* <div className="bg-white shadow-md rounded-lg p-8 max-w-4xl w-full mx-4">
         <form className="grid grid-cols-1 gap-6 sm:grid-cols-2" onSubmit={handleSubmit}>
           <div>
             <label className="block text-gray-700">Full names</label>
@@ -216,7 +264,109 @@ const Contact = () => {
             </button>
           </div>
         </form>
-      </div>
+      </div> */}
+      <motion.div
+            className="bg-white shadow-md rounded-lg p-8 max-w-4xl w-full mx-4"
+            variants={formVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
+        >
+            <form className="grid grid-cols-1 gap-6 sm:grid-cols-2" onSubmit={handleSubmit}>
+                <motion.div
+                    variants={fadeIn}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 1 }}
+                >
+                    <label className="block text-gray-700">Full names</label>
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="i.e. John Doe"
+                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                    />
+                </motion.div>
+                <motion.div
+                    variants={fadeIn}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 1 }}
+                >
+                    <label className="block text-gray-700">Email</label>
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="i.e. john@mail.com"
+                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                    />
+                </motion.div>
+                <motion.div
+                    variants={fadeIn}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 1 }}
+                >
+                    <label className="block text-gray-700">Phone Number</label>
+                    <input
+                        type="text"
+                        name="phone"
+                        placeholder="i.e. +1-234-567-7890"
+                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                        value={formData.phone}
+                        onChange={handleChange}
+                    />
+                </motion.div>
+                <motion.div
+                    variants={fadeIn}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 1 }}
+                >
+                    <label className="block text-gray-700">Subject</label>
+                    <input
+                        type="text"
+                        name="subject"
+                        placeholder="i.e. Seeking mentorship"
+                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                        value={formData.subject}
+                        onChange={handleChange}
+                        required
+                    />
+                </motion.div>
+                <motion.div
+                    className="sm:col-span-2"
+                    variants={fadeIn}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 1 }}
+                >
+                    <label className="block text-gray-700">Message</label>
+                    <textarea
+                        name="message"
+                        placeholder="Type your message"
+                        className="mt-1 block w-full border border-gray-300 rounded-md p-2 h-32"
+                        value={formData.message}
+                        onChange={handleChange}
+                        required
+                    ></textarea>
+                </motion.div>
+                <motion.div
+                    className="w-full mt-10 sm:col-span-2"
+                    variants={fadeIn}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 1 }}
+                >
+                    <button
+                        type="submit"
+                        className="w-[20%] bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700"
+                    >
+                        Send
+                    </button>
+                </motion.div>
+            </form>
+        </motion.div>
     </div>
   );
 };

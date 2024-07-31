@@ -92,7 +92,7 @@ const FAQ = () => {
                 className="text-3xl font-semibold mb-16 text-center"
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, amount: 1 }}
+                viewport={{ once: true, amount: 0.5 }}
                 transition={{ duration: 0.6 }}
             >
                 Frequently Asked Questions (FAQs)

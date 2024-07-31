@@ -14,7 +14,7 @@ import Testimonial from '../components/home/testimonial';
 const Home = () => {
 
   const h2Variants = {
-    hidden: { opacity: 0, y: -50 },
+    hidden: { opacity: 0, y: -40 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.4 } },
   };
 
@@ -74,27 +74,7 @@ const Home = () => {
         </div>
       </div>
       <div className=" text-center">
-        <div className="flex flex-col items-center justify-center">
-          <motion.h2
-            className="text-3xl font-bold mb-8 text-white"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 1 }}
-            variants={h2Variants}
-          >
-            Services we offer for you
-          </motion.h2>
-          <motion.p
-            className="mb-12 px-2 md:px-0 md:w-[40%] text-center font-semibold text-white"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 1 }}
-            variants={pVariants}
-          >
-            With lots of unique blocks, you can easily build a page without coding. Build your next landing page.
-          </motion.p>
-        </div>
-        <div className="px-20 w-full">
+        <div className="px-20 mt-16 w-full">
           <motion.h2
             className="text-3xl font-bold mb-8"
             initial="hidden"
