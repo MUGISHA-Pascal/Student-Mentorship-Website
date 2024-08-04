@@ -97,7 +97,7 @@ const App: React.FC = () => {
           <div
             className="text-center mt-4 h-screen w-full flex items-center justify-center"
           >
-            <Digital size={60} />
+            <Digital size={60} speed={0.6} />
           </div>
         }
       >
