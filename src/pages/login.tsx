@@ -6,6 +6,8 @@ import PasswordInput from "../components/mini/passwordInput"
 import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
+import { Digital } from "react-activity";
+import "react-activity/dist/library.css";
 
 interface Slide {
   id: number;
@@ -104,6 +106,9 @@ const Login = () => {
             value={password}
             onChangeText={setPassword}
           />
+          <Link to='/forgot' className="text-blue-600 font-semibold float-right text-end">
+          Forgot Password?
+          </Link>
           <button
             className={`w-4/5 py-4 px-[10%] text-center rounded-full mt-10 mb-4 ${isButtonDisabled ? 'bg-gray-400' : 'bg-blue-600'} text-white text-lg font-semibold`}
             onClick={handleLogin}
@@ -111,7 +116,7 @@ const Login = () => {
 
           >
             {isSubmitting ? (
-              <span>Submitting ...</span>
+              <span><Digital /></span>
             ) : (
               <span>Login</span>
             )}

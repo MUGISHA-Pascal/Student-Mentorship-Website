@@ -11,6 +11,7 @@ import Footer from './components/footer';
 import Welcome from './pages/welcome';
 import Blog from './pages/blog';
 import './App.css';
+import Forgot from './pages/forgot';
 
 
 interface LayoutProps {
@@ -34,6 +35,7 @@ const App: React.FC = () => {
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="welcome" element={<Welcome />} />
+        <Route path="forgot" element={<Forgot />} />
         <Route
           path="*"
           element={

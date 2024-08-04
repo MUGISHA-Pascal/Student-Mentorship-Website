@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { FaBriefcase } from 'react-icons/fa';
 import careersData from '../utils/json/careers.json';
+import { Digital } from "react-activity";
+import "react-activity/dist/library.css";
 
 interface CareerSelectionProps {
   onCareerSelect: (career: string) => void;
@@ -11,12 +13,6 @@ interface CareerSelectionProps {
 const CareerSelection: React.FC<CareerSelectionProps> = ({ onCareerSelect, isSubmitting }) => {
   const [career, setCareer] = useState('');
   const [selectedCareer, setSelectedCareer] = useState<string | null>(null);
-  // const [suggestions] = useState<string[]>([
-  //   'Software engineer',
-  //   'Football player',
-  //   'Data scientist',
-  //   'Product manager'
-  // ]);
   const suggestions = careersData;
 
   const handleCareerSelect = (career: string) => {
@@ -82,7 +78,7 @@ const CareerSelection: React.FC<CareerSelectionProps> = ({ onCareerSelect, isSub
         onClick={handleContinue}
       >
         {isSubmitting ? (
-          <span className="text-center text-white font-semibold">Submitting ...</span>
+          <span className="text-center text-white font-semibold"><Digital /></span>
         ) : (
           <span className="text-center text-white font-semibold">Continue</span>
         )}

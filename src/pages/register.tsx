@@ -97,7 +97,6 @@ const Register: React.FC = () => {
         theme: "colored",
       });
       navigate('/login');
-      // Navigate to another page or reset state as needed
     } catch (error) {
       toast.error('Error during registration. Please try again.', {
         position: "top-right",
