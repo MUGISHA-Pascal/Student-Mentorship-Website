@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { toast, ToastContainer } from "react-toastify"
+import 'react-toastify/dist/ReactToastify.css';
 import BigLogo from "../components/mini/bigLogo"
 import AuthTextInput from "../components/mini/authTextInput"
 import PasswordInput from "../components/mini/passwordInput"
