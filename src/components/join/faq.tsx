@@ -9,7 +9,7 @@ import { motion } from 'framer-motion';
 const faqData = [
     {
         title: "What is GOYA (Go Young Africa)?",
-        content: `GOYA (Go Young Africa) is a transformative initiative dedicated to empowering young Africans 
+        content: `GOYA (Go Young Africa) is a transformative initiative dedicated to empowering youngsters 
         through meaningful connections with mentors and career coaches. Our mission is to unlock the 
         untapped potential of young minds by engaging them in real-world projects through project
         based experience from their mentors. By fostering these invaluable relationships, we create job 
@@ -124,7 +124,7 @@ type AccordionTriggerProps = {
 
 const AccordionTrigger = React.forwardRef<HTMLButtonElement, AccordionTriggerProps>(
     ({ children, className, ...props }, forwardedRef) => (
-        <Accordion.Header className="AccordionHeader">
+        <Accordion.Header className="AccordionHeader cursor-pointer">
             <Accordion.Trigger
                 className={classNames('AccordionTrigger', className)}
                 {...props}

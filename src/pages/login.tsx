@@ -92,6 +92,7 @@ const Login = () => {
           <div className="text-center mt-4">
             <h2 className="text-2xl font-semibold">Log in to</h2>
             <h2 className="text-2xl font-bold">GOYA e-connects</h2>
+            <p className="text-gray-500 font-semibold mt-1">You have been missed!</p>
           </div>
         </div>
         <div className="w-full flex-col mt-6">

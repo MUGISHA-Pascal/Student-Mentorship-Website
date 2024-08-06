@@ -36,13 +36,13 @@ const Statistics = () => {
     return (
         <motion.div
             ref={ref}
-            className="w-full flex flex-col md:flex-row md:justify-between items-center mt-4 md:mt-8 md:text-center md:px-28 shadow"
+            className="w-full flex flex-col bg-indigo md:flex-row md:justify-between items-center mt-4 md:mt-[1%] lg:-mt-[0%] md:text-center lg:px-[5%] md:px-[3%] lg lg:top-[80%]"
             variants={container}
             initial="hidden"
             animate={controls}
         >
             {stats.map((stat, index) => (
-                <motion.div key={index} className="flex flex-col md:flex-row items-center gap-x-5 md:w-[25%] pb-10" variants={item}>
+                <motion.div key={index} className="flex flex-col bg lg:flex-row  items-center gap-x-5  md:w-[30%] pb-10" variants={item}>
                     <h2 className="text-4xl font-bold">{stat.value}</h2>
                     <p>{stat.description}</p>
                 </motion.div>

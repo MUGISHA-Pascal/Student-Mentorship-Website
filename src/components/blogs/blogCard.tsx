@@ -35,7 +35,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ title, content, categories, date })
         {categories.map((category, index) => (
           <motion.p
             key={index}
-            className='bg-black text-white text-sm py-1 px-3 rounded-full text-nowrap text-center'
+            className='bg-black text-white lg:text-sm md:text-[10px] py-1 px-3 rounded-full text-nowrap text-center'
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}

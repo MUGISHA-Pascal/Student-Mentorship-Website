@@ -69,12 +69,12 @@ const Consultancy = () => {
         >
             <ToastContainer />
             <div className="bg-gray-700 w-full h-full absolute opacity-60 z-0"></div>
-            <div className="w-full flex flex-col md:flex-row px-7 md:px-28 z-50">
+            <div className="w-full flex flex-col md:flex-row px-7 lg:px-[10%] md:px-[8%] z-50 items-center justify-center">
                 <motion.div
-                    className="w-full md:w-1/2 py-10 px-10 md:px-36 flex flex-col gap-y-5"
+                    className="w-4/5 md:w-1/2 py-10 px-10 lg:px-[8%] md:px-[5%] flex flex-col gap-y-5"
                     initial={{ opacity: 0, x: -50 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, amount: 1 }}
+                    viewport={{ once: true, amount: 0.5 }}
                     transition={{ duration: 0.5 }}
                 >
                     <img src="/images/chat.png" alt="chat" className="w-20" />
@@ -86,10 +86,10 @@ const Consultancy = () => {
                     </p>
                 </motion.div>
                 <motion.div
-                    className="w-full md:w-1/3 bg-white p-5 rounded-lg"
+                    className="w-4/5 md:w-1/2 p-5 rounded-lg"
                     initial={{ opacity: 0, x: 50 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, amount: 1 }}
+                    viewport={{ once: true, amount: 0.5 }}
                     transition={{ duration: 0.5 }}
                 >
                     <form className="flex flex-col gap-y-3" onSubmit={handleSubmit}>
@@ -129,14 +129,14 @@ const Consultancy = () => {
                         <div className="mb-6">
                             <select
                                 name="career"
-                                className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none"
+                                className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none text-gray-400 cursor-pointer"
                                 value={formData.career}
                                 onChange={handleChange}
                                 required
                             >
                                 <option value="">Select a Career</option>
                                 {careers.map((career, index) => (
-                                    <option key={index} value={career}>
+                                    <option key={index} value={career} className="!text-black !cursor-pointer">
                                         {career}
                                     </option>
                                 ))}
@@ -144,7 +144,7 @@ const Consultancy = () => {
                         </div>
                         <button
                             type="submit"
-                            className="w-4/5 bg-blue-600 text-white py-3 px-9 rounded-lg"
+                            className="bg-blue-600 text-center text-white py-3 px-9 rounded-lg cursor-pointer font-semibold"
                         >
                             Get Consultancy
                         </button>

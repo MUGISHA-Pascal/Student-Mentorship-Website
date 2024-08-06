@@ -146,7 +146,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="bg-blue-50 min-h-screen flex flex-col items-center py-12">
+    <div className="bg-blue-50 min-h-screen flex flex-col items-center justify-center py-12">
       <ToastContainer />
       <div className="text-center mb-12 px-4">
         <motion.h1
@@ -157,7 +157,7 @@ const Contact = () => {
           variants={h2Variants}
         >Get in Touch</motion.h1>
         <motion.p
-          className="text-gray-600 px-5 md:px-64"
+          className="text-gray-600 px-5 md:px-[5%] lg:px-[10%]"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.5 }}
@@ -167,7 +167,7 @@ const Contact = () => {
         </motion.p>
       </div>
       <motion.div
-        className="flex flex-wrap justify-around w-full max-w-4xl mb-12 px-4"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full max-w-4xl mb-12 lg:px-[1%] md:px-[10%] "
         variants={staggerContainer}
         initial="hidden"
         animate="visible"

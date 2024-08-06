@@ -49,7 +49,7 @@ const Blog: React.FC = () => {
   const filteredBlogs = blogs.filter(blog => blog.categories.includes(activeTab));
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="mx-auto px-4 py-8">
       <div className="text-center mb-12 px-4">
         <motion.h1
           className="text-4xl font-bold text-black mb-8"
@@ -59,7 +59,7 @@ const Blog: React.FC = () => {
           variants={h2Variants}
         >Insights & Stories</motion.h1>
         <motion.p
-          className="text-gray-600 px-5 md:px-64 mb-8"
+          className="text-gray-600 md:px-[5%] lg:px-[10%] mb-8"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.5 }}
@@ -100,7 +100,7 @@ const Blog: React.FC = () => {
           </motion.button>
         ))}
       </motion.div>
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-x-20 md:px-20'>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-x-[4%] px-[2%]'>
         {filteredBlogs.map(blog => (
           <BlogCard key={blog.id} title={blog.title} content={blog.content} categories={blog.categories} date={blog.date} />
         ))}

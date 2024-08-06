@@ -45,8 +45,8 @@ const pVariants = {
 };
 
 const fadeIn = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 1 } },
+  hidden: { scale: 0.8 },
+  visible: { scale: 1, transition: { duration: 1.5 } },
 };
 
 const containerVariants = {
@@ -54,7 +54,7 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.5,
+      staggerChildren: 0.2,
     },
   },
 };
@@ -66,7 +66,7 @@ const itemVariants = {
 
 const Join = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center py-12">
+    <div className="min-h-screen flex flex-col items-center py-12 overflow-x-hidden">
       <div className="text-center mb-12 px-4">
         <motion.h1
           className="text-4xl font-bold mb-4 text-center"
@@ -95,7 +95,7 @@ const Join = () => {
           variants={fadeIn}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.6 }}
+          viewport={{ once: true, amount: 0.1 }}
         />
         {/* <video src="/videos/video2.mp4" className="h-full w-full" autoPlay muted loop /> */}
       </div>
@@ -119,7 +119,7 @@ const Join = () => {
         </motion.p>
       </div>
       <motion.div
-        className="grid grid-cols-1 gap-10 md:grid-cols-3 pr-[20%] md:px-36"
+        className="grid grid-cols-1 gap-10 lg:grid-cols-3 md:grid-cols-2 pr-[20%] lg:px-[10%] md:px-[8%]"
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
@@ -143,7 +143,7 @@ const Join = () => {
           </motion.div>
         ))}
       </motion.div>
-      <div className="w-full md:px-48 md:mt-14">
+      <div className="w-full px-3 md:px-[6%] md:mt-14">
         <FAQ />
       </div>
     </div>

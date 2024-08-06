@@ -26,7 +26,7 @@ const Partners = () => {
     ];
 
     return (
-        <div className='py-10 mt-3 overflow-hidden'>
+        <div className='py-[1%] mt-3 overflow-hidden'>
             <motion.div
                 className='flex'
                 animate={{ x: '-100%' }}

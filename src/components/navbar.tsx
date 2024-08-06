@@ -172,16 +172,16 @@ const Navbar = () => {
                     </Link>
                 </div>
                 <div className="hidden md:flex items-center space-x-4">
-                    <Link to="/login" className="text-gray-600 hover:text-gray-900">
+                    <Link to="/login" className="text-gray-600 font-semibold hover:text-gray-900">
                         Sign In
                     </Link>
                     <Link to="/register">
                         <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-                            Sign Up
+                            Join Waitlist
                         </button>
                     </Link>
                 </div>
-                <div className="md:hidden">
+                <div className="md:hidden cursor-pointer">
                     <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="focus:outline-none">
                         <FontAwesomeIcon icon={isMobileMenuOpen ? faTimes : faBars} className="h-6 w-6" />
                     </button>

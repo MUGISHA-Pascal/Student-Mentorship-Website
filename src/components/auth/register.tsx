@@ -1,12 +1,19 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../../styles/toast.css';
 import BigLogo from "../mini/bigLogo";
 import AuthTextInput from "../mini/authTextInput";
 import PasswordInput from "../mini/passwordInput";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { format } from 'date-fns';
+import './datepicker.css';
+import { FaCalendarAlt } from 'react-icons/fa';
+import { Link } from "react-router-dom";
 
 interface RegisterScreenProps {
     onRegister: (info: any) => void;
@@ -16,12 +23,11 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister }) => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
-    const [age, setAge] = useState('');
+    const [dob, setDob] = useState('');
     const [gender, setGender] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-
-    const isButtonDisabled = !firstName || !lastName || !email || !age || !gender || !password || !confirmPassword;
+    const [error, setError] = useState<string | null>(null);
 
     const handleRegister = async () => {
         if (password !== confirmPassword) {
@@ -55,7 +61,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister }) => {
             firstName,
             lastName,
             email,
-            age,
+            dob,
             gender,
             password
         });
@@ -63,7 +69,31 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister }) => {
 
     const handleGenderChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setGender(e.target.value);
-      };
+    };
+
+    const handleDateChange = (date: any) => {
+        const formatted = format(date, 'yyyy-MM-dd');
+        setDob(formatted);
+        const age = calculateAge(date);
+        if (age < 14) {
+            setError("You must be at least 14 years!");
+        } else {
+            setError(null);
+        }
+    };
+
+    const calculateAge = (dob: any) => {
+        const today = new Date();
+        const birthDate = new Date(dob);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    };
+
+    const isButtonDisabled = !firstName || !lastName || !email || !dob || !gender || !password || !confirmPassword || (calculateAge(dob) < 14);
 
     return (
         <div className="flex">
@@ -74,6 +104,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister }) => {
                     <div className="text-center mt-4">
                         <h2 className="text-2xl font-semibold">Register to</h2>
                         <h2 className="text-2xl font-bold">GOYA e-connects</h2>
+                        <p className="text-gray-500 font-semibold mt-1">Long waiting is over for you!</p>
                     </div>
                 </div>
                 <div className="w-full flex gap-x-3 mt-6">
@@ -96,25 +127,29 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister }) => {
                     value={email}
                     onChangeText={setEmail}
                 />
-                <div className="w-full flex gap-x-3 mt-6">
-                    <AuthTextInput
-                        placeholder="Age"
-                        width="50%"
-                        value={age}
-                        onChangeText={setAge}
-                    />
-                    {/* <AuthTextInput
-                        placeholder="Gender"
-                        width="50%"
-                        value={gender}
-                        onChangeText={setGender}
-                    /> */}
+                <div className="w-full flex gap-x-3">
+                    <div className={`w-1/2 h-[8vh] ${error ? 'mt-1' : 'mt-6'}`}>
+                        {error && <div className="error-message text-red-500 text-sm font-semibold">{error}</div>}
+                        <div className="custom-datepicker bg-gray-200 w-full h-full">
+                            <FaCalendarAlt className="custom-datepicker-icon" />
+                            <DatePicker
+                                selected={dob ? new Date(dob) : null}
+                                onChange={handleDateChange}
+                                placeholderText="Select birth date"
+                                dateFormat="yyyy/MM/dd"
+                                showYearDropdown
+                                scrollableYearDropdown
+                                yearDropdownItemNumber={100}
+                                className="custom-datepicker-input bg-gray-200 cursor-pointer"
+                            />
+                        </div>
+                    </div>
                     <select
-                        className="mt-6 block w-1/2 bg-gray-200 text-gray-400 font-semibold rounded-md px-2"
+                        className="block w-1/2 bg-gray-200 text-gray-400 font-semibold rounded-md px-2 p-4  mt-6 cursor-pointer"
                         value={gender}
                         onChange={handleGenderChange}
                     >
-                        <option value="" disabled>
+                        <option value="">
                             Select your gender
                         </option>
                         <option value="male">Male</option>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
@@ -47,7 +48,7 @@ const Register: React.FC = () => {
     firstName: '',
     lastName: '',
     email: '',
-    age: '',
+    dob: '',
     gender: '',
     password: ''
   });
@@ -75,6 +76,53 @@ const Register: React.FC = () => {
     setCurrentScreen('careerSelection');
   };
 
+  // const handleCareerSelection = async (career: string) => {
+  //   if (!selectedRole) return;
+
+  //   setIsSubmitting(true);
+  //   try {
+  //     const payload = {
+  //       ...registrationInfo,
+  //       role: roleMap[selectedRole],
+  //       career
+  //     };
+  //     await axios.post('http://localhost:3000/api/v1/auth/register', payload);
+  //     toast.success('You have been registered successfully!', {
+  //       position: "top-right",
+  //       autoClose: 5000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //       theme: "colored",
+  //     });
+  //     navigate('/login');
+  //   } catch (error) {
+  //     toast.error('Error during registration. Please try again.', {
+  //       position: "top-right",
+  //       autoClose: 5000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //       theme: "colored",
+  //     });
+  //   } finally {
+  //     toast.error('Error during registration. Please try again.', {
+  //       position: "top-right",
+  //       autoClose: 5000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //       theme: "colored",
+  //     });
+  //     setIsSubmitting(false);
+  //   }
+  // };
   const handleCareerSelection = async (career: string) => {
     if (!selectedRole) return;
 
@@ -83,52 +131,45 @@ const Register: React.FC = () => {
       const payload = {
         ...registrationInfo,
         role: roleMap[selectedRole],
-        career
+        career,
       };
       await axios.post('https://ge-iutg.onrender.com/api/v1/auth/register', payload);
       toast.success('You have been registered successfully!', {
-        position: "top-right",
+        position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "colored",
+        theme: 'colored',
       });
-      navigate('/login');
-    } catch (error) {
-      toast.error('Error during registration. Please try again.', {
-        position: "top-right",
+      navigate('/welcome');
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message || 'Error during registration. Please try again.';
+      toast.error(errorMessage, {
+        position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "colored",
+        theme: 'colored',
       });
     } finally {
-      toast.error('Error during registration. Please try again.', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
       setIsSubmitting(false);
     }
   };
 
+
   const currentSlide = slides[currentSlideIndex];
 
   return (
-    <div className="flex">
+    <div className="flex items-center justify-center overflow-x-hidden ">
       <ToastContainer />
-      <div className="float-start w-full md:w-[45%] h-screen px-8 md:px-20 overflow-y-scroll" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      <div className="float-start w-full lg:w-[45%] md:ml-[25%] lg:ml-0 md:w-full h-screen px-8 lg:px-[5%] md:px-[1%] overflow-y-scroll" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         {currentScreen === 'register' ? (
           <RegisterScreen onRegister={handleRegister} />
         ) : currentScreen === 'roleSelection' ? (
@@ -137,7 +178,7 @@ const Register: React.FC = () => {
           <CareerSelection onCareerSelect={handleCareerSelection} isSubmitting={isSubmitting} />
         )}
       </div>
-      <div className="relative float-end w-[55%] h-screen hidden md:block">
+      <div className="relative float-end w-[55%] h-screen hidden lg:block bg-green-300">
         <div className='absolute w-full h-full bg-blue-300 opacity-60'>
         </div>
         <img src="/images/auth.png" alt="auth" className="w-full h-full" />

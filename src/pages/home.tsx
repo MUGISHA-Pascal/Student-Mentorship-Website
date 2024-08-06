@@ -24,27 +24,27 @@ const Home = () => {
   };
 
   return (
-    <div >
+    <div className="overflow-hidden">
       <div className="relative">
-        <div className="w-full bg-cover bg-center h-[35vh] md:h-[120vh] px-32 relative flex items-center justify-center text-center text-white bg-opacity-75">
+        <div className="w-full bg-cover bg-center h-[35vh] lg:h-[120vh] md:h-[70vh] px-32 relative flex items-center justify-center text-center text-white bg-opacity-75">
           <div className="absolute top-[3px] bg-white w-full text-black overflow-hidden h-full">
             <video src="/videos/video11.mp4" className="" autoPlay loop muted />
           </div>
           <Video />
         </div>
-        <div className="flex gap-x-5 sm:my-1 my-2 px-[20%] md:hidden">
+        <div className="flex items-center justify-center sm:my-1 my-4 px-[20%] md:hidden">
           <Link to="/register" className="">
             <button className="flex items-center justify-center gap-x-2 md:gap-x-5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm md:text-lg py-2 px-2 md:py-4 md:px-4 rounded-md text-nowrap">
-              Get started now
+              Join the waitlist
               <FaArrowRight className="-rotate-45" />
             </button>
           </Link>
-          <Link to="/login" className="">
+          {/* <Link to="/login" className="">
             <button className="flex items-center justify-center gap-x-2 md:gap-x-5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm md:text-lg py-2 px-2 md:py-4 md:px-4 rounded-md text-nowrap">
               Sign in
               <FaArrowRight className="-rotate-45" />
             </button>
-          </Link>
+          </Link> */}
         </div>
         <Statistics />
       </div>
@@ -57,24 +57,24 @@ const Home = () => {
             viewport={{ once: true, amount: 0.5 }}
             variants={h2Variants}
           >
-            Services we offer for you
+            Our Comprehensive Services
           </motion.h2>
           <motion.p
-            className="mb-12 px-2 md:px-0 md:w-[40%] text-center font-semibold text-white"
+            className="mb-12 px-2 md:px-0 lg:w-[40%] md:w-[60%] text-center font-semibold text-white"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.5 }}
             variants={pVariants}
           >
-            With lots of unique blocks, you can easily build a page without coding. Build your next landing page.
+            From personalized coaching sessions to industry-specific mentorship, we offer a wide range of services to support your career journey and help you thrive.
           </motion.p>
         </div>
-        <div className="px-[10%] md:px-40 overflow-x-hidden">
+        <div className="px-[10%] md:px-[15%] lg:px-[10%] overflow-x-hidden">
           <Services />
         </div>
       </div>
-      <div className=" text-center">
-        <div className="px-20 mt-16 w-full">
+      <div className="text-center">
+        <div className="px-[10%] mt-16 w-full">
           <motion.h2
             className="text-3xl font-bold mb-8"
             initial="hidden"
@@ -85,14 +85,18 @@ const Home = () => {
             Why Choose Us for Your E-Coaching Journey?
           </motion.h2>
           <motion.p
-            className="mb-12 px-0 md:px-60 text-center font-semibold"
+            className="mb-12 px-0 lg:px-[15%] md:px-[15%] text-center font-semibold"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 1 }}
             variants={pVariants}
           >
-            Elevate your skills with personalized guidance from industry experts. Our platform offers unique, interactive sessions that are designed to transform your career.
+            {/* Elevate your skills with personalized guidance from industry experts. Our platform offers unique, interactive sessions that are designed to transform your career. */}
+            Unlock your true potential by discovering what you love and excel at. Our platform connects you with expert mentors who guide you to achieve your career goals and make a meaningful impact in the world.
           </motion.p>
+        </div>
+        <div className="w-full">
+          
         </div>
         <WhyUs />
         <div className="w-full bg-blue-600 text-white py-4 px-8 my-12">

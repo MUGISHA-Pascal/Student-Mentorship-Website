@@ -1,6 +1,7 @@
 import { toast, ToastContainer } from 'react-toastify';
 import FAQ from "../components/join/faq";
 import { motion } from 'framer-motion';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Team {
   name: string;
@@ -80,7 +81,7 @@ const About = () => {
     });
   };
   return (
-    <div className="min-h-screen flex flex-col items-center py-12">
+    <div className="min-h-screen flex flex-col items-center py-12 overflow-x-hidden">
       <ToastContainer />
       <div className="w-full flex-col text-center mb-12 px-4">
         <motion.h1
@@ -104,24 +105,24 @@ const About = () => {
           Together, we can create impactful connections and unlock your full potential.
         </motion.p>
       </div>
-      <div className="w-full flex items-center justify-center mb-20 px-0 md:px-44 ">
+      <div className="w-full flex items-center justify-center mb-20 px-0 lg:px-0 md:px-[5%] ">
         <motion.div
-          className="w-4/5"
+          className="w-full flex items-center justify-center"
           initial={{ opacity: 0, scale: 0.5 }}
           whileInView={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.5 }}
           viewport={{ once: true, amount: 0.5 }}
         >
           <img
-            className="w-full"
+            className="w-4/5 lg:w-4/5 md:w-full"
             src="/images/about1.png"
             alt="team"
           />
         </motion.div>
       </div>
-      <div className="mb-10 md:px-64 grid grid-cols-1 sm:grid-cols-2 gap-x-2">
+      <div className="mb-10 lg:px-[12%] md:px-[10%] px-[4%] grid grid-cols-1 sm:grid-cols-2 gap-x-2">
         <motion.div
-          className="mb-8 md:mb-0 px-5 md:px-0"
+          className="mb-8 md:mb-0 text-center"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 1 }}
@@ -145,9 +146,9 @@ const About = () => {
           </p>
         </motion.div>
       </div>
-      <div className="w-full bg-blue-50 grid grid-cols-1 sm:grid-cols-2 px-14 md:px-64 py-20">
+      <div className="w-full bg-blue-50 grid grid-cols-1 sm:grid-cols-2 px-14 lg:px-[15%] md:px-[10%] py-20 justify-center">
         <motion.div
-          className="w-4/5"
+          className="w-full md:-4/5 flex items-center justify-center"
           initial={{ opacity: 0, scale: 0.5 }}
           whileInView={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.5 }}
@@ -155,7 +156,7 @@ const About = () => {
         >
 
           <img
-            className="w-full md:w-4/5 h-96"
+            className="w-4/5 h-96 bg-cover"
             src="/images/about2.png" alt="team"
           />
         </motion.div>
@@ -195,17 +196,8 @@ const About = () => {
           </motion.p>
         </div>
         <div>
-          <div className="w-full grid grid-cols-1 md:grid-cols-4 px-[15%] md:px-0 gap-6">
+          <div className="w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 px-[15%] md:px-0 gap-6">
             {team.map((member, index) => (
-              // <div key={index} className=" w-64 md:w-52 flex flex-col items-center text-center bg-white rounded-lg">
-              //   <img
-              //     src={member.image}
-              //     alt={member.name}
-              //     className="w-full h-56 object-cover mb-4"
-              //   />
-              //   <h2 className="text-lg font-bold">{member.name}</h2>
-              //   <p className="text-gray-400">{member.role}</p>
-              // </div>
               <motion.div
                 key={index}
                 className="w-64 md:w-52 flex flex-col items-center text-center bg-white rounded-lg"
@@ -252,7 +244,7 @@ const About = () => {
               <form onSubmit={handleHire}>
                 <button
                   type="submit"
-                  className='text-blue-700 font-bold underline'
+                  className='text-blue-700 font-bold underline cursor-pointer'
                 >
                   Apply now
                 </button>
@@ -261,7 +253,7 @@ const About = () => {
           </div>
         </div>
       </div>
-      <div className="w-full px-3 md:px-48 md:mt-14">
+      <div className="w-full px-3 md:px-[6%] md:mt-14">
         <FAQ />
       </div>
     </div>

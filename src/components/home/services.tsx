@@ -57,7 +57,8 @@ const Services = () => {
     return (
         <motion.div
             ref={ref}
-            className="relative w-full h-auto pt-20 pb-12 px-0 md:px-10 flex flex-col md:flex-row gap-y-20 gap-x-20 items-center"
+            // className="relative w-full h-auto pt-20 pb-12 px-0 md:px-10 flex flex-col md:flex-row gap-y-20 gap-x-20 items-center"
+            className="relative w-full h-auto pt-20 pb-12 px-[25%] lg:px-0 md:px-[0] grid lg:grid-cols-3 md:grid-cols-2 gap-y-20 gap-x-[10%] items-center justify-center"
             variants={container}
             initial="hidden"
             animate={controls}
@@ -65,7 +66,7 @@ const Services = () => {
             {services.map((service) => (
                 <motion.div
                     key={service.id}
-                    className="group relative w-72 h-[335px] flex flex-col items-center"
+                    className="group relative w- h-[335px] flex flex-col items-center"
                     variants={item}
                 >
                     <div className="relative">

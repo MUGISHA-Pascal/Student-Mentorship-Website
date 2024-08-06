@@ -50,8 +50,8 @@ const CareerSelection: React.FC<CareerSelectionProps> = ({ onCareerSelect, isSub
         <ul className="w-full p-0 list-none bg-gray-200 rounded-lg h-72 overflow-y-scroll overflow-x-hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {suggestions
             .filter(s => s.toLowerCase().includes(career.toLowerCase()))
-            .map((item) => (
-              <li key={item} >
+            .map((item, key) => (
+              <li key={key} >
                 <button
                   onClick={() => handleCareerSelect(item)}
                   className="w-full p-4 border-b border-gray-200 text-left"

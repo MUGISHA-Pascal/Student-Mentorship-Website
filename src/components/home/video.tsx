@@ -37,9 +37,9 @@ const Video = () => {
     };
 
     return (
-        <div className="md:w-[30%] absolute px-7 left-0 md:left-24 md:top-16 md:mt-64">
+        <div className="lg:w-[30%] md:w-[40%] absolute px-7 left-0 lg:left-24 md:left-14 lg:top-[5%] md:top-[30%] lg:mt-[18%] md:mt-[5%]">
             <motion.h1
-                className="text-xl md:text-4xl font-bold mb-1 md:mb-4 text-start mix-blend-difference"
+                className="text-xl lg:text-4xl md:text-2xl font-bold mb-1 md:mb-4 text-start mix-blend-difference"
                 variants={typewriter}
                 initial="hidden"
                 animate="visible"
@@ -62,7 +62,7 @@ const Video = () => {
                     Connect with experienced professionals
                 </motion.p>
                 <motion.div variants={item}>
-                    <Link to="/register" className="hidden md:block">
+                    <Link to="/register" className="hidden md:block ">
                         <button className="flex items-center justify-center gap-x-2 md:gap-x-5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm md:text-lg py-2 px-2 md:py-4 md:px-4 rounded-md text-nowrap">
                             Get started now
                             <FaArrowRight className="" />
