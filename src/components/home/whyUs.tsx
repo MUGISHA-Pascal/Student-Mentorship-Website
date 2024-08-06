@@ -72,7 +72,7 @@ const WhyUs = () => {
     return (
         <div className="w-full flex flex-col  md:flex-row gap-x-[3%]">
             <motion.div
-                className="flex md:w-1/2 justify-center items-center mb-12 lg:ml-20 md:ml-[5%] ml-0"
+                className="flex md:w-1/2 justify-center lg:justify-end items-center mb-12 lg:ml-[0%] md:ml-[5%] ml-0"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.5 }}
