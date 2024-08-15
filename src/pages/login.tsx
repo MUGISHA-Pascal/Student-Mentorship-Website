@@ -56,7 +56,8 @@ const Login = () => {
   const handleLogin = async () => {
     setIsSubmitting(true)
     try {
-      await axios.post('https://ge-iutg.onrender.com/api/v1/auth/login', { email, password });
+      // await axios.post('https://ge-iutg.onrender.com/api/v1/auth/login', { email, password });
+      await axios.post('http://146.190.40.172:5000/api/v1/auth/login', { email, password });
       toast.success('Login successful!', {
         position: "top-right",
         autoClose: 5000,
