@@ -133,7 +133,8 @@ const Register: React.FC = () => {
         role: roleMap[selectedRole],
         career,
       };
-      await axios.post('http://146.190.40.172:5000//api/v1/auth/register', payload);
+      // await axios.post('http://146.190.40.172:5000//api/v1/auth/register', payload);
+      await axios.post('https://ge-iutg.onrender.com//api/v1/auth/register', payload);
       toast.success('You have been registered successfully!', {
         position: 'top-right',
         autoClose: 5000,
