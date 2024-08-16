@@ -6,5 +6,5 @@ services:
     build:
       context: .
     ports:
-      - 3085:3000
+      - 3085:4173
     restart: always
