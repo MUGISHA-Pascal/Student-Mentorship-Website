@@ -58,7 +58,7 @@ const Login = () => {
     try {
       //const response = await axios.post('http://localhost:3000/api/v1/auth/login', { email, password });
       //await axios.post('https://ge-iutg.onrender.com/api/v1/auth/login', { email, password });
-      const response = await axios.post('https://api.goyoungafrica.org//api/v1/auth/login', { email, password });
+      const response = await axios.post('https://api.goyoungafrica.org/api/v1/auth/login', { email, password });
 
 
       const { token, user } = response.data;

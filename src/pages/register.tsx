@@ -134,7 +134,7 @@ const Register: React.FC = () => {
         career,
       };
       // await axios.post('http://146.190.40.172:5000//api/v1/auth/register', payload);
-      const response = await axios.post('https://api.goyoungafrica.org//api/v1/auth/register', payload);
+      const response = await axios.post('https://api.goyoungafrica.org/api/v1/auth/register', payload);
       const { token, user } = response.data;
       const { role } = user;
       //console.log("The login token is ", token);
