@@ -56,8 +56,22 @@ const Login = () => {
   const handleLogin = async () => {
     setIsSubmitting(true)
     try {
-      await axios.post('https://ge-iutg.onrender.com/api/v1/auth/login', { email, password });
-      // await axios.post('http://146.190.40.172:5000/api/v1/auth/login', { email, password });
+      //const response = await axios.post('http://localhost:3000/api/v1/auth/login', { email, password });
+      //await axios.post('https://ge-iutg.onrender.com/api/v1/auth/login', { email, password });
+      const response = await axios.post('https://api.goyoungafrica.org//api/v1/auth/login', { email, password });
+
+
+      const { token, user } = response.data;
+      const { role } = user;
+      //console.log("The login token is ", token);
+      console.log("The user role is ", role);
+      console.log(response.data);
+      
+      
+
+      localStorage.setItem('authToken', token);
+      localStorage.setItem('userRole', role);
+
       toast.success('Login successful!', {
         position: "top-right",
         autoClose: 5000,
@@ -109,7 +123,7 @@ const Login = () => {
             onChangeText={setPassword}
           />
           <Link to='/forgot' className="text-blue-600 font-semibold float-right text-end">
-          Forgot Password?
+            Forgot Password?
           </Link>
           <button
             className={`w-4/5 py-4 px-[10%] text-center rounded-full mt-10 mb-4 ${isButtonDisabled ? 'bg-gray-400' : 'bg-blue-600'} text-white text-lg font-semibold`}

@@ -134,7 +134,17 @@ const Register: React.FC = () => {
         career,
       };
       // await axios.post('http://146.190.40.172:5000//api/v1/auth/register', payload);
-      await axios.post('https://ge-iutg.onrender.com//api/v1/auth/register', payload);
+      const response = await axios.post('https://api.goyoungafrica.org//api/v1/auth/register', payload);
+      const { token, user } = response.data;
+      const { role } = user;
+      //console.log("The login token is ", token);
+      console.log("The user role is ", role);
+      console.log(response.data);
+
+
+
+      localStorage.setItem('authToken', token);
+      localStorage.setItem('userRole', role);
       toast.success('You have been registered successfully!', {
         position: 'top-right',
         autoClose: 5000,
