@@ -9,6 +9,7 @@ import Video from "../components/home/video";
 import Statistics from "../components/home/statistics";
 import WhyUs from '../components/home/whyUs';
 import Testimonial from '../components/home/testimonial';
+import { ToastContainer } from 'react-toastify';
 
 
 const Home = () => {
@@ -25,6 +26,7 @@ const Home = () => {
 
   return (
     <div className="overflow-hidden">
+      <ToastContainer />
       <div className="relative">
         <div className="w-full bg-cover bg-center h-[35vh] lg:h-[120vh] md:h-[70vh] px-32 relative flex items-center justify-center text-center text-white bg-opacity-75">
           <div className="absolute top-[3px] bg-white w-full text-black overflow-hidden h-full">

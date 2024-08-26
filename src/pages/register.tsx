@@ -76,53 +76,6 @@ const Register: React.FC = () => {
     setCurrentScreen('careerSelection');
   };
 
-  // const handleCareerSelection = async (career: string) => {
-  //   if (!selectedRole) return;
-
-  //   setIsSubmitting(true);
-  //   try {
-  //     const payload = {
-  //       ...registrationInfo,
-  //       role: roleMap[selectedRole],
-  //       career
-  //     };
-  //     await axios.post('http://localhost:3000/api/v1/auth/register', payload);
-  //     toast.success('You have been registered successfully!', {
-  //       position: "top-right",
-  //       autoClose: 5000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //       theme: "colored",
-  //     });
-  //     navigate('/login');
-  //   } catch (error) {
-  //     toast.error('Error during registration. Please try again.', {
-  //       position: "top-right",
-  //       autoClose: 5000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //       theme: "colored",
-  //     });
-  //   } finally {
-  //     toast.error('Error during registration. Please try again.', {
-  //       position: "top-right",
-  //       autoClose: 5000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //       theme: "colored",
-  //     });
-  //     setIsSubmitting(false);
-  //   }
-  // };
   const handleCareerSelection = async (career: string) => {
     if (!selectedRole) return;
 

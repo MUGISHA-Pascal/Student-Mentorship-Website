@@ -5,6 +5,9 @@ import Footer from './components/footer';
 import { Digital } from "react-activity";
 import "react-activity/dist/library.css";
 import Dashboard from './pages/dashboard';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const Home = lazy(() => import('./pages/home'));
 const About = lazy(() => import('./pages/about'));
@@ -36,6 +39,7 @@ const Layout: React.FC<LayoutProps> = ({ children, showNavbar = true, showFooter
 const App: React.FC = () => {
   return (
     <Router>
+      <ToastContainer />
       <Suspense
         fallback={
           <div className="text-center mt-4 h-screen w-full flex items-center justify-center">

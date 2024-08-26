@@ -55,7 +55,7 @@ const RoleSelection: React.FC<RoleSelectionProps> = ({ onRoleSelect }) => {
         <button
           key={role.id}
           onClick={() => setSelectedRole(role.id)}
-          className={`w-full flex flex-row items-center p-3 mb-4 rounded-lg ${selectedRole === role.id ? 'bg-blue-600' : 'bg-blue-100'}`}
+          className={`w-full flex flex-row items-center p-3 cursor-pointer mb-4 rounded-lg ${selectedRole === role.id ? 'bg-blue-600' : 'bg-blue-100'}`}
         >
           <div className="mr-4 bg-white rounded-md p-1">{role.icon}</div>
           <span className={`flex-1 font-semibold ${selectedRole === role.id ? 'text-white' : 'text-blue-600'}`}>{role.label}</span>
@@ -66,7 +66,7 @@ const RoleSelection: React.FC<RoleSelectionProps> = ({ onRoleSelect }) => {
         </button>
       ))}
       <button
-        className={`mt-14 text-center w-full p-4 rounded-full ${selectedRole ? 'bg-blue-600' : 'bg-gray-500 opacity-50'}`}
+        className={`mt-14 text-center w-full p-4  rounded-full ${selectedRole ? 'bg-blue-600 cursor-pointer' : 'bg-gray-500 opacity-50'}`}
         disabled={!selectedRole}
         onClick={handleContinue}
       >

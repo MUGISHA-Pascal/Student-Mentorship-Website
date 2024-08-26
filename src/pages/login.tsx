@@ -56,7 +56,7 @@ const Login = () => {
   const handleLogin = async () => {
     setIsSubmitting(true)
     try {
-      //const response = await axios.post('http://localhost:3000/api/v1/auth/login', { email, password });
+      // const response = await axios.post('http://localhost:3000/api/v1/auth/login', { email, password });
       //await axios.post('https://ge-iutg.onrender.com/api/v1/auth/login', { email, password });
       const response = await axios.post('https://api.goyoungafrica.org/api/v1/auth/login', { email, password });
 
@@ -82,7 +82,7 @@ const Login = () => {
         progress: undefined,
         theme: "colored",
       });
-      navigate('/welcome');
+      navigate('/');
     } catch (error) {
       toast.error('Login failed. Incorrect email or password.', {
         position: "top-right",
@@ -126,7 +126,7 @@ const Login = () => {
             Forgot Password?
           </Link>
           <button
-            className={`w-4/5 py-4 px-[10%] text-center rounded-full mt-10 mb-4 ${isButtonDisabled ? 'bg-gray-400' : 'bg-blue-600'} text-white text-lg font-semibold`}
+            className={`w-4/5 py-4 px-[10%] text-center rounded-full mt-10 mb-4 ${isButtonDisabled ? 'bg-gray-400' : 'bg-blue-600 cursor-pointer'} text-white text-lg font-semibold`}
             onClick={handleLogin}
             disabled={isButtonDisabled || isSubmitting}
 

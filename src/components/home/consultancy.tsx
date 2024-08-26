@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { toast, ToastContainer } from "react-toastify"
+import { toast } from "react-toastify"
 import careersData from '../../utils/json/careers.json';
 import { motion } from 'framer-motion';
+import { Digital } from 'react-activity';
+import "react-activity/dist/library.css";
 
 const Consultancy = () => {
     const [careers, setCareers] = useState<string[]>([]);
@@ -11,6 +13,7 @@ const Consultancy = () => {
         phone: '',
         career: '',
     });
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         setCareers(careersData);
@@ -25,6 +28,7 @@ const Consultancy = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setIsSubmitting(true);
 
         try {
             const response = await fetch('https://formspree.io/f/xnnajdlp', {
@@ -37,6 +41,7 @@ const Consultancy = () => {
             });
 
             if (response.ok) {
+                setIsSubmitting(false);
                 console.log('Form submitted successfully!');
                 setFormData({
                     name: '',
@@ -67,7 +72,6 @@ const Consultancy = () => {
             className="w-full relative flex flex-col md:flex-row items-center justify-between py-12 bg-center bg-cover"
             style={{ backgroundImage: `url('/images/image1.png')` }}
         >
-            <ToastContainer />
             <div className="bg-gray-700 w-full h-full absolute opacity-60 z-0"></div>
             <div className="w-full flex flex-col md:flex-row px-7 lg:px-[10%] md:px-[8%] z-50 items-center justify-center">
                 <motion.div
@@ -146,7 +150,7 @@ const Consultancy = () => {
                             type="submit"
                             className="bg-blue-600 text-center text-white py-3 px-9 rounded-lg cursor-pointer font-semibold"
                         >
-                            Get Consultancy
+                            {isSubmitting ? <Digital size={18} speed={0.5} color='#fff'/> : ' Get Consultancy'}
                         </button>
                     </form>
                 </motion.div>

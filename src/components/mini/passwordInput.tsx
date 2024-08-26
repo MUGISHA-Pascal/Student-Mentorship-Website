@@ -23,7 +23,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({ placeholder, value, onCha
                     placeholder={placeholder}
                     type={isPasswordVisible ? 'text' : 'password'}
                 />
-                <button onClick={togglePasswordVisibility} className="ml-2">
+                <button onClick={togglePasswordVisibility} className="ml-2 cursor-pointer">
                     {isPasswordVisible ? (
                         <img src="/svgs/eye-off.svg" alt="Hide" width={24} height={24} />
                     ) : (

@@ -54,7 +54,7 @@ const CareerSelection: React.FC<CareerSelectionProps> = ({ onCareerSelect, isSub
               <li key={key} >
                 <button
                   onClick={() => handleCareerSelect(item)}
-                  className="w-full p-4 border-b border-gray-200 text-left"
+                  className="w-full p-4 border-b border-gray-200 text-left cursor-pointer hover:bg-gray-300"
                 >
                   {item}
                 </button>
@@ -73,7 +73,7 @@ const CareerSelection: React.FC<CareerSelectionProps> = ({ onCareerSelect, isSub
         </div>
       )}
       <button
-        className={`mt-14 text-center w-4/5 py-4 px-[10%] rounded-full ${selectedCareer ? 'bg-blue-600' : 'bg-gray-500 opacity-50'}`}
+        className={`mt-14 text-center w-4/5 py-4 px-[10%] rounded-full ${selectedCareer ? 'bg-blue-600 cursor-pointer' : 'bg-gray-500 opacity-50'}`}
         disabled={!selectedCareer || isSubmitting}
         onClick={handleContinue}
       >
