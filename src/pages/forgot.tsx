@@ -56,7 +56,7 @@ const Forgot: React.FC = () => {
     setIsSubmitting(true);
     try {
       // const response =
-      await axios.post('https://ge-iutg.onrender.com/api/v1/user/generate-otp', { email });
+      await axios.post('https://api.goyoungafrica.org/api/v1/user/generate-otp', { email });
       toast.success('OTP sent successfully');
       setCurrentScreen('otpVerification');
     } catch (error) {
@@ -73,7 +73,7 @@ const Forgot: React.FC = () => {
         toast.error('Please enter OTP');
         return;
       }
-      const response = await axios.get(`https://ge-iutg.onrender.com/api/v1/user/verify-otp?otp=${otp}`);
+      const response = await axios.get(`https://api.goyoungafrica.org/api/v1/user/verify-otp?otp=${otp}`);
       if (response.status === 200) {
         toast.success('OTP verified successfully');
         setCurrentScreen('newPassword');
@@ -92,7 +92,7 @@ const Forgot: React.FC = () => {
     setIsSubmitting(true);
     try {
       // const response = 
-      await axios.post('https://ge-iutg.onrender.com/api/v1/user/generate-otp', { email });
+      await axios.post('https://api.goyoungafrica.org/api/v1/user/generate-otp', { email });
       toast.success('OTP resent successfully');
     } catch (error) {
       toast.error('Failed to resend OTP');
@@ -105,7 +105,7 @@ const Forgot: React.FC = () => {
     setIsSubmitting(true);
     try {
       // const response = 
-      await axios.patch('https://ge-iutg.onrender.com/api/v1/user/update-password', {
+      await axios.patch('https://api.goyoungafrica.org/api/v1/v1/user/update-password', {
         email,
         password: newPassword
       });

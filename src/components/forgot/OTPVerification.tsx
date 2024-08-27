@@ -34,7 +34,7 @@ const OTPVerification = ({ handleOTPVerification, handleOTPResend, otp, setOtp, 
                 containerStyle="mt-6"
             />
             <button
-                className={`w-4/5 py-4 px-[10%] text-center rounded-full mt-10 mb-4 ${isButtonDisabled ? 'bg-gray-400' : 'bg-blue-600'} text-white text-lg font-semibold`}
+                className={`w-4/5 py-4 px-[10%] text-center rounded-full mt-10 mb-4 ${isButtonDisabled ? 'bg-gray-400' : 'bg-blue-600 cursor-pointer'} text-white text-lg font-semibold`}
                 onClick={handleOTPVerification}
                 disabled={isButtonDisabled || isSubmitting}
             >
@@ -47,7 +47,7 @@ const OTPVerification = ({ handleOTPVerification, handleOTPResend, otp, setOtp, 
             <div className="flex justify-center items-center mb-8">
                 <p className="text-gray-600 font-semibold">Didn't receive code?</p>
                 <button onClick={handleOTPResend}>
-                    <span className="text-blue-600 font-bold ml-1">
+                    <span className="text-blue-600 font-bold ml-1 cursor-pointer">
                         Resend
                     </span>
                 </button>

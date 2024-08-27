@@ -26,7 +26,7 @@ const SendOTP: React.FC<SendOTPProps> = ({ handleSendOTP, email, setEmail, isSub
                 onChangeText={setEmail}
             />
             <button
-                className={`w-4/5 py-4 px-[10%] text-center rounded-full mt-10 mb-4 ${isButtonDisabled ? 'bg-gray-400' : 'bg-blue-600'} text-white text-lg font-semibold`}
+                className={`w-4/5 py-4 px-[10%] text-center rounded-full mt-10 mb-4 ${isButtonDisabled ? 'bg-gray-400' : 'bg-blue-600 cursor-pointer'} text-white text-lg font-semibold`}
                 onClick={handleSendOTP}
                 disabled={isButtonDisabled || isSubmitting}
             >
@@ -39,7 +39,7 @@ const SendOTP: React.FC<SendOTPProps> = ({ handleSendOTP, email, setEmail, isSub
             <div className="flex justify-center items-center mb-8">
                 <p className="text-gray-600 font-semibold">Already got an OTP?</p>
                 <button onClick={onVerifyOtpClick}> {/* Update button to use new handler */}
-                    <span className="text-blue-600 font-bold ml-1">
+                    <span className="text-blue-600 font-bold ml-1 cursor-pointer">
                         Verify
                     </span>
                 </button>

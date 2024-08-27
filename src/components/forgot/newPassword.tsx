@@ -44,7 +44,7 @@ const NewPassword = ({ handleNewPassword, isSubmitting }: NewPasswordProps) => {
                 onChangeText={setConfirmPassword}
             />
             <button
-                className={`w-4/5 py-4 px-[10%] text-center rounded-full mt-10 mb-4 ${isButtonDisabled ? 'bg-gray-400' : 'bg-blue-600'} text-white text-lg font-semibold`}
+                className={`w-4/5 py-4 px-[10%] text-center rounded-full mt-10 mb-4 ${isButtonDisabled ? 'bg-gray-400' : 'bg-blue-600 cursor-pointer'} text-white text-lg font-semibold`}
                 onClick={handleSubmit}
                 disabled={isButtonDisabled || isSubmitting}
             >

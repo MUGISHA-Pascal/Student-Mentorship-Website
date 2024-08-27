@@ -56,8 +56,6 @@ const Login = () => {
   const handleLogin = async () => {
     setIsSubmitting(true)
     try {
-      // const response = await axios.post('http://localhost:3000/api/v1/auth/login', { email, password });
-      //await axios.post('https://ge-iutg.onrender.com/api/v1/auth/login', { email, password });
       const response = await axios.post('https://api.goyoungafrica.org/api/v1/auth/login', { email, password });
 
 
@@ -66,8 +64,8 @@ const Login = () => {
       //console.log("The login token is ", token);
       console.log("The user role is ", role);
       console.log(response.data);
-      
-      
+
+
 
       localStorage.setItem('authToken', token);
       localStorage.setItem('userRole', role);

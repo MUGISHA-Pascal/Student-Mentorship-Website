@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import Modal from 'react-minimal-modal';
 
 interface User {
     id: string;
@@ -18,11 +19,19 @@ interface User {
 
 const Dashboard = () => {
     const [users, setUsers] = useState<User[]>([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/v1/user/all');
+                const token = localStorage.getItem('authToken');
+                const response = await axios.get('https://api.goyoungafrica.org/api/v1/user/users', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
                 setUsers(response.data.users);
             } catch (error) {
                 toast.error('Failed to retrieve users.', {
@@ -41,31 +50,49 @@ const Dashboard = () => {
         fetchUsers();
     }, []);
 
-    const handleDelete = async (id : string) => {
-        try {
-            await axios.delete(`http://localhost:3000/api/v1/user/${id}`);
-            setUsers(users.filter(user => user.id !== id));
-            toast.success('User deleted successfully!', {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-            });
-        } catch (error) {
-            toast.error('Failed to delete user.', {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-            });
+    const openModal = (id: string) => {
+        setSelectedUserId(id);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedUserId(null);
+    };
+
+    const handleDelete = async () => {
+        if (selectedUserId) {
+            try {
+                const token = localStorage.getItem('authToken');
+                await axios.delete(`https://api.goyoungafrica.org/api/v1/user/${selectedUserId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                setUsers(users.filter(user => user.id !== selectedUserId));
+                toast.success('User deleted successfully!', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
+                closeModal();
+            } catch (error) {
+                toast.error('Failed to delete user.', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
+            }
         }
     };
 
@@ -92,7 +119,7 @@ const Dashboard = () => {
                                 <td className="px-6 py-4">{user.career}</td>
                                 <td className="px-6 py-4">
                                     <button
-                                        onClick={() => handleDelete(user.id)}
+                                        onClick={() => openModal(user.id)}
                                         className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
                                     >
                                         Delete
@@ -103,6 +130,22 @@ const Dashboard = () => {
                     </tbody>
                 </table>
             </div>
+            <Modal
+                open={isModalOpen}
+                onOpenChange={closeModal}
+            >
+                <div className="flex flex-col justify-center items-center p-6">
+                    <h2 className="text-xl font-bold mb-4">Are you sure you want to delete this user?</h2>
+                    <div className="flex justify-end mt-4">
+                        <button
+                            onClick={handleDelete}
+                            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2"
+                        >
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 };
