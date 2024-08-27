@@ -71,7 +71,7 @@ const Footer = () => {
                 <div className="flex flex-col text-white lg:ml-[15%] md:ml-[5%]">
                     <h1 className="mb-3 font-bold text-xl">Social links</h1>
                     <div className="flex gap-x-4">
-                        <a href="https://www.linkedin.com/in/go-young-africa-x" target="_blank" rel="noreferrer">
+                        <a href="https://www.linkedin.com/company/go-young-africa-x/" target="_blank" rel="noreferrer">
                             <FaLinkedinIn size={24} />
                         </a>
                         <a href="https://x.com/GOYAFRICA" target="_blank" rel="noreferrer">
