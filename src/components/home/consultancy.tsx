@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { toast } from "react-toastify"
+import { toast } from "react-toastify";
 import careersData from '../../utils/json/careers.json';
-import { motion } from 'framer-motion';
-import { Digital } from 'react-activity';
-import "react-activity/dist/library.css";
+import TextInput from '../mini/textInput';
+import { Levels } from 'react-activity';
 
 const Consultancy = () => {
     const [careers, setCareers] = useState<string[]>([]);
@@ -15,10 +14,12 @@ const Consultancy = () => {
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    // Load careers from careersData.json on component mount
     useEffect(() => {
         setCareers(careersData);
     }, []);
 
+    // Handle input change
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({
             ...formData,
@@ -26,12 +27,13 @@ const Consultancy = () => {
         });
     };
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    // Handle the form submission logic
+    const handleSubmit = async () => {
         setIsSubmitting(true);
 
         try {
-            const response = await fetch('https://formspree.io/f/xnnajdlp', {
+            // Send form data to the custom backend API
+            const response = await fetch('https://api.goyoungafrica.org/api/v1/subscription/consultancy-request', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -42,14 +44,16 @@ const Consultancy = () => {
 
             if (response.ok) {
                 setIsSubmitting(false);
-                console.log('Form submitted successfully!');
+                console.log('Su submitted successfully!');
                 setFormData({
                     name: '',
                     email: '',
                     phone: '',
                     career: '',
                 });
-                toast.success('email sent!', {
+
+                // Show success toast notification
+                toast.success('Form submitted successfully!', {
                     position: "top-right",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -60,10 +64,13 @@ const Consultancy = () => {
                     theme: "colored",
                 });
             } else {
-                console.error('Form submission error:', response.statusText);
+                const errorData = await response.json();
+                console.error('Form submission error:', errorData.message || response.statusText);
             }
         } catch (error) {
             console.error('Network error:', error);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -72,65 +79,45 @@ const Consultancy = () => {
             className="w-full relative flex flex-col md:flex-row items-center justify-between py-12 bg-center bg-cover"
             style={{ backgroundImage: `url('/images/image1.png')` }}
         >
-            <div className="bg-gray-700 w-full h-full absolute opacity-60 z-0"></div>
+            <div className="w-full h-full absolute opacity-60 z-0"></div>
             <div className="w-full flex flex-col md:flex-row px-7 lg:px-[10%] md:px-[8%] z-50 items-center justify-center">
-                <motion.div
-                    className="w-4/5 md:w-1/2 py-10 px-10 lg:px-[8%] md:px-[5%] flex flex-col gap-y-5"
-                    initial={{ opacity: 0, x: -50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, amount: 0.5 }}
-                    transition={{ duration: 0.5 }}
-                >
-                    <img src="/images/chat.png" alt="chat" className="w-20" />
-                    <h2 className="text-2xl font-bold text-white">
+                <div className="w-4/5 md:w-1/2 py-10 px-10 lg:px-[8%] md:px-[5%] flex flex-col gap-y-5">
+                    <h2 className="text-2xl font-bold text-center">
                         Unlock Expert Guidance for Your Reading Journey!
                     </h2>
-                    <p className="text-white font-semibold">
-                        Dive into personalized book mentorship with our seasoned experts. Whether you're a student seeking knowledge, a mentor expanding your repertoire, or an employer enhancing team skills!
-                    </p>
-                </motion.div>
-                <motion.div
-                    className="w-4/5 md:w-1/2 p-5 rounded-lg"
-                    initial={{ opacity: 0, x: 50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, amount: 0.5 }}
-                    transition={{ duration: 0.5 }}
-                >
-                    <form className="flex flex-col gap-y-3" onSubmit={handleSubmit}>
+                    <img src="/svgs/consultancy.svg" alt="chat" />
+                </div>
+                <div className="w-4/5 md:w-1/2 p-5 rounded-lg">
+                    <div className="flex flex-col">
                         <div className="mb-4">
-                            <input
-                                type="text"
-                                name="name"
+                            <TextInput
+                                label="Name"
                                 placeholder="Name"
-                                className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none"
+                                width="100%"
                                 value={formData.name}
-                                onChange={handleChange}
-                                required
+                                onChangeText={(value) => setFormData({ ...formData, name: value })}
                             />
                         </div>
                         <div className="mb-4">
-                            <input
-                                type="email"
-                                name="email"
+                            <TextInput
+                                label="Email"
                                 placeholder="Email"
-                                className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none"
+                                width="100%"
                                 value={formData.email}
-                                onChange={handleChange}
-                                required
+                                onChangeText={(value) => setFormData({ ...formData, email: value })}
                             />
                         </div>
                         <div className="mb-4">
-                            <input
-                                type="text"
-                                name="phone"
-                                placeholder="Phone"
-                                className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none"
+                            <TextInput
+                                label="Phone No."
+                                placeholder="Phone No."
+                                width="100%"
                                 value={formData.phone}
-                                onChange={handleChange}
-                                required
+                                onChangeText={(value) => setFormData({ ...formData, phone: value })}
                             />
                         </div>
-                        <div className="mb-6">
+                        <div className="mt-3 mb-6">
+                            <label className="font-bold text-gray-500">Career</label>
                             <select
                                 name="career"
                                 className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none text-gray-400 cursor-pointer"
@@ -147,13 +134,13 @@ const Consultancy = () => {
                             </select>
                         </div>
                         <button
-                            type="submit"
+                            onClick={handleSubmit}
                             className="bg-blue-600 text-center text-white py-3 px-9 rounded-lg cursor-pointer font-semibold"
                         >
-                            {isSubmitting ? <Digital size={18} speed={0.5} color='#fff'/> : ' Get Consultancy'}
+                            {isSubmitting ? <Levels speed={0.5} /> : ' Get Consultancy'}
                         </button>
-                    </form>
-                </motion.div>
+                    </div>
+                </div>
             </div>
         </div>
     );

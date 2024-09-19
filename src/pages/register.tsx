@@ -1,114 +1,72 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import RegisterScreen from '../components/auth/register';
-import RoleSelection from '../components/roleSelection';
-import CareerSelection from '../components/careerSelection';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import TextInput from "../components/mini/textInput"
+import { format } from 'date-fns';
+import { FaCalendarAlt } from 'react-icons/fa';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import '../styles/datepicker.css';
+import PasswordInput from "../components/mini/passwordInput";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
+import SlideShow from "../components/auth/slideShow";
+import axios from "axios";
+import { Levels } from "react-activity";
+import "react-activity/dist/library.css";
 
-type Role = 'STUDENT' | 'COACH' | 'EMPLOYER' | 'ADMIN';
-
-const roleMap: { [key: number]: Role } = {
-  1: 'STUDENT',
-  2: 'COACH',
-  3: 'EMPLOYER',
-  4: 'ADMIN'
-};
-
-interface Slide {
-  id: number;
-  title: string;
-  text: string;
-}
-
-const slides: Slide[] = [
-  {
-    id: 1,
-    title: 'Empower Your Career Journey',
-    text: 'Connect with expert coaches to guide you through every step of your career path.'
-  },
-  {
-    id: 2,
-    title: 'Unlock Job Opportunities',
-    text: 'Discover job openings and connect directly with employers looking for talent like you.',
-  },
-  {
-    id: 3,
-    title: 'Learn and Grow',
-    text: 'Access resources and training to develop new skills and advance in your career.',
-  },
-];
 
 const Register: React.FC = () => {
-  const [currentScreen, setCurrentScreen] = useState('register');
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-  const [registrationInfo, setRegistrationInfo] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    dob: '',
-    gender: '',
-    password: ''
-  });
-  const [selectedRole, setSelectedRole] = useState<number | null>(null);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [dob, setDob] = useState('');
+  const [gender, setGender] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (currentScreen === 'register') {
-      setCurrentSlideIndex(0);
-    } else if (currentScreen === 'roleSelection') {
-      setCurrentSlideIndex(1);
-    } else if (currentScreen === 'careerSelection') {
-      setCurrentSlideIndex(2);
-    }
-  }, [currentScreen]);
 
-  const handleRegister = (info: typeof registrationInfo) => {
-    setRegistrationInfo(info);
-    setCurrentScreen('roleSelection');
-  };
-
-  const handleRoleSelection = (role: number) => {
-    setSelectedRole(role);
-    setCurrentScreen('careerSelection');
-  };
-
-  const handleCareerSelection = async (career: string) => {
-    if (!selectedRole) return;
-
-    setIsSubmitting(true);
-    try {
-      const payload = {
-        ...registrationInfo,
-        role: roleMap[selectedRole],
-        career,
-      };
-      // await axios.post('http://146.190.40.172:5000//api/v1/auth/register', payload);
-      const response = await axios.post('https://api.goyoungafrica.org/api/v1/auth/register', payload);
-      const { token, user } = response.data;
-      const { role } = user;
-      //console.log("The login token is ", token);
-      console.log("The user role is ", role);
-      console.log(response.data);
-
-
-
-      localStorage.setItem('authToken', token);
-      localStorage.setItem('userRole', role);
-      toast.success('You have been registered successfully!', {
-        position: 'top-right',
+  const handleRegister = async () => {
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match!', {
+        position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'colored',
+        theme: "colored",
       });
-      navigate('/welcome');
+      return;
+    }
+    if (password.length < 8) {
+      toast.error('Password must be at least 8 characters long!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const payload = { firstName, lastName, email, dob, gender, password };
+      // await axios.post('http://146.190.40.172:5000//api/v1/auth/register', payload);
+      const response = await axios.post('https://api.goyoungafrica.org/api/v1/auth/register', payload);
+      // const { user } = response.data;
+
+      console.log(response.data);
+      navigate('/');
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.message || 'Error during registration. Please try again.';
@@ -125,42 +83,153 @@ const Register: React.FC = () => {
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  // const handleGoogleRegister = () => {
+
+  // }
+
+  const calculateAge = (dob: any) => {
+    const today = new Date();
+    const birthDate = new Date(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+  const handleDateChange = (date: any) => {
+    const formatted = format(date, 'yyyy-MM-dd');
+    setDob(formatted);
+    const age = calculateAge(date);
+    if (age < 14) {
+      setError("You must be at least 14 years!");
+    } else {
+      setError(null);
+    }
   };
 
+  const handleGenderChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setGender(e.target.value);
+  };
 
-  const currentSlide = slides[currentSlideIndex];
+  const isButtonDisabled = !firstName || !lastName || !email || !dob || !gender || !password || !confirmPassword || (calculateAge(dob) < 14);
 
   return (
-    <div className="flex items-center justify-center overflow-x-hidden ">
-      <ToastContainer />
-      <div className="float-start w-full lg:w-[45%] md:ml-[25%] lg:ml-0 md:w-full h-screen px-8 lg:px-[5%] md:px-[1%] overflow-y-scroll" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-        {currentScreen === 'register' ? (
-          <RegisterScreen onRegister={handleRegister} />
-        ) : currentScreen === 'roleSelection' ? (
-          <RoleSelection onRoleSelect={handleRoleSelection} />
-        ) : (
-          <CareerSelection onCareerSelect={handleCareerSelection} isSubmitting={isSubmitting} />
-        )}
-      </div>
-      <div className="relative float-end w-[55%] h-screen hidden lg:block bg-green-300">
-        <div className='absolute w-full h-full bg-blue-300 opacity-60'>
+    <div className="h-screen p-3 md:p-7 lg:p-10 lg:overflow-y-hidden overflow-y-scroll bg-blue-50">
+      <div className="w-full lg:h-full md:h-auto h-auto lg:flex bg-white border border-blue-100 p-3 rounded-lg">
+        <div className="w-full lg:w-1/2 px-2 lg:px-10 overflow-y-scroll" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <div className="flex flex-col items-center">
+            <div className="flex items-center flex-col gap-y-2">
+              <Link to='/'>
+                <img src="/icons/logo.svg" />
+              </Link>
+              {/* <h2 className="text-2xl font-bold">Join us</h2> */}
+              <h2 className="text-2xl text-blue-500 font-bold">Sign In</h2>
+              <h2 className="text-gray-500 font-semibold">Long waiting is over for you!</h2>
+            </div>
+            <div className="w-full flex gap-x-3">
+              <TextInput
+                label="First name"
+                placeholder="First name"
+                width="50%"
+                value={firstName}
+                onChangeText={setFirstName}
+              />
+              <TextInput
+                label="Last name"
+                placeholder="Last name"
+                width="50%"
+                value={lastName}
+                onChangeText={setLastName}
+              />
+            </div>
+            <TextInput
+              label="Email"
+              placeholder="Email"
+              width="100%"
+              value={email}
+              onChangeText={setEmail}
+            />
+            <div className={`w-full flex flex-col lg:flex-row md:flex-row gap-x-3 ${error ? 'mb-2' : 'mb-0'}`}>
+              <div className={`lg:w-1/2 md:w-1/2 w-full h-[7.5vh] cursor-pointer ${error ? 'mt-3 mb-2' : 'mt-3'}`}>
+                <label className='font-bold text-gray-500'>DOB</label>
+                <div className="custom-datepicker w-full h-[55px] border border-gray-400 rounded-lg">
+                  <FaCalendarAlt className="custom-datepicker-icon" />
+                  <DatePicker
+                    selected={dob ? new Date(dob) : null}
+                    onChange={handleDateChange}
+                    placeholderText="DOB"
+                    dateFormat="yyyy/MM/dd"
+                    showYearDropdown
+                    scrollableYearDropdown
+                    yearDropdownItemNumber={100}
+                    className="custom-datepicker-input cursor-pointer w-full"
+                  />
+                </div>
+                {error && <div className="error-message text-red-500 text-sm  font-semibold">{error}</div>}
+              </div>
+              <div className={`block lg:w-1/2 md:w-1/2 w-full ${error ? 'mt-9 lg:mt-3 md:mt-3':'lg:mt-3 md:mt-3 mt-10'}`}>
+                <label className='font-bold text-gray-500'>Gender</label>
+                <select
+                  className={`block  w-full h-[55px] border border-gray-400 text-gray-400 font-semibold rounded-md px-3 cursor-pointer`}
+                  value={gender}
+                  onChange={handleGenderChange}
+                >
+                  <option value="">
+                    Select your gender
+                  </option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+            <PasswordInput
+              label="Password"
+              placeholder="Password"
+              value={password}
+              onChangeText={setPassword}
+            />
+            <PasswordInput
+              label="Confirm password"
+              placeholder="Confirm password"
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+            />
+            <button
+              className={`w-full py-3 px-[10 text-center rounded-2xl mt-10 mb-4 ${isButtonDisabled ? 'bg-gray-400' : 'bg-blue-600 cursor-pointer'} text-white text-lg font-semibold`}
+              onClick={handleRegister}
+              disabled={isButtonDisabled}
+            >
+              {!isSubmitting ? (
+                <>Sign Up</>
+              ) : (
+                <Levels speed={0.5} />
+              )}
+            </button>
+            {/* <button
+              className={`w-full py-3 px-10 flex items-center justify-center gap-x-5 border border-gray-400 rounded-2xl mt-10 mb-4 text-lg font-semibold`}
+              onClick={handleGoogleRegister}
+            >
+              <img src="/svgs/google.svg" />
+              <p className="text-black">Sign Up With Google</p>
+            </button> */}
+            <div className="flex justify-center items-center mb-8">
+              <p className="text-gray-600 font-semibold">Already have an account?</p>
+              <Link to="/login">
+                <a className="text-blue-600 font-bold ml-1">
+                  Sign In
+                </a>
+              </Link>
+            </div>
+          </div>
         </div>
-        <img src="/images/auth.png" alt="auth" className="w-full h-full" />
-        <div className='absolute top-1/2 left-1/4 flex-col text-center'>
-          <h1 className='text-3xl text-white font-bold'>{currentSlide.title}</h1>
-          <p className='w-96 text-white font-semibold mt-3'>{currentSlide.text}</p>
-        </div>
-        <div className="w-full absolute top-[85%] flex gap-x-7 items-center justify-center">
-          {slides.map((_, index) => (
-            <div
-              key={index}
-              className={`w-14 h-2 rounded ${currentSlideIndex === index ? 'bg-blue-500' : 'bg-white'}`}
-            ></div>
-          ))}
-        </div>
+        <SlideShow />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Register;
+export default Register
