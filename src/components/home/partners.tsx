@@ -36,7 +36,11 @@ const Partners = () => {
     ];
 
     return (
-        <div className='py-[1%] mt-3 overflow-hidden'>
+        <div className='flex flex-col items-center bg-[#1782CF] mt-3 overflow-hidden'>
+            <div className='flex gap-x-5 text-white items-center p-2'>
+                <p>In Partnership with more than </p>
+                <p className='font-bold text-4xl'>100+</p>
+            </div>
             <motion.div
                 className='flex'
                 animate={{ x: '-100%' }}

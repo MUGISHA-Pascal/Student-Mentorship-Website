@@ -1,98 +1,178 @@
-import { useState } from 'react';
-import { Digital } from "react-activity";
-import "react-activity/dist/library.css";
-import { FaCopyright, FaFacebookMessenger, FaInstagram, FaLinkedinIn, FaTwitter } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { toast, ToastContainer } from 'react-toastify';
+import React, { useState } from 'react';
+import { FaFacebookMessenger, FaInstagram, FaLinkedinIn, FaTwitter } from "react-icons/fa";
+import { Link } from 'react-router-dom';
+import { toast } from "react-toastify";
 
-const Footer = () => {
-    const [isSubmitting, setIsSubmitting] = useState(false);
+const Footer: React.FC = () => {
     const [email, setEmail] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubscription = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setIsSubmitting(true);
-
-        // Simulate API call
-        setTimeout(() => {
-            setIsSubmitting(false);
-            setEmail('');  // Clear the input field
-            toast.success('Subscription request sent!', {
+    // Handle email subscription submission
+    const handleSubmit = async () => {
+        if (!email) {
+            toast.error('Please enter a valid email.', {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
                 draggable: true,
+                progress: undefined,
                 theme: "colored",
             });
-        }, 2000); // Simulate a 2-second API call delay
+            return;
+        }
+
+        setIsSubmitting(true);
+
+        try {
+            const response = await fetch('https://api.goyoungafrica.org/api/v1/subscription/subscribe', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ email }),
+            });
+
+            if (response.ok) {
+                setIsSubmitting(false);
+                setEmail(''); // Clear the input after successful submission
+                toast.success('Successfully subscribed!', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
+            } else {
+                const errorData = await response.json();
+                console.error('Subscription error:', errorData.message || response.statusText);
+                toast.error('Subscription failed. Please try again later.', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
+            }
+        } catch (error) {
+            console.error('Network error:', error);
+            toast.error('Network error. Please check your connection.', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
-        <div className="bg-gray-800 pt-16 pb-2 overflow-x-hidden">
-            <ToastContainer />
-            <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 px-10 lg:px-[5%] md:px-[8%] gap-y-10 gap-x-[2%]">
-                <div className="flex flex-col text-white">
-                    <h1 className="mb-3 font-bold text-xl">Learn more</h1>
-                    <Link to="/" className="font-semibold hover:text-blue-900">Home</Link>
-                    <Link to="/about" className="font-semibold hover:text-blue-900">About</Link>
-                    <Link to="/join" className="font-semibold hover:text-blue-900">Join</Link>
-                    <Link to="/contact" className="font-semibold hover:text-blue-900">Contact</Link>
-                    <Link to="/blog" className="hover:text-blue-900 font-semibold">Blogs</Link>
+        <footer className="w-full bg-white py-2 border-t border-gray-200">
+            <div className="px-6">
+                <div className="flex flex-col lg:flex-row justify-between items-center mb-8 gap-y-3">
+                    <div className="flex items-center space-x-2">
+                        <img
+                            src="/icons/logo-text.svg"
+                            alt="Logo"
+                            className="h-12"
+                        />
+                    </div>
+                    <div className="lg:w-2/5 w-full text-gray-500 font-light text-center">
+                        Empower your growth with Goya – the e-coaching platform designed to unlock your potential, one skill at a time. Transform your future, guided by expert mentors.
+                    </div>
                 </div>
-                <div className="flex flex-col text-white md:ml-[5%]">
-                    <h1 className="mb-3 font-bold text-xl">Get in touch</h1>
-                    <p className="mb-1">KN 78 St, Kigali <br /> Norrsken House Kigali</p>
-                </div>
-                <div className="flex flex-col text-white">
-                    <h1 className="mb-3 font-bold text-xl">Our newsletter</h1>
-                    <div className="my-1">Subscribe to our newsletter to get our news & deals delivered to you.</div>
-                    <form onSubmit={handleSubscription}>
-                        <div className="flex">
-                            <input
-                                type="email"
-                                placeholder="Email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="w-[70%] py-2 px-5 mt-3 text-black focus:outline-none"
-                                required
-                            />
-                            <button
-                                type="submit"
-                                className="w-[20%] bg-blue-700 py-2 px-5 mt-3 cursor-pointer text-center font-semibold"
-                                disabled={isSubmitting}
-                            >
-                                {isSubmitting ? <Digital size={18} speed={0.5} color="#fff" /> : 'Submit'}
-                            </button>
+
+                <div className="border-t border-gray-300 py-8">
+                    {/* Links */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <div className="flex flex-col items-center">
+                            <h4 className="text-gray-700 font-bold mb-4 text-center">Product</h4>
+                            <ul className="space-y-2 text-gray-500">
+                                <li><Link to="#" className="hover:text-gray-900">Features</Link></li>
+                                <li><Link to="#" className="hover:text-gray-900">Pricing</Link></li>
+                                <li><Link to="#" className="hover:text-gray-900">Case Studies</Link></li>
+                                <li><Link to="#" className="hover:text-gray-900">Reviews</Link></li>
+                                <li><Link to="#" className="hover:text-gray-900">Updates</Link></li>
+                            </ul>
                         </div>
-                    </form>
+                        <div className="flex flex-col items-center">
+                            <h4 className="text-gray-700 font-bold mb-4 text-center">Company</h4>
+                            <ul className="space-y-2 text-gray-500">
+                                <li><Link to="#" className="hover:text-gray-900">About</Link></li>
+                                <li><Link to="#" className="hover:text-gray-900">Contact Us</Link></li>
+                                <li><Link to="#" className="hover:text-gray-900">Careers</Link></li>
+                                <li><Link to="#" className="hover:text-gray-900">Culture</Link></li>
+                            </ul>
+                        </div>
+                        <div className="flex flex-col items-center">
+                            <h4 className="text-gray-700 font-bold mb-4 text-center">Support</h4>
+                            <ul className="space-y-2 text-gray-500">
+                                <li><Link to="#" className="hover:text-gray-900">Getting Started</Link></li>
+                                <li><Link to="#" className="hover:text-gray-900">Help Center</Link></li>
+                                <li><Link to="#" className="hover:text-gray-900">Server Status</Link></li>
+                                <li><Link to="#" className="hover:text-gray-900">Report a Bug</Link></li>
+                            </ul>
+                        </div>
+                        <div className="flex flex-col items-center">
+                            <h4 className="text-gray-700 font-bold mb-4 text-center">Subscribe to our newsletter</h4>
+                            <p className="text-gray-500 mb-4">
+                                Stay updated with our latest news and offers.
+                            </p>
+                            <div className="w-full flex flex-col space-y-2">
+                                <input
+                                    type="email"
+                                    placeholder="Enter your email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:border-blue-500"
+                                />
+                                <button
+                                    onClick={handleSubmit}
+                                    className="w-3/5 bg-blue-500 text-white text-sm px-6 py-2 rounded-full hover:bg-blue-600"
+                                    disabled={isSubmitting}
+                                >
+                                    {isSubmitting ? "Subscribing..." : "Subscribe"}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div className="flex flex-col text-white lg:ml-[15%] md:ml-[5%]">
-                    <h1 className="mb-3 font-bold text-xl">Social links</h1>
-                    <div className="flex gap-x-4">
+
+                <div className="border-t border-gray-300 py-2 flex justify-between items-center">
+                    <div className="text-center text-gray-500 text-sm">
+                        &copy; 2024 GOYA | All Rights Reserved
+                    </div>
+                    <div className="flex space-x-4">
                         <a href="https://www.linkedin.com/company/go-young-africa-x/" target="_blank" rel="noreferrer">
-                            <FaLinkedinIn size={24} />
+                            <FaLinkedinIn size={20} className="text-blue-600" />
                         </a>
                         <a href="https://x.com/GOYAFRICA" target="_blank" rel="noreferrer">
-                            <FaTwitter size={24} />
+                            <FaTwitter size={20} className="text-blue-600" />
                         </a>
                         <a href="https://www.facebook.com/profile.php?id=61563176430025" target="_blank" rel="noreferrer">
-                            <FaFacebookMessenger size={24} />
+                            <FaFacebookMessenger size={20} className="text-blue-600" />
                         </a>
                         <a href="https://www.instagram.com/goyoungafrica/" target="_blank" rel="noreferrer">
-                            <FaInstagram size={24} />
+                            <FaInstagram size={20} className="text-blue-600" />
                         </a>
                     </div>
                 </div>
             </div>
-            <div className="mx-5 mt-5 mb-2 border"></div>
-            <p className="flex text-white items-center gap-x-4 px-10 md:px-24">
-                <FaCopyright color="white" />
-                2024 Copyright, All Right Reserved
-            </p>
-        </div>
+        </footer>
     );
-}
+};
 
 export default Footer;
