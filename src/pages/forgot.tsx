@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from "react";
-import SendOtp from "../components/forgot/SendOtp";
+import SendOTP from "../components/forgot/sendOtp";
 import { useNavigate } from "react-router-dom";
 import NewPassword from "../components/forgot/newPassword";
-import OtpVerification from "../components/forgot/OtpVerification";
+import OTPVerification from "../components/forgot/OtpVerification";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -96,7 +96,7 @@ const Forgot = () => {
     return (
         <div>
             {currentScreen === 'sendOTP' ? (
-                <SendOtp
+                <SendOTP
                     handleSendOTP={handleSendOTP}
                     email={email}
                     setEmail={setEmail}
@@ -104,7 +104,7 @@ const Forgot = () => {
                     onVerifyOtpClick={handleVerifyOtpClick}
                 />
             ) : currentScreen === 'otpVerification' ? (
-                <OtpVerification
+                <OTPVerification
                     handleOTPVerification={handleOTPVerification}
                     handleOTPResend={handleOTPResend}
                     otp={otp}
