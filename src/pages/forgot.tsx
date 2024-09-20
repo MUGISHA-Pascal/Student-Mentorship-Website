@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from "react";
-import SendOTP from "../components/forgot/sendOtp";
+import SendOTP from "../components/forgot/sendOTP";
 import { useNavigate } from "react-router-dom";
 import NewPassword from "../components/forgot/newPassword";
-import OTPVerification from "../components/forgot/OtpVerification";
+import OTPVerification from "../components/forgot/OTPVerification";
 import axios from "axios";
 import { toast } from "react-toastify";
 
