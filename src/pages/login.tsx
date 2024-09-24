@@ -1,60 +1,43 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import TextInput from "../components/mini/textInput";
 import PasswordInput from "../components/mini/passwordInput";
 import { toast } from "react-toastify";
-import axios from "axios"
 import { Levels } from "react-activity";
 import "react-activity/dist/library.css";
 import SlideShow from "../components/auth/slideShow";
+import { useAuthStore } from "../store/authStore";
+import { useEffect, useState } from "react";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { email, password, isSubmitting, login, setEmail, setPassword } = useAuthStore();
+  const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    setIsSubmitting(true)
     try {
-      // const response =
-       await axios.post('https://api.goyoungafrica.org/api/v1/auth/login', { email, password });
-      // console.log(response.data);
-
-      toast.success('Login successful!', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+      await login(email, password);
+      if (rememberMe) {
+        localStorage.setItem("email", email);
+      } else {
+        localStorage.removeItem("email");
+      }
+      toast.success("Login successful!", { position: "top-right", autoClose: 5000 });
       navigate('/');
     } catch (error) {
-      toast.error('Login failed. Incorrect email or password.', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-    } finally {
-      setIsSubmitting(false);
+      toast.error("Login failed. Incorrect email or password.", { position: "top-right", autoClose: 5000 });
     }
-  }
+  };
 
-  // const handleGoogleLogin = () => {
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("email");
+    if (storedEmail) {
+      setEmail(storedEmail);
+      setRememberMe(true);
+    }
+  }, [setEmail]);
 
-  // }
-
-
-  const isButtonDisabled = !email || !password;
+  const isButtonDisabled = !email || !password || isSubmitting;
 
   return (
     <div className="h-screen p-3 md:p-7 lg:p-10 overflow-x-hidden bg-blue-50">
@@ -65,7 +48,6 @@ const Login = () => {
               <Link to='/'>
                 <img src="/icons/logo.svg" />
               </Link>
-              {/* <h2 className="text-2xl font-bold">Welcome back</h2> */}
               <h2 className="text-2xl text-blue-500 font-bold">Sign In</h2>
               <h2 className="text-gray-500 font-semibold">Welcome back, You have been missed!</h2>
             </div>
@@ -84,7 +66,12 @@ const Login = () => {
             />
             <div className="w-full flex justify-between px-1 mt-1">
               <div className="flex items-center gap-x-1">
-                <input type="checkbox" className="w-4 h-4 border border-blue-100" />
+                <input
+                  type="checkbox"
+                  className="w-4 h-4 border border-blue-100"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                />
                 <p className="text-gray-500 font-semibold">Remember me</p>
               </div>
               <div>
@@ -121,11 +108,6 @@ const Login = () => {
             </div>
           </div>
         </div>
-        {/* <div className="w-1/2 hidden lg:block bg-red-400">
-          <div className="bg-blue-100">
-            ahjkl;lkhgjfds
-          </div>
-        </div> */}
         <SlideShow />
       </div>
     </div>
