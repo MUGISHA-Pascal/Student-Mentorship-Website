@@ -54,21 +54,36 @@ const Navbar = () => {
                             <Link to="#" className="font-semibold hover:text-blue-500" onClick={toggleMobileMenu}>Consultancy</Link>
                         </div>
                         <div className="flex items-center font-semibold mt-4 gap-x-5 px-5">
-                            <button className="px-10 w-1/3 py-2 border border-blue-500 text-blue-600 rounded-xl hover:bg-blue-100">
-                                <Link to="/login">
-                                    Login
-                                </Link>
-                            </button>
-                            <button className="px-10 w-1/3 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-700">
-                                <Link to="/register">
-                                    Join
-                                </Link>
-                            </button>
-                            <button className="px-4 w-1/3 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-700">
-                                <Link to="/donate">
-                                    Donate
-                                </Link>
-                            </button>
+                            {isAuthenticated ? (
+                                <>
+                                    <button onClick={handleLogout} className="px-10 py-2 border border-blue-500 text-blue-600 rounded-xl hover:bg-blue-100">
+                                        Logout
+                                    </button>
+                                    <Link to="/donate">
+                                        <button className="px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-700">
+                                            Donate
+                                        </button>
+                                    </Link>
+                                </>
+                            ) : (
+                                <div className='flex items-center font-semibold mt-4 gap-x-5'> 
+                                    <Link to="/login">
+                                        <button className="px-10 py-2 border border-blue-500 text-blue-600 rounded-xl hover:bg-blue-100">
+                                            Login
+                                        </button>
+                                    </Link>
+                                    <Link to="/register">
+                                        <button className="px-10 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-700">
+                                            Join
+                                        </button>
+                                    </Link>
+                                    <Link to="/donate">
+                                        <button className="px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-700">
+                                            Donate
+                                        </button>
+                                    </Link>
+                                </div>
+                            )}
                         </div>
                     </nav>
                 )}
