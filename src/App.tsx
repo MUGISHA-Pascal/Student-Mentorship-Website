@@ -15,6 +15,14 @@ import MentorDashboard from './pages/dashboard/mentor';
 import EmployerDashboard from './pages/dashboard/employer';
 import FamilyDashboard from './pages/dashboard/family';
 import { useAuthStore } from './store/authStore';
+import HomeStudent from './pages/dashboard/student/homeStudent';
+import MentorStudent from './pages/dashboard/student/mentorStudent';
+import CalendarStudent from './pages/dashboard/student/calendarStudent';
+import ChatStudent from './pages/dashboard/student/chatStudent';
+import DocsStudent from './pages/dashboard/student/docsStudent';
+import ParentStudent from './pages/dashboard/student/ParentStudent';
+import SettingsStudent from './pages/dashboard/student/settingsStudent';
+import ProfileStudent from './pages/dashboard/student/profileStudent';
 
 interface LayoutProps {
   children: ReactNode;
@@ -57,7 +65,16 @@ const App = () => {
         <Route path="/donate" element={<Layout showNavbar={false} showFooter={false}><Donate /></Layout>} />
 
         <Route path="/admin/dashboard" element={<ProtectedRoute element={<AdminDashboard />} />} />
-        <Route path="/student/dashboard" element={<ProtectedRoute element={<StudentDashboard />} />} />
+        <Route path="/student/dashboard" element={<ProtectedRoute element={<StudentDashboard />} />} >
+          <Route path="/student/dashboard" element={<HomeStudent />} />
+          <Route path="/student/dashboard/mentor" element={<MentorStudent />} />
+          <Route path="/student/dashboard/calendar" element={<CalendarStudent />} />
+          <Route path="/student/dashboard/chats" element={<ChatStudent />} />
+          <Route path="/student/dashboard/docs" element={<DocsStudent />} />
+          <Route path="/student/dashboard/parent" element={<ParentStudent />} />
+          <Route path="/student/dashboard/settings" element={<SettingsStudent />} />
+          <Route path="/student/dashboard/profile" element={<ProfileStudent />} />
+        </Route>
         <Route path="/mentor/dashboard" element={<ProtectedRoute element={<MentorDashboard />} />} />
         <Route path="/employer/dashboard" element={<ProtectedRoute element={<EmployerDashboard />} />} />
         <Route path="/family/dashboard" element={<ProtectedRoute element={<FamilyDashboard />} />} />

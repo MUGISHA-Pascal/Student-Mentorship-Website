@@ -30,13 +30,13 @@ const Login = () => {
         navigate('/student/dashboard');
       }
       else if (user.role === 'EMPLOYER') {
-        navigate('/student/dashboard');
+        navigate('/employer/dashboard');
       }
       else if (user.role === 'FAMILY') {
-        navigate('/student/dashboard');
+        navigate('/family/dashboard');
       }
       else if (user.role === 'MENTOR') {
-        navigate('/student/dashboard');
+        navigate('/mentor/dashboard');
       } else {
         navigate('/notfound');
       }
