@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Navbar from './components/navbar';
 import Home from './pages/home';
 import Login from './pages/login';
-import { ReactNode, useEffect } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import Donate from './pages/donate';
 import Register from './pages/register';
 import Forgot from './pages/forgot';
@@ -20,9 +20,9 @@ import MentorStudent from './pages/dashboard/student/mentorStudent';
 import CalendarStudent from './pages/dashboard/student/calendarStudent';
 import ChatStudent from './pages/dashboard/student/chatStudent';
 import DocsStudent from './pages/dashboard/student/docsStudent';
-import ParentStudent from './pages/dashboard/student/ParentStudent';
 import SettingsStudent from './pages/dashboard/student/settingsStudent';
 import ProfileStudent from './pages/dashboard/student/profileStudent';
+import ParentStudent from './pages/dashboard/student/parentStudent';
 
 interface LayoutProps {
   children: ReactNode;
@@ -30,13 +30,29 @@ interface LayoutProps {
   showFooter?: boolean;
 }
 
+interface DarkModeContextType {
+  dark: boolean;
+  setDark: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+// Provide a default value when creating the context
+const DarkModeContext = React.createContext<DarkModeContextType | undefined>(undefined);
+
 const Layout: React.FC<LayoutProps> = ({ children, showNavbar = true, showFooter = true }) => {
+  const [dark, setDark] = useState(false);
   return (
-    <div className='overflow-x-hidden'>
-      {showNavbar && <Navbar />}
-      {children}
-      {showFooter && <Footer />}
-    </div>
+    // <div className='overflow-x-hidden'>
+    //   {showNavbar && <Navbar />}
+    //   {children}
+    //   {showFooter && <Footer />}
+    // </div>
+    <DarkModeContext.Provider value={{ dark, setDark }}>
+      <div className={`${dark ? 'dark' : ''} overflow-x-hidden`}>
+        {showNavbar && <Navbar />}
+        {children}
+        {showFooter && <Footer />}
+      </div>
+    </DarkModeContext.Provider>
   );
 };
 

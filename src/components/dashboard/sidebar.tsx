@@ -36,7 +36,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 
   return (
     <SidebarContext.Provider value={{ expanded, setExpanded }}>
-      <aside className="h-screen">
+      <aside className="h-screen dark:bg-black">
         <nav className="h-full flex flex-col bg-white border-r shadow-sm">
           <div className="p-4 pb-2 flex justify-between items-center">
             <div className="flex justify-center items-center gap-x-2">
