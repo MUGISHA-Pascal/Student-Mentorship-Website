@@ -3,7 +3,7 @@ import { FaAngleDoubleLeft, FaAngleDoubleRight, FaEllipsisV } from "react-icons/
 import logo from "/icons/logo.svg";
 import profile from "/images/testimonial.png";
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 interface SidebarContextType {
   expanded: boolean;
@@ -48,7 +48,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
             </div>
             {/* <button
               onClick={() => setExpanded((curr) => !curr)}
-              className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100"
+              className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 hidden lg:block"
             >
               {expanded ? <FaAngleDoubleLeft /> : <FaAngleDoubleRight />}
             </button> */}
@@ -87,9 +87,11 @@ interface SidebarItemProps {
 
 export const SidebarItem: React.FC<SidebarItemProps> = ({ icon, text, linkTo, active, alert }) => {
   const { expanded } = useContext(SidebarContext)!;
+  const location = useLocation(); 
+  const isActive = location.pathname === linkTo;
   return (
     <li
-      className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors group ${active ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800" : "hover:bg-indigo-50 text-gray-600"
+      className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors group ${isActive ? "bg-gradient-to-tr from-blue-200 to-indigo-100 text-blue-800" : "hover:bg-blue-50 text-gray-600"
         }`}
     >
       <Link to={linkTo} className="flex items-center w-full">

@@ -17,7 +17,7 @@ const Upcoming = () => {
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold text-black">Upcoming</h2>
-        <a href="#" className="text-blue-500 font-medium">Full Calendar</a>
+        <a href="/student/dashboard/calendar" className="text-blue-500 font-medium">Full Calendar</a>
       </div>
 
       <div className="space-y-4">

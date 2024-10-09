@@ -3,6 +3,7 @@ import { useState } from "react";
 import DashboardOverview from "../../../components/dashboard/student/dashboardOverview"
 import Upcoming from "../../../components/dashboard/student/upcoming";
 import StudentGraph from "../../../components/dashboard/student/studentGraph";
+import Courses from "../../../components/dashboard/student/courses";
 
 const HomeStudent = () => {
   const [name, setName] = useState("John Doe");
@@ -28,14 +29,15 @@ const HomeStudent = () => {
         medals={medals}
         courses={courses}
       />
-      <div className="w-full flex gap-x-5">
-        <div className="w-[65%]">
+      <div className="w-full flex flex-col lg:flex-row gap-x-5">
+        <div className="lg:w-[65%] w-full">
           <StudentGraph />
         </div>
-        <div className="w-[35%]">
+        <div className="lg:w-[35%] w-full">
           <Upcoming />
         </div>
       </div>
+      <Courses />
     </div>
   )
 }
