@@ -70,7 +70,7 @@ export default function CoachHome() {
         </header>
         <footer className="grid grid-cols-4 gap-x-16">
           {[1, 2, 3, 4].map((e) => (
-            <Card />
+            <Card key={e} />
           ))}
         </footer>
       </section>
@@ -88,7 +88,10 @@ export default function CoachHome() {
           </header>
           <ul className="flex flex-col space-y-2">
             {[1, 2, 3, 4].map((e) => (
-              <li className="flex p-2 space-x-2 rounded-xl border shadow-md items-center">
+              <li
+                className="flex p-2 space-x-2 rounded-xl border shadow-md items-center"
+                key={e}
+              >
                 <GoGraduateIcon style={{ width: 60, height: 60 }} />
                 <span className="">
                   <p className="font-bold text-lg">Meeting with</p>
@@ -111,6 +114,7 @@ export default function CoachHome() {
         <div className="grid grid-cols-4 self-start gap-x-10 gap-y-4">
           {[1, 2, 3, 4, 0, 0, 0, 0].map((e) => (
             <img
+              key={e}
               src="https://github.com/shadcn.png"
               alt=""
               className="size-52 rounded-lg"
