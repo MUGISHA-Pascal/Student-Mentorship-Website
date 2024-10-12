@@ -1,3 +1,8 @@
+body, html {
+  font-family: 'Roboto', regular;
+  font-size: 14px;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Search, Edit2, Plus, ChevronDown, Send } from 'lucide-react'
+import { Search, Edit2, Plus, ChevronDown, Send, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -27,28 +27,28 @@ interface Message {
   isOwn: boolean;
 }
 
-const ChannelItem: React.FC<{ channel: Channel; isActive: boolean }> = ({ channel, isActive }) => (
+const ChannelItem: React.FC<{ channel: Channel; isActive: boolean; isCollapsed: boolean }> = ({ channel, isActive, isCollapsed }) => (
   <div className={`flex items-center justify-between p-2 rounded-lg ${isActive ? 'bg-blue-100' : 'hover:bg-gray-100'}`}>
     <div className="flex items-center">
       <span className="text-lg mr-2">#</span>
-      <span>{channel.name}</span>
+      {!isCollapsed && <span>{channel.name}</span>}
     </div>
-    {channel.unreadCount > 0 && (
+    {channel.unreadCount > 0 && !isCollapsed && (
       <Badge variant="destructive">{channel.unreadCount}</Badge>
     )}
   </div>
 )
 
-const DirectMessageItem: React.FC<{ dm: DirectMessage; isActive: boolean }> = ({ dm, isActive }) => (
+const DirectMessageItem: React.FC<{ dm: DirectMessage; isActive: boolean; isCollapsed: boolean }> = ({ dm, isActive, isCollapsed }) => (
   <div className={`flex items-center justify-between p-2 rounded-lg ${isActive ? 'bg-blue-100' : 'hover:bg-gray-100'}`}>
     <div className="flex items-center">
       <Avatar className="h-8 w-8 mr-2">
         <AvatarImage src={dm.avatar} alt={dm.name} />
         <AvatarFallback>{dm.name.charAt(0)}</AvatarFallback>
       </Avatar>
-      <span>{dm.name}</span>
+      {!isCollapsed && <span>{dm.name}</span>}
     </div>
-    {dm.unreadCount > 0 && (
+    {dm.unreadCount > 0 && !isCollapsed && (
       <Badge variant="destructive">{dm.unreadCount}</Badge>
     )}
   </div>
@@ -58,7 +58,7 @@ const MessageBubble: React.FC<{ message: Message }> = ({ message }) => (
   <div className={`flex ${message.isOwn ? 'justify-end' : 'justify-start'} mb-4`}>
     <div className={`max-w-[70%] p-3 rounded-lg ${message.isOwn ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
       <p className="text-sm">{message.content}</p>
-      <p className="text-xs text-gray-500 mt-1">{message.timestamp}</p>
+      <p className="text-xs text-white-500 mt-1">{message.timestamp}</p>
     </div>
   </div>
 )
@@ -82,33 +82,42 @@ export default function ChatsPage() {
     { id: '4', sender: 'You', content: 'Message. Lorem ipsum dolor.', timestamp: '10:45 AM', isOwn: true },
   ])
 
+  const [isCollapsed, setIsCollapsed] = useState(false)
+
+  const toggleCollapse = () => {
+    setIsCollapsed(!isCollapsed)
+  }
+
   return (
     <div className="flex h-screen bg-white">
-      <div className="w-64 border-r flex flex-col">
-        <div className="p-4 border-b">
-          <div className="relative">
+      <div className={`border-r flex flex-col transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'}`}>
+        <div className="p-4 border-b flex items-center justify-between">
+          <div className={`relative flex-grow ${isCollapsed ? 'hidden' : 'block'}`}>
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <Input className="pl-10" placeholder="Search" />
           </div>
+          <Button variant="ghost" size="icon" onClick={toggleCollapse} className={isCollapsed ? '' : 'ml-2'}>
+            {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+          </Button>
         </div>
         <div className="flex-1 overflow-y-auto p-4">
-          <div className="flex justify-between items-center mb-2">
+          <div className={`flex justify-between items-center mb-2 ${isCollapsed ? 'hidden' : 'block'}`}>
             <h2 className="font-semibold">Channels</h2>
             <Button variant="ghost" size="sm" className="text-blue-500">
               Clear All
             </Button>
           </div>
           {channels.map(channel => (
-            <ChannelItem key={channel.id} channel={channel} isActive={activeChannel === channel.id} />
+            <ChannelItem key={channel.id} channel={channel} isActive={activeChannel === channel.id} isCollapsed={isCollapsed} />
           ))}
-          <div className="flex justify-between items-center mt-4 mb-2">
+          <div className={`flex justify-between items-center mt-4 mb-2 ${isCollapsed ? 'hidden' : 'block'}`}>
             <h2 className="font-semibold">Direct Messages</h2>
             <Button variant="ghost" size="sm" className="text-blue-500">
               Clear All
             </Button>
           </div>
           {directMessages.map(dm => (
-            <DirectMessageItem key={dm.id} dm={dm} isActive={activeChannel === dm.id} />
+            <DirectMessageItem key={dm.id} dm={dm} isActive={activeChannel === dm.id} isCollapsed={isCollapsed} />
           ))}
         </div>
       </div>
