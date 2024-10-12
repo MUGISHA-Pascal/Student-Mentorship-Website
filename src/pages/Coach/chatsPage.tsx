@@ -64,7 +64,7 @@ const MessageBubble: React.FC<{ message: Message }> = ({ message }) => (
 )
 
 export default function ChatsPage() {
-  const [activeChannel, setActiveChannel] = useState<string>('general-music')
+  const [activeChannel] = useState<string>('general-music')
   const [channels] = useState<Channel[]>([
     { id: 'general-music', name: 'general-music', unreadCount: 2 },
   ])

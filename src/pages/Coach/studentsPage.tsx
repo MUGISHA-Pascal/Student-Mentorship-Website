@@ -87,7 +87,7 @@ const StudentProfile: React.FC<{ student: {
 )
 
 export default function StudentsPage() {
-  const [selectedStudent, setSelectedStudent] = useState(null)
+  const [selectedStudent] = useState(null)
   const [students] = useState([
     { id: 1, name: 'John Doe', contact: 'Contact', email: 'johndoe@example.com', field: 'Music & Dancing', avatar: 'https://i.pravatar.cc/150?img=1', address: 'Nyabiku, West' },
     { id: 2, name: 'Jane Smith', contact: 'Contact', email: 'janesmith@example.com', field: 'Music & Dancing', avatar: 'https://i.pravatar.cc/150?img=2', address: 'Nyabiku, East' },

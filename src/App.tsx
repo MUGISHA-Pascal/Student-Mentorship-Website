@@ -18,7 +18,7 @@ import ChatsPage from './pages/Coach/chatsPage';
 import DocsPage from './pages/Coach/docsPage';
 import SettingsPage from './pages/Coach/settimgsPage';
 
-import JotFormEmbed from './components/home/formPage'
+// import JotFormEmbed from './components/home/formPage'
 
 
 interface LayoutProps {
@@ -58,7 +58,7 @@ const App = () => {
         <Route path="/members" element={<Members />} />
         <Route path="/login" element={<Layout showNavbar={false} showFooter={false}><Login /></Layout>} />
         <Route path="/register" element={<Layout showNavbar={false} showFooter={false}><Register /></Layout>} />
-        <Route path="/form" element={<JotFormEmbed />} />
+        {/* <Route path="/form" element={<JotFormEmbed />} /> */}
         <Route path="/forgot" element={<Layout showNavbar={false} showFooter={false}><Forgot /></Layout>} />
         <Route path="/donate" element={<Layout showNavbar={false} showFooter={false}><Donate /></Layout>} />
 

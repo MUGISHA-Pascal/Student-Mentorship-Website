@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { Plus, Video, BellDot, Home, Users, Calendar, MessageSquare, FileText, Settings } from 'lucide-react'
 import { Button } from "@/components/ui/button"
@@ -108,10 +108,10 @@ function Header({ title }: { title: string }) {
     const LayoutCoach = () => {
       const location = useLocation();
       const [activeSection, setActiveSection] = useState(location.pathname);
-      const [darkMode, setDarkMode] = useState(false);
+      // const [darkMode, setDarkMode] = useState(false);
       const [isProfileSetupOpen, setIsProfileSetupOpen] = useState(true); // Ensure this is true initially
 
-      const toggleDarkMode = () => setDarkMode(!darkMode);
+      // const toggleDarkMode = () => setDarkMode(!darkMode);
 
       // Use useEffect to set isProfileSetupOpen to true when the component mounts
       React.useEffect(() => {
