@@ -28,7 +28,7 @@ interface Message {
 }
 
 const ChannelItem: React.FC<{ channel: Channel; isActive: boolean; isCollapsed: boolean }> = ({ channel, isActive, isCollapsed }) => (
-  <div className={`flex items-center justify-between p-2 rounded-lg ${isActive ? 'bg-blue-100' : 'hover:bg-gray-100'}`}>
+  <div className={`flex items-center justify-between p-2 rounded-lg ${isActive ? 'bg-primary/10 text-primary' : 'hover:bg-accent'}`}>
     <div className="flex items-center">
       <span className="text-lg mr-2">#</span>
       {!isCollapsed && <span>{channel.name}</span>}
@@ -40,7 +40,7 @@ const ChannelItem: React.FC<{ channel: Channel; isActive: boolean; isCollapsed: 
 )
 
 const DirectMessageItem: React.FC<{ dm: DirectMessage; isActive: boolean; isCollapsed: boolean }> = ({ dm, isActive, isCollapsed }) => (
-  <div className={`flex items-center justify-between p-2 rounded-lg ${isActive ? 'bg-blue-100' : 'hover:bg-gray-100'}`}>
+  <div className={`flex items-center justify-between p-2 rounded-lg ${isActive ? 'bg-primary/10 text-primary' : 'hover:bg-accent'}`}>
     <div className="flex items-center">
       <Avatar className="h-8 w-8 mr-2">
         <AvatarImage src={dm.avatar} alt={dm.name} />
@@ -56,9 +56,9 @@ const DirectMessageItem: React.FC<{ dm: DirectMessage; isActive: boolean; isColl
 
 const MessageBubble: React.FC<{ message: Message }> = ({ message }) => (
   <div className={`flex ${message.isOwn ? 'justify-end' : 'justify-start'} mb-4`}>
-    <div className={`max-w-[70%] p-3 rounded-lg ${message.isOwn ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
+    <div className={`max-w-[70%] p-3 rounded-lg ${message.isOwn ? 'bg-primary text-primary-foreground' : 'bg-secondary'}`}>
       <p className="text-sm">{message.content}</p>
-      <p className="text-xs text-white-500 mt-1">{message.timestamp}</p>
+      <p className="text-xs text-muted-foreground mt-1">{message.timestamp}</p>
     </div>
   </div>
 )
@@ -78,7 +78,7 @@ export default function ChatsPage() {
   const [messages] = useState<Message[]>([
     { id: '1', sender: 'John Doe', content: 'How are you doing guys? Can you be able to get at the office tomorrow to discuss some stuffs?', timestamp: '10:30 AM', isOwn: false },
     { id: '2', sender: 'You', content: 'How are you doing guys? Can you be able to get at the office tomorrow to discuss some stuffs?', timestamp: '10:35 AM', isOwn: true },
-    { id: '3', sender: 'John Doe', content: 'Message. Lorem ipsum dolor.', timestamp: '10:40 AM', isOwn: false },
+    { id: '3', sender:  'John Doe', content: 'Message. Lorem ipsum dolor.', timestamp: '10:40 AM', isOwn: false },
     { id: '4', sender: 'You', content: 'Message. Lorem ipsum dolor.', timestamp: '10:45 AM', isOwn: true },
   ])
 
@@ -89,11 +89,11 @@ export default function ChatsPage() {
   }
 
   return (
-    <div className="flex h-screen bg-white">
-      <div className={`border-r flex flex-col transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'}`}>
-        <div className="p-4 border-b flex items-center justify-between">
+    <div className="flex h-screen bg-background text-foreground">
+      <div className={`border-r border-border flex flex-col transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'}`}>
+        <div className="p-4 border-b border-border flex items-center justify-between">
           <div className={`relative flex-grow ${isCollapsed ? 'hidden' : 'block'}`}>
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
             <Input className="pl-10" placeholder="Search" />
           </div>
           <Button variant="ghost" size="icon" onClick={toggleCollapse} className={isCollapsed ? '' : 'ml-2'}>
@@ -103,7 +103,7 @@ export default function ChatsPage() {
         <div className="flex-1 overflow-y-auto p-4">
           <div className={`flex justify-between items-center mb-2 ${isCollapsed ? 'hidden' : 'block'}`}>
             <h2 className="font-semibold">Channels</h2>
-            <Button variant="ghost" size="sm" className="text-blue-500">
+            <Button variant="ghost" size="sm" className="text-primary">
               Clear All
             </Button>
           </div>
@@ -112,7 +112,7 @@ export default function ChatsPage() {
           ))}
           <div className={`flex justify-between items-center mt-4 mb-2 ${isCollapsed ? 'hidden' : 'block'}`}>
             <h2 className="font-semibold">Direct Messages</h2>
-            <Button variant="ghost" size="sm" className="text-blue-500">
+            <Button variant="ghost" size="sm" className="text-primary">
               Clear All
             </Button>
           </div>
@@ -122,7 +122,7 @@ export default function ChatsPage() {
         </div>
       </div>
       <div className="flex-1 flex flex-col">
-        <div className="flex justify-between items-center p-4 border-b">
+        <div className="flex justify-between items-center p-4 border-b border-border">
           <div className="flex items-center">
             <h1 className="text-xl font-semibold">Chats</h1>
             <ChevronDown className="ml-2" />
@@ -138,7 +138,7 @@ export default function ChatsPage() {
             <MessageBubble key={message.id} message={message} />
           ))}
         </div>
-        <div className="p-4 border-t">
+        <div className="p-4 border-t border-border">
           <div className="flex items-center">
             <Input className="flex-1 mr-2" placeholder="Type a message..." />
             <Button size="icon">

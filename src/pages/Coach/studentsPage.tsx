@@ -1,26 +1,25 @@
-import React, { ReactNode, useState } from 'react'
+import React, { useState } from 'react'
 import { Search, Filter, ChevronDown, MoreVertical, MessageSquare, UserPlus, Check, X } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-
 interface StatCardProps {
-    icon: React.ReactNode;
-    value: string;
-    label: string;
-    subtitle: string;
-  }
-  
+  icon: React.ReactNode;
+  value: string;
+  label: string;
+  subtitle: string;
+}
+
 const StatCard: React.FC<StatCardProps> = ({ icon, value, label, subtitle }) => (
-  <Card className="bg-white">
+  <Card className="bg-card text-card-foreground">
     <CardContent className="flex items-center p-4">
-      <div className="mr-4 p-3 bg-gray-100 rounded-full">{icon}</div>
+      <div className="mr-4 p-3 bg-primary/10 rounded-full">{icon}</div>
       <div>
         <div className="text-xl sm:text-2xl font-bold">{value}</div>
-        <div className="text-sm font-medium text-gray-500">{label}</div>
-        <div className="text-xs text-gray-400">{subtitle}</div>
+        <div className="text-sm font-medium text-muted-foreground">{label}</div>
+        <div className="text-xs text-muted-foreground">{subtitle}</div>
       </div>
     </CardContent>
   </Card>
@@ -28,9 +27,9 @@ const StatCard: React.FC<StatCardProps> = ({ icon, value, label, subtitle }) => 
 
 interface StudentItemProps {
   student: {
-    field: ReactNode
-    email: ReactNode
-    contact: ReactNode
+    field: React.ReactNode
+    email: React.ReactNode
+    contact: React.ReactNode
     avatar: string;
     name: string;
   };
@@ -38,30 +37,31 @@ interface StudentItemProps {
 }
 
 const StudentItem: React.FC<StudentItemProps> = ({ student, isWaitlist = false }) => (
-  <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white rounded-lg mb-2">
+  <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-card text-card-foreground rounded-lg mb-2">
     <div className="flex items-center mb-2 sm:mb-0">
       <input type="checkbox" className="mr-4" />
       <img src={student.avatar} alt={student.name} className="w-10 h-10 rounded-full mr-4" />
       <div>
         <div className="font-medium">{student.name}</div>
-        <div className="text-sm text-gray-500">{student.contact}</div>
+        <div className="text-sm text-muted-foreground">{student.contact}</div>
       </div>
     </div>
     <div className="flex flex-col sm:flex-row sm:items-center mt-2 sm:mt-0">
-      <div className="mb-2 sm:mb-0 sm:mr-4 text-blue-500">{student.email}</div>
-      <div className="mb-2 sm:mb-0 sm:mr-4 px-3 py-1 bg-purple-100 text-purple-700 rounded-full">{student.field}</div>
-      {!isWaitlist && <MoreVertical className="text-gray-400 hidden sm:block" />}
+      <div className="mb-2 sm:mb-0 sm:mr-4 text-primary">{student.email}</div>
+      <div className="mb-2 sm:mb-0 sm:mr-4 px-3 py-1 bg-secondary text-secondary-foreground rounded-full">{student.field}</div>
+      {!isWaitlist && <MoreVertical className="text-muted-foreground hidden sm:block" />}
     </div>
   </div>
 )
+
 const StudentProfile: React.FC<{ student: {
-    email: ReactNode
-    address: ReactNode; avatar: string; name: string; field: string 
+  email: React.ReactNode
+  address: React.ReactNode; avatar: string; name: string; field: string 
 } }> = ({ student }) => (
-  <div className="bg-white p-6 rounded-lg">
+  <div className="bg-card text-card-foreground p-6 rounded-lg">
     <img src={student.avatar} alt={student.name} className="w-24 h-24 rounded-full mx-auto mb-4" />
     <h3 className="text-xl font-bold text-center mb-2">{student.name}</h3>
-    <p className="text-gray-500 text-center mb-6">{student.field}</p>
+    <p className="text-muted-foreground text-center mb-6">{student.field}</p>
     <Tabs defaultValue="personal">
       <TabsList className="grid w-full grid-cols-3">
         <TabsTrigger value="personal">Personal</TabsTrigger>
@@ -100,9 +100,9 @@ export default function StudentsPage() {
   ])
 
   return (
-    <div className="p-4 sm:p-6 bg-gray-100 min-h-screen">
+    <div className="p-4 sm:p-6 bg-background text-foreground min-h-screen">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <StatCard icon={<MessageSquare className="h-6 w-6 text-blue-500" />} value="12" label="Activities" subtitle="Last week" />
+        <StatCard icon={<MessageSquare className="h-6 w-6 text-primary" />} value="12" label="Activities" subtitle="Last week" />
         <StatCard icon={<UserPlus className="h-6 w-6 text-green-500" />} value="80%" label="Mentor-rate" subtitle="Last week" />
         <StatCard icon={<Check className="h-6 w-6 text-red-500" />} value="3" label="Students" subtitle="Coached" />
         <StatCard icon={<X className="h-6 w-6 text-orange-500" />} value="12" label="Courses" subtitle="Provided" />
@@ -118,7 +118,7 @@ export default function StudentsPage() {
           </div>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
             <div className="relative w-full sm:w-auto mb-2 sm:mb-0">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
               <Input className="pl-10 w-full sm:w-auto" placeholder="Search" />
             </div>
             <div className="flex items-center space-x-2 w-full sm:w-auto">
@@ -135,6 +135,7 @@ export default function StudentsPage() {
               <StudentItem key={student.id} student={student} />
             ))}
           </div>
+          <div></div>
           <h2 className="text-xl font-semibold mt-8 mb-4">Waitlist (Pending Approvals)</h2>
           <div className="space-y-2">
             {waitlist.map(student => (

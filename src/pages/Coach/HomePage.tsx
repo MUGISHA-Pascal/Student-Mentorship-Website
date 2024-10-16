@@ -13,7 +13,7 @@ interface StatCardProps {
 }
 
 const StatCard: React.FC<StatCardProps> = ({ icon, value, label, subtitle }) => (
-  <Card>
+  <Card className="bg-card text-card-foreground">
     <CardContent className="flex items-center p-6">
       <div className="mr-4 p-3 bg-primary/10 rounded-full">{icon}</div>
       <div>
@@ -31,10 +31,10 @@ interface UpcomingEventProps {
 }
 
 const UpcomingEvent: React.FC<UpcomingEventProps> = ({ title, subtitle }) => (
-  <Card className="mb-4">
+  <Card className="mb-4 bg-card text-card-foreground">
     <CardContent className="flex items-center p-4">
-      <div className="bg-orange-100 p-3 rounded-full mr-4">
-        <GraduationCap className="h-6 w-6 text-orange-500" />
+      <div className="bg-orange-100 dark:bg-orange-900 p-3 rounded-full mr-4">
+        <GraduationCap className="h-6 w-6 text-orange-500 dark:text-orange-300" />
       </div>
       <div>
         <h3 className="font-semibold">{title}</h3>
@@ -61,13 +61,13 @@ const performanceData = [
 
 export default function HomePage() {
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 bg-background text-foreground">
       <div className="flex justify-between items-start">
         <div>
           <h2 className="text-3xl font-bold">Good Morning, Dr. Marcus <span className="text-yellow-500">★★★☆☆</span></h2>
           <p className="text-muted-foreground">We are happy that you came back</p>
         </div>
-        <Card className="w-64">
+        <Card className="w-64 bg-card text-card-foreground">
           <CardContent className="p-4">
             <h3 className="font-semibold mb-2">What are you doing Today?</h3>
             <p className="text-orange-500 font-semibold">9th/10/2024</p>
@@ -79,7 +79,7 @@ export default function HomePage() {
         </Card>
       </div>
 
-      <Card>
+      <Card className="bg-card text-card-foreground">
         <CardContent className="p-6">
           <h3 className="font-semibold mb-2">On-going: Intermediate Piano Course</h3>
           <Progress value={40} className="mb-2" />
@@ -95,7 +95,7 @@ export default function HomePage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2">
+        <Card className="lg:col-span-2 bg-card text-card-foreground">
           <CardHeader>
             <CardTitle>Performance Statistics</CardTitle>
           </CardHeader>
@@ -106,12 +106,12 @@ export default function HomePage() {
                 <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="value" fill="#3b82f6" />
+                <Bar dataKey="value" fill="hsl(var(--primary))" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="bg-card text-card-foreground">
           <CardHeader>
             <div className="flex justify-between items-center">
               <CardTitle>Upcoming</CardTitle>
@@ -130,7 +130,7 @@ export default function HomePage() {
         </Card>
       </div>
 
-      <Card>
+      <Card className="bg-card text-card-foreground">
         <CardHeader>
           <div className="flex justify-between items-center">
             <CardTitle>What is New?</CardTitle>
@@ -140,7 +140,7 @@ export default function HomePage() {
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             {[1, 2, 3, 4].map((i) => (
-              <Card key={i}>
+              <Card key={i} className="bg-card text-card-foreground">
                 <CardContent className="p-0">
                   <img
                     src="/images/image.png"
