@@ -37,11 +37,11 @@ const Layout: React.FC<LayoutProps> = ({ children, showNavbar = true, showFooter
   );
 };
 
-// Placeholder for authentication check
-const isAuthenticated = () => {
-  // Replace this with your actual authentication check
-  return localStorage.getItem('token') !== null;
-};
+// // Placeholder for authentication check
+// const isAuthenticated = () => {
+//   // Replace this with your actual authentication check
+//   return localStorage.getItem('token') !== null;
+// };
 
 /* const PrivateRoute = ({ children }: { children: ReactNode }) => {
   return isAuthenticated() ? <>{children}</> : <Navigate to="/dashboard" replace />;

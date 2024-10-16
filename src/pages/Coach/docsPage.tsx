@@ -37,7 +37,7 @@ const DocumentCard: React.FC<{ document: Document }> = ({ document }) => (
 )
 
 export default function DocsPage() {
-  const [documents, set_documents] = useState<Document[]>([
+  const [documents] = useState<Document[]>([
     { id: '1', name: 'Course Syllabus.pdf', type: 'pdf' },
     { id: '2', name: 'Lecture 1.mp4', type: 'mp4' },
     { id: '3', name: 'Assignment Guidelines.pdf', type: 'pdf' },

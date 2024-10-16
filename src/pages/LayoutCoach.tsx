@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { Plus, Video, BellDot, Home, Users, Calendar, MessageSquare, Menu, FileText, Settings, PanelRightOpen } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import ProfileSetupPopup from '../pages/Coach/ProfileSetupPopup'
+// import ProfileSetupPopup from '../pages/Coach/ProfileSetupPopup'
 import DarkModeToggle from '../pages/Coach/DarkModeToggle'
 
 const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange } : { expanded: boolean; setExpanded: (expanded: boolean) => void; activeSection: string; onSectionChange: (section: string) => void }) => {
@@ -73,7 +73,7 @@ function Header({ title }: { title: string }) {
 export default function LayoutCoach() {
   const [expanded, setExpanded] = useState(true);
   const location = useLocation();
-  const [isProfileSetupOpen, setIsProfileSetupOpen] = useState(true);
+  // const [isProfileSetupOpen, setIsProfileSetupOpen] = useState(true);
 
   const onSectionChange = (section: string) => {
     // Handle section change logic here
