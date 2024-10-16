@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import { Plus, Video, BellDot, Home, Users, Calendar, MessageSquare, Menu, FileText, Settings, PanelRightClose } from 'lucide-react'
+import { Plus, Video, BellDot, Home, Users, Calendar, MessageSquare, Menu, FileText, Settings, PanelRightOpen } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import ProfileSetupPopup from '../pages/Coach/ProfileSetupPopup'
 import DarkModeToggle from '../pages/Coach/DarkModeToggle'
@@ -14,7 +14,7 @@ const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange } : { e
           {expanded && <span className="text-2xl font-bold text-primary">GOYA</span>}
         </div>
         <Button variant="ghost" size="icon" onClick={() => setExpanded(!expanded)}>
-          {expanded ? <PanelRightClose className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          {expanded ? <PanelRightOpen className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </Button>
       </div>
       <nav className="space-y-2 flex-grow">

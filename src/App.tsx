@@ -43,9 +43,9 @@ const isAuthenticated = () => {
   return localStorage.getItem('token') !== null;
 };
 
-const PrivateRoute = ({ children }: { children: ReactNode }) => {
+/* const PrivateRoute = ({ children }: { children: ReactNode }) => {
   return isAuthenticated() ? <>{children}</> : <Navigate to="/dashboard" replace />;
-};
+}; */
 
 const App = () => {
   return (
@@ -63,10 +63,12 @@ const App = () => {
         <Route path="/donate" element={<Layout showNavbar={false} showFooter={false}><Donate /></Layout>} />
 
         {/* Protected dashboard routes */}
-        <Route path="/dashboard" element={<PrivateRoute><LayoutCoach /></PrivateRoute>}>
+        {/* <Route path="/dashboard" element={<PrivateRoute><LayoutCoach /></PrivateRoute>}> */}
+        <Route path="/dashboard" element={<LayoutCoach />}>
+        <Route index element={<Navigate replace to="/dashboard/home" />} />
           <Route path="home" element={<HomePage />} />
-           <Route path="students" element={<StudentsPage />} />
-         <Route path="calendar" element={<CalendarPage />} />
+          <Route path="students" element={<StudentsPage />} />
+          <Route path="calendar" element={<CalendarPage />} />
           <Route path="chats" element={<ChatsPage />} />
           <Route path="docs" element={<DocsPage />} />
           <Route path="settings" element={<SettingsPage />} /> 
