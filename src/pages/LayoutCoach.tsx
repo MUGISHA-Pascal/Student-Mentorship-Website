@@ -73,7 +73,7 @@ function Header({ title }: { title: string }) {
 export default function LayoutCoach() {
   const [expanded, setExpanded] = useState(true);
   const location = useLocation();
-  // const [isProfileSetupOpen, setIsProfileSetupOpen] = useState(true);
+  const [isProfileSetupOpen, setIsProfileSetupOpen] = useState(true);
 
   const onSectionChange = (section: string) => {
     // Handle section change logic here
@@ -106,7 +106,7 @@ export default function LayoutCoach() {
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-4">
           <Outlet />
         </main>
-        {/* <ProfileSetupPopup isOpen={isProfileSetupOpen} onClose={() => setIsProfileSetupOpen(false)} /> */}
+         {/* <ProfileSetupPopup isOpen={isProfileSetupOpen} onClose={() => setIsProfileSetupOpen(false)} /> */}
       </div>
     </div>
   )

@@ -116,7 +116,8 @@ export default function CalendarPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <TodayCard />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+          <div className="flex flex-col">
             <div>
               <h2 className="text-xl font-semibold mb-4">Recent Activities</h2>
               <Card>
@@ -148,6 +149,7 @@ export default function CalendarPage() {
               </Card>
             </div>
           </div>
+        </div>
         </div>
         <div>
           <h2 className="text-xl font-semibold mb-4">Upcoming Meetings</h2>

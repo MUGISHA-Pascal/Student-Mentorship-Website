@@ -64,8 +64,8 @@ const App = () => {
 
         {/* Protected dashboard routes */}
         {/* <Route path="/dashboard" element={<PrivateRoute><LayoutCoach /></PrivateRoute>}> */}
-        <Route path="/dashboard" element={<LayoutCoach />}>
-        <Route index element={<Navigate replace to="/dashboard/home" />} />
+          <Route path="/dashboard" element={<LayoutCoach />}>
+          <Route index element={<Navigate replace to="/dashboard/home" />} />
           <Route path="home" element={<HomePage />} />
           <Route path="students" element={<StudentsPage />} />
           <Route path="calendar" element={<CalendarPage />} />

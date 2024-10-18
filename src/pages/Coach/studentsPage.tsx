@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Search, Filter, ChevronDown, MoreVertical, MessageSquare, UserPlus, Check, X } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 interface StatCardProps {
   icon: React.ReactNode;
@@ -85,25 +87,92 @@ const StudentProfile: React.FC<{ student: {
     </div>
   </div>
 )
+interface Student {
+  id: number;
+  name: string;
+  contact: string;
+  email: string;
+  field: string;
+  avatar: string;
+  address: string;
+}
 
 export default function StudentsPage() {
-  const [selectedStudent] = useState(null)
-  const [students] = useState([
+  const [students, setStudents] = useState<Student[]>([
     { id: 1, name: 'John Doe', contact: 'Contact', email: 'johndoe@example.com', field: 'Music & Dancing', avatar: 'https://i.pravatar.cc/150?img=1', address: 'Nyabiku, West' },
-    { id: 2, name: 'Jane Smith', contact: 'Contact', email: 'janesmith@example.com', field: 'Music & Dancing', avatar: 'https://i.pravatar.cc/150?img=2', address: 'Nyabiku, East' },
-    { id: 3, name: 'Bob Johnson', contact: 'Contact', email: 'bobjohnson@example.com', field: 'Music & Dancing', avatar: 'https://i.pravatar.cc/150?img=3', address: 'Nyabiku, North' },
-    { id: 4, name: 'Alice Williams', contact: 'Contact', email: 'alicewilliams@example.com', field: 'Music & Dancing', avatar: 'https://i.pravatar.cc/150?img=4', address: 'Nyabiku, South' },
+    { id: 2, name: 'Jane Smith', contact: 'Contact', email: 'janesmith@example.com', field: 'Software Engineering', avatar: 'https://i.pravatar.cc/150?img=2', address: 'Nyabiku, East' },
+    { id: 3, name: 'Bob Johnson', contact: 'Contact', email: 'bobjohnson@example.com', field: 'Photography', avatar: 'https://i.pravatar.cc/150?img=3', address: 'Nyabiku, North' },
+    { id: 4, name: 'Alice Williams', contact: 'Contact', email: 'alicewilliams@example.com', field: 'Digital Marketing', avatar: 'https://i.pravatar.cc/150?img=4', address: 'Nyabiku, South' },
   ])
-  const [waitlist] = useState([
+  const [waitlist, setWaitlist] = useState<Student[]>([
     { id: 5, name: 'Charlie Brown', contact: 'Contact', email: 'charliebrown@example.com', field: 'Music & Dancing', avatar: 'https://i.pravatar.cc/150?img=5', address: 'Nyabiku, Central' },
-    { id: 6, name: 'Diana Clark', contact: 'Contact', email: 'dianaclark@example.com', field: 'Music & Dancing', avatar: 'https://i.pravatar.cc/150?img=6', address: 'Nyabiku, Downtown' },
+    { id: 6, name: 'Diana Clark', contact: 'Contact', email: 'dianaclark@example.com', field: 'Web Development', avatar: 'https://i.pravatar.cc/150?img=6', address: 'Nyabiku, Downtown' },
   ])
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [sortBy, setSortBy] = useState('name')
+  const [filterField, setFilterField] = useState('All')
+  const [selectedWaitlistStudents, setSelectedWaitlistStudents] = useState<number[]>([])
+
+  useEffect(() => {
+    if (students.length > 0 && !selectedStudent) {
+      setSelectedStudent(students[0])
+    }
+  }, [students, selectedStudent])
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query)
+  }
+
+  const handleSort = (criteria: string) => {
+    setSortBy(criteria)
+  }
+
+  const handleFilter = (field: string) => {
+    setFilterField(field)
+  }
+
+  const handleStudentSelect = (student: Student) => {
+    setSelectedStudent(student)
+  }
+
+  const handleWaitlistStudentSelect = (studentId: number) => {
+    setSelectedWaitlistStudents(prev => 
+      prev.includes(studentId) 
+        ? prev.filter(id => id !== studentId)
+        : [...prev, studentId]
+    )
+  }
+
+  const handleApproveWaitlist = () => {
+    const approvedStudents = waitlist.filter(student => selectedWaitlistStudents.includes(student.id))
+    setStudents(prev => [...prev, ...approvedStudents])
+    setWaitlist(prev => prev.filter(student => !selectedWaitlistStudents.includes(student.id)))
+    setSelectedWaitlistStudents([])
+  }
+
+  const handleRemoveWaitlist = () => {
+    setWaitlist(prev => prev.filter(student => !selectedWaitlistStudents.includes(student.id)))
+    setSelectedWaitlistStudents([])
+  }
+
+  const filteredStudents = students
+    .filter(student => 
+      student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      student.email.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .filter(student => filterField === 'All' || student.field === filterField)
+    .sort((a, b) => {
+      if (sortBy === 'name') return a.name.localeCompare(b.name)
+      if (sortBy === 'email') return a.email.localeCompare(b.email)
+      return 0
+    })
 
   return (
     <div className="p-4 sm:p-6 bg-background text-foreground min-h-screen">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <StatCard icon={<MessageSquare className="h-6 w-6 text-primary" />} value="12" label="Activities" subtitle="Last week" />
-        <StatCard icon={<UserPlus className="h-6 w-6 text-green-500" />} value="80%" label="Mentor-rate" subtitle="Last week" />
+        <StatCard icon={<MessageSquare className="h-6 w-6 text-primary" />} value={students.length.toString()} label="Students" subtitle="Total" />
+        <StatCard icon={<UserPlus className="h-6 w-6 text-green-500" />} value={waitlist.length.toString()} label="Waitlist" subtitle="Pending" />
         <StatCard icon={<Check className="h-6 w-6 text-red-500" />} value="3" label="Students" subtitle="Coached" />
         <StatCard icon={<X className="h-6 w-6 text-orange-500" />} value="12" label="Courses" subtitle="Provided" />
       </div>
@@ -112,43 +181,83 @@ export default function StudentsPage() {
         <div className="w-full lg:w-2/3 lg:pr-6 mb-6 lg:mb-0">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
             <h2 className="text-xl font-semibold mb-2 sm:mb-0">Students List</h2>
-            <Button>
-              <UserPlus className="mr-2 h-4 w-4" /> Add Student
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button>
+                  <UserPlus className="mr-2 h-4 w-4" /> Add Student
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Add New Student</DialogTitle>
+                </DialogHeader>
+                {/* Add form fields here */}
+                <p>Form to add a new student would go here</p>
+              </DialogContent>
+            </Dialog>
           </div>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
             <div className="relative w-full sm:w-auto mb-2 sm:mb-0">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-              <Input className="pl-10 w-full sm:w-auto" placeholder="Search" />
+              <Input 
+                className="pl-10 w-full sm:w-auto" 
+                placeholder="Search" 
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
+              />
             </div>
             <div className="flex items-center space-x-2 w-full sm:w-auto">
-              <Button variant="outline" className="w-full sm:w-auto">
-                <Filter className="mr-2 h-4 w-4" /> Filter
-              </Button>
-              <Button variant="outline" className="w-full sm:w-auto">
-                Sort <ChevronDown className="ml-2 h-4 w-4" />
-              </Button>
+              <Select onValueChange={handleFilter} defaultValue="All">
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Filter by field" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="All">All Fields</SelectItem>
+                  <SelectItem value="Music & Dancing">Music & Dancing</SelectItem>
+                  <SelectItem value="Software Engineering">Software Engineering</SelectItem>
+                  <SelectItem value="Photography">Photography</SelectItem>
+                  <SelectItem value="Digital Marketing">Digital Marketing</SelectItem>
+                  <SelectItem value=">Web Developement">Web Developement</SelectItem>
+                  {/* Add more fields as needed */}
+                </SelectContent>
+              </Select>
+              <Select onValueChange={handleSort} defaultValue="name">
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="name">Sort by Name</SelectItem>
+                  <SelectItem value="email">Sort by Email</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <div className="space-y-2">
-            {students.map(student => (
-              <StudentItem key={student.id} student={student} />
+            {filteredStudents.map(student => (
+              <div key={student.id} onClick={() => handleStudentSelect(student)}>
+                <StudentItem student={student} />
+              </div>
             ))}
           </div>
           <div></div>
           <h2 className="text-xl font-semibold mt-8 mb-4">Waitlist (Pending Approvals)</h2>
           <div className="space-y-2">
             {waitlist.map(student => (
-              <StudentItem key={student.id} student={student} isWaitlist />
+              <div key={student.id} onClick={() => handleWaitlistStudentSelect(student.id)}>
+                <StudentItem 
+                  student={student} 
+                  isWaitlist 
+                />
+              </div>
             ))}
           </div>
           <div className="mt-4 flex justify-end space-x-2">
-            <Button>Approve</Button>
-            <Button variant="destructive">Remove</Button>
+            <Button onClick={handleApproveWaitlist} disabled={selectedWaitlistStudents.length === 0}>Approve</Button>
+            <Button variant="destructive" onClick={handleRemoveWaitlist} disabled={selectedWaitlistStudents.length === 0}>Remove</Button>
           </div>
         </div>
         <div className="w-full lg:w-1/3">
-          <StudentProfile student={selectedStudent || students[0]} />
+          {selectedStudent && <StudentProfile student={selectedStudent} />}
         </div>
       </div>
     </div>
