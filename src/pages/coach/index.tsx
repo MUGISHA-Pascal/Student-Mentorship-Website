@@ -1,14 +1,49 @@
 import {
   GoActivityIcon,
+  GoCoursesIcon,
   GoGraduateIcon,
+  GoHeadgearIcon,
+  GoMentorIcon,
+  GoMiniCalendarIcon,
   GoScheduleTaskIcon,
 } from "@/components/common/icons";
 import { SliderDemo } from "@/components/common/progress";
-import { Checkbox } from "@/components/ui/checkbox";
 import { StarRating } from "@/components/ui/star-rating";
 import PerformanceStatistics from "./components/chart-statistics";
+import { useMemo } from "react";
+import { CardProps, HeroCard } from "./components/hero-card";
 
 export default function CoachHome() {
+  const heroCards = useMemo(
+    () =>
+      [
+        {
+          title: "Activities",
+          subTitle: "Last week",
+          value: 12,
+          icon: GoActivityIcon,
+        },
+        {
+          title: "Mentor-rate",
+          icon: GoMentorIcon,
+          subTitle: "Last week",
+          value: "80%",
+        },
+        {
+          title: "Students",
+          icon: GoHeadgearIcon,
+          subTitle: "Coached",
+          value: "3",
+        },
+        {
+          title: "Courses",
+          icon: GoCoursesIcon,
+          subTitle: "Provided",
+          value: "12",
+        },
+      ] satisfies CardProps[],
+    []
+  );
   return (
     <main className="flex w-full flex-col min-h-full space-y-10 overflow-y-auto p-4">
       <section className="flex flex-col space-y-8">
@@ -18,7 +53,7 @@ export default function CoachHome() {
               <header className="flex flex-col space-y-2">
                 <span className="flex items-center space-x-2">
                   <p className="">{`Good morning, `}</p>
-                  <p className="font-semibold text-base text-blue-500">{`Mr. Oscar`}</p>
+                  <p className="font-bold text-base text-blue-500">{`Mr. Oscar`}</p>
                   <StarRating
                     value={2}
                     numStars={5}
@@ -35,14 +70,14 @@ export default function CoachHome() {
               <ul className="flex flex-col space-y-3 mt-4">
                 <li className="flex space-x-3 items-center">
                   <p className="text-neutral-600 w-32">{`On-going:`}</p>
-                  <p className="text-neutral-800">{`Intermediate Piano Course`}</p>
+                  <p className="text-neutral-700 font-bold">{`Intermediate Piano Course`}</p>
                 </li>
                 <li>
                   <SliderDemo />
                 </li>
                 <li className="flex space-x-3 items-center">
                   <p className="text-neutral-600 w-32">{`Start:`}</p>
-                  <p className="text-neutral-800">{`4th September 2024`}</p>
+                  <p className="text-blue-500 font-bold">{`4th September 2024`}</p>
                 </li>
               </ul>
             </article>
@@ -57,7 +92,7 @@ export default function CoachHome() {
                 <p className="font-bold text-orange-700">9th/10/2024</p>
               </span>
               <div className="flex items-center space-x-2">
-                <Checkbox id="terms" />
+                <GoMiniCalendarIcon />
                 <label
                   htmlFor="terms"
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -69,8 +104,14 @@ export default function CoachHome() {
           </aside>
         </header>
         <footer className="grid grid-cols-4 gap-x-16">
-          {[1, 2, 3, 4].map((e) => (
-            <Card key={e} />
+          {heroCards.map((card) => (
+            <HeroCard
+              key={card.value}
+              value={card.value}
+              title={card.title}
+              subTitle={card.subTitle}
+              icon={card.icon}
+            />
           ))}
         </footer>
       </section>
@@ -125,16 +166,3 @@ export default function CoachHome() {
     </main>
   );
 }
-
-const Card = () => {
-  return (
-    <article className="rounded-lg bg-blue-100 flex space-x-1 px-7 py-5 items-center">
-      <GoActivityIcon />
-      <span className="flex flex-col space-y-1<span>icon</span>">
-        <h1 className="font-bold text-2xl">12</h1>
-        <p className="font-bold text-xl">Activities</p>
-        <p className="text-xs font-normal text-neutral-700">Last Week</p>
-      </span>
-    </article>
-  );
-};
