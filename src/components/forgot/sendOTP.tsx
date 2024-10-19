@@ -12,7 +12,7 @@ interface SendOTPProps {
     onVerifyOtpClick: () => void;
 }
 
-const SendOtp: React.FC<SendOTPProps> = ({ handleSendOTP, email, setEmail, isSubmitting, onVerifyOtpClick }) => {
+const SendOTP: React.FC<SendOTPProps> = ({ handleSendOTP, email, setEmail, isSubmitting, onVerifyOtpClick }) => {
     const navigate = useNavigate();
     const isButtonDisabled = !email;
 
@@ -77,4 +77,4 @@ const SendOtp: React.FC<SendOTPProps> = ({ handleSendOTP, email, setEmail, isSub
     )
 }
 
-export default SendOtp
+export default SendOTP
