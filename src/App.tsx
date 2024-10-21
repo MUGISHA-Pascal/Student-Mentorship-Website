@@ -135,7 +135,7 @@ const App = () => {
           }
         />
         <Route
-          path="/coach"
+          path="/mentor/dash"
           element={
             <AppLayout>
               <CoachHome />
