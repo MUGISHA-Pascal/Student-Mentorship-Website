@@ -111,7 +111,7 @@ const UserProfileDialog: React.FC<{ user: User }> = ({ user }) => (
   </Dialog>
 )
 
-export default function ChatsPage() {
+export default function StudentChatsPage() {
   const [activeChannel, setActiveChannel] = useState<string>('general-music')
   const [channels] = useState<Channel[]>([
     { id: 'general-music', name: 'general-music', unreadCount: 2 },

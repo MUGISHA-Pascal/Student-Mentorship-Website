@@ -110,7 +110,7 @@ const CalendarView = () => {
   )
 }
 
-export default function CalendarPage() {
+export default function StudentCalendarPage() {
   return (
     <div className="p-4 sm:p-6 bg-background text-foreground min-h-screen">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -122,7 +122,7 @@ export default function CalendarPage() {
               <h2 className="text-xl font-semibold mb-4">Recent Activities</h2>
               <Card>
                 <CardContent className="p-4">
-                  <div className="flex justify-between items-center mb-4">
+                  <div className="flex justify-between items-center mb-">
                     <h3 className="font-semibold">Recent Activities</h3>
                     <Button variant="link">Clear All</Button>
                   </div>
@@ -134,7 +134,7 @@ export default function CalendarPage() {
               </Card>
             </div>
             <div>
-              <h2 className="text-xl font-semibold mb-">Upcoming Activities</h2>
+              <h2 className="p-4 text-xl font-semibold mb-">Upcoming Activities</h2>
               <Card>
                 <CardContent className="p-4">
                   <UpcomingActivity title="UI/UX Design Course By John Doe" date="9/17/2024" time="3:00 pm" />
@@ -153,22 +153,22 @@ export default function CalendarPage() {
         </div>
         <div>
           <h2 className="text-xl font-semibold mb-4">Upcoming Meetings</h2>
-          <UpcomingMeeting title="Meeting With The Students" date="9/12/2024" time="3:00 pm" />
-          <UpcomingMeeting title="Meeting With The Students" date="9/12/2024" time="3:00 pm" />
-          <UpcomingMeeting title="Meeting With The Students" date="9/12/2024" time="3:00 pm" />
+          <UpcomingMeeting title="Meeting With The Mentors" date="9/12/2024" time="3:00 pm" />
+          <UpcomingMeeting title="Meeting With The Mentors" date="9/12/2024" time="3:00 pm" />
+          <UpcomingMeeting title="Meeting With The Mentors" date="9/12/2024" time="3:00 pm" />
           <CalendarView />
         </div>
       </div>
 
       <div className="mt-6">
-        <h2 className="text-xl font-semibold mb-4">Students Availability</h2>
+        <h2 className="text-xl font-semibold mb-4">Mentors Availability</h2>
         <Card>
           <CardContent className="p-4">
-            <StudentAvailability name="Meeting With Students" status="Unavailable" />
-            <StudentAvailability name="Meeting With Students" status="Available" />
-            <StudentAvailability name="Meeting With Students" status="Excused" />
-            <StudentAvailability name="Meeting With Students" status="Unavailable" />
-            <StudentAvailability name="Meeting With Students" status="Available" />
+            <StudentAvailability name="Meeting With Mentors" status="Unavailable" />
+            <StudentAvailability name="Meeting With Mentors" status="Available" />
+            <StudentAvailability name="Meeting With Mentors" status="Excused" />
+            <StudentAvailability name="Meeting With Mentors" status="Unavailable" />
+            <StudentAvailability name="Meeting With Mentors" status="Available" />
           </CardContent>
         </Card>
       </div>

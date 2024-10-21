@@ -18,6 +18,14 @@ import ChatsPage from './pages/Coach/chatsPage';
 import DocsPage from './pages/Coach/docsPage';
 import SettingsPage from './pages/Coach/settimgsPage';
 
+import LayoutStudent from './pages/LayoutStudent'
+import HomePageStudent from './pages/Student/Homepage';
+import StudentChatsPage from './pages/Student/studentchatsPage';
+import StudentMentorProfil from './pages/Student/studentMentorProfil'
+import StudentCalendarPage from './pages/Student/studentCalendarPage '
+import StudentDocsPage from './pages/Student/studentDocsPage'
+import StudentSettingsPage from './pages/Student/studentSettingsPage'
+
 // import JotFormEmbed from './components/home/formPage'
 
 
@@ -64,8 +72,8 @@ const App = () => {
 
         {/* Protected dashboard routes */}
         {/* <Route path="/dashboard" element={<PrivateRoute><LayoutCoach /></PrivateRoute>}> */}
-          <Route path="/dashboard" element={<LayoutCoach />}>
-          <Route index element={<Navigate replace to="/dashboard/home" />} />
+          <Route path="/dashboard/coach" element={<LayoutCoach />}>
+          <Route index element={<Navigate replace to="/dashboard/coach/home" />} />
           <Route path="home" element={<HomePage />} />
           <Route path="students" element={<StudentsPage />} />
           <Route path="calendar" element={<CalendarPage />} />
@@ -73,6 +81,19 @@ const App = () => {
           <Route path="docs" element={<DocsPage />} />
           <Route path="settings" element={<SettingsPage />} /> 
         </Route>
+        
+        <Route path="/dashboard/student" element={<LayoutStudent />}>
+          <Route index element={<Navigate replace to="/dashboard/student/home" />} />
+          <Route path="home" element={<HomePageStudent />} /> 
+          <Route path="chat" element={<StudentChatsPage />} /> 
+          <Route path="mentor" element={<StudentMentorProfil />} /> 
+          <Route path="docs" element={<StudentDocsPage />} />
+          <Route path="calendar" element={<StudentCalendarPage />} /> 
+          <Route path="settings" element={<StudentSettingsPage />} /> 
+           
+          
+        </Route>
+
 
       </Routes>
     </Router>

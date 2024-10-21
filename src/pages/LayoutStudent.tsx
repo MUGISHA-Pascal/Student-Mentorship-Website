@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { Plus, Video, BellDot, Home, Users, Calendar, MessageSquare, Menu, FileText, Settings, PanelRightOpen } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import ProfileSetupPopup from '../pages/Coach/ProfileSetupPopup'
+import StudentProfilSetup from './Student/StudentProfilSetup'
 import DarkModeToggle from './DarkModeToggle'
 
 const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange } : { expanded: boolean; setExpanded: (expanded: boolean) => void; activeSection: string; onSectionChange: (section: string) => void }) => {
@@ -18,13 +18,14 @@ const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange } : { e
         </Button>
       </div>
       <nav className="space-y-2 flex-grow">
-        <SidebarLink icon={<Home />} label="Home" isActive={activeSection === '/dashboard/home'} onClick={() => onSectionChange('/dashboard/home')} to="/dashboard/coach/home" expanded={expanded} />
-        <SidebarLink icon={<Users />} label="Students" isActive={activeSection === '/dashboard/students'} onClick={() => onSectionChange('/dashboard/students')} to="/dashboard/coach/students" expanded={expanded} />
-        <SidebarLink icon={<Calendar />} label="Calendar" isActive={activeSection === '/dashboard/calendar'} onClick={() => onSectionChange('/dashboard/calendar')} to="/dashboard/coach/calendar" expanded={expanded} />
-        <SidebarLink icon={<MessageSquare />} label="Chats" isActive={activeSection === '/dashboard/chats'} onClick={() => onSectionChange('/dashboard/chats')} to="/dashboard/coach/chats" badge="2" expanded={expanded} />
-        <SidebarLink icon={<FileText />} label="Docs" isActive={activeSection === '/dashboard/docs'} onClick={() => onSectionChange('/dashboard/docs')} to="/dashboard/coach/docs" expanded={expanded} />
+        <SidebarLink icon={<Home />} label="Home" isActive={activeSection === '/dashboard/student/home'} onClick={() => onSectionChange('/dashboard/student/home')} to="/dashboard/student/home" expanded={expanded} />
+        <SidebarLink icon={<Users />} label="Mentor" isActive={activeSection === 'dashboard/student/mentor'} onClick={() => onSectionChange('/dashboard/student/mentor')} to="/dashboard/student/mentor" expanded={expanded} />
+        <SidebarLink icon={<Calendar />} label="Calendar" isActive={activeSection === '/dashboard/student/calendar'} onClick={() => onSectionChange('/dashboard/student/calendar')} to="/dashboard/student/calendar" expanded={expanded} />
+        <SidebarLink icon={<MessageSquare />} label="Chats" isActive={activeSection === '/dashboard/student/chat'} onClick={() => onSectionChange('/dashboard/student/chat')} to="/dashboard/student/chat" badge="2" expanded={expanded} />
+        <SidebarLink icon={<FileText />} label="Docs" isActive={activeSection === '/dashboard/student/docs'} onClick={() => onSectionChange('/dashboard/student/docs')} to="/dashboard/student/docs" expanded={expanded} />
+        {/* <SidebarLink icon={<FileText />} label="Parent" isActive={activeSection === '/dashboard/docs'} onClick={() => onSectionChange('/dashboard/docs')} to="/dashboard/docs" expanded={expanded} /> */}
       </nav>
-      <SidebarLink icon={<Settings />} label="Settings" isActive={activeSection === '/dashboard/settings'} onClick={() => onSectionChange('/dashboard/settings')} to="/dashboard/coach/settings" expanded={expanded} />
+      {/* <SidebarLink icon={<Settings />} label="Settings" isActive={activeSection === '/dashboard/settings'} onClick={() => onSectionChange('/dashboard/student/settings')} to="/dashboard/student/settings" expanded={expanded} /> */}
     </div>
   )
 }
@@ -70,7 +71,7 @@ function Header({ title }: { title: string }) {
   )
 }
 
-export default function LayoutCoach() {
+export default function LayoutStudent() {
   const [expanded, setExpanded] = useState(true);
   const location = useLocation();
   const [isProfileSetupOpen, setIsProfileSetupOpen] = useState(true);
@@ -81,13 +82,13 @@ export default function LayoutCoach() {
   };
 
   const titles: { [key: string]: string } = {
-    '/dashboard': 'Dashboard',
-    '/dashboard/coach/home': 'Mentor',
-    '/dashboard/coach/students': 'Your Students',
-    '/dashboard/coach/calendar': 'Your Calendar',
-    '/dashboard/coach/chats': 'Chats',
-    '/dashboard/coach/docs': 'Your Documents',
-    '/dashboard/coach/settings': 'Your Profile',
+    '/dashboard/student': 'Student',
+    '/dashboard/student/home': 'Mentor',
+    '/dashboard/student/mentor': 'Your Mentor',
+    '/dashboard/student/calendar': 'Your Calendar',
+    '/dashboard/student/chat': 'Chats',
+    '/dashboard/student/docs': 'Your Documents',
+    '/dashboard/student/settings': 'Your Profile',
   }
   const getTitle = (path: string) => {
     return titles[path as keyof typeof titles] || 'Dashboard'
@@ -106,7 +107,7 @@ export default function LayoutCoach() {
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-4">
           <Outlet />
         </main>
-        <ProfileSetupPopup isOpen={isProfileSetupOpen} onClose={() => setIsProfileSetupOpen(false)} />
+        <StudentProfilSetup isOpen={isProfileSetupOpen} onClose={() => setIsProfileSetupOpen(false)} />
       </div>
     </div>
   )
