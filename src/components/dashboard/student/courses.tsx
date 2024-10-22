@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { MoreVertical } from 'lucide-react';
 import React, { useState } from 'react';
 import { FaEllipsisH } from 'react-icons/fa';
 
@@ -47,7 +52,7 @@ const Courses: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                 {visibleCourses.map((course, index) => (
-                    <div key={index} className="bg-white shadow-md rounded-lg py-4 px-2 cursor-pointer">
+                    <Card key={index} className="shadow-md rounded-lg py-4 px-2 cursor-pointer">
                         <img
                             src={course.courseType === 'video' ? '/svgs/video_course.svg' : '/svgs/file_course.svg'}
                             alt={course.title}
@@ -57,9 +62,18 @@ const Courses: React.FC = () => {
                         <h3 className="text-lg font-semibold mb-2">{course.title}</h3>
                         <p className="text-sm text-gray-600 mb-2">{course.extension}</p>
                         <div className="flex justify-between">
-                            <button className="" onClick={handleMore}>
-                                <FaEllipsisH />
-                            </button>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" className="h-8 w-8 p-0 rotate-90">
+                                        <MoreVertical className="h-4 w-4" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuItem>View</DropdownMenuItem>
+                                    <DropdownMenuItem>Download</DropdownMenuItem>
+                                    <DropdownMenuItem>Delete</DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                             <a
                                 href={course.downloadLink}
                                 // download
@@ -68,7 +82,7 @@ const Courses: React.FC = () => {
                                 <img src='/svgs/download.svg' />
                             </a>
                         </div>
-                    </div>
+                    </Card>
                 ))}
             </div>
         </div>

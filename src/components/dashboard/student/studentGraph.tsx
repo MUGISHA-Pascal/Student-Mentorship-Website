@@ -62,20 +62,20 @@ const StudentGraph: React.FC = () => {
     };
 
     return (
-        <div className="bg-white p-6 rounded-lg">
+        <div className="p-6 rounded-lg">
             <div className="flex justify-between mb-4">
                 <h2 className="text-xl font-bold">Performance Statistics</h2>
             </div>
 
-            <div className='border border-blue-200 px-3 py-6 rounded-xl'>
+            <div className='border shadow-sm px-3 py-6 rounded-xl'>
                 <div className='flex justify-between'>
                     <div>
                         <p className="text-3xl font-bold text-blue-500">5,000.00</p>
-                        <p className="text-gray-500 mb-4">50 Orders</p>
+                        <p className="text-muted-foreground mb-4">50 Orders</p>
                     </div>
                     <div>
-                        <select className="border rounded-lg p-2 cursor-pointer">
-                            <option>This Week</option>
+                        <select className="dark:bg-transparent dark:text-muted-foreground border rounded-lg p-2 cursor-pointer">
+                            <option className="cursor-pointer">This Week</option>
                             <option>Last Week</option>
                             <option>This Month</option>
                         </select>

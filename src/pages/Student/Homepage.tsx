@@ -1,10 +1,15 @@
-import React from 'react'
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { ClipboardList, Users, Award, BookOpen, ChevronRight, Plus } from 'lucide-react'
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
+import { useState } from "react"
+import DashboardOverview from "@/components/dashboard/student/dashboardOverview"
+import StudentGraph from "@/components/dashboard/student/studentGraph"
+import Courses from "@/components/dashboard/student/courses"
+import { FaPlus } from "react-icons/fa"
 
 const performanceData = [
   { name: 'Jan', Content: 20, "Content ": 30 },
@@ -16,9 +21,20 @@ const performanceData = [
 ]
 
 export default function HomePageStudent() {
+
+  const [name, setName] = useState("John Doe");
+  const [ongoingCourse, setOngoingCourse] = useState("Intermediate Piano Course");
+  const [startDate, setStartDate] = useState("4th/September/2024");
+  const [currentDate, setCurrentDate] = useState("9th/October/2024");
+  const [currentTask, setCurrentTask] = useState("Meeting with the Team");
+  const [activities, setActivities] = useState(12);
+  const [mentorRate, setMentorRate] = useState(80); // 80% rate
+  const [medals, setMedals] = useState(3);
+  const [courses, setCourses] = useState(12);
+
   return (
     <div className="p-6 space-y-6 bg-background text-foreground">
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center">
+      {/* <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center">
         <div>
           <h1 className="text-3xl font-bold">Good Morning, John Doe</h1>
           <p className="text-muted-foreground">We are happy that you came back</p>
@@ -41,9 +57,20 @@ export default function HomePageStudent() {
           <Progress value={40} className="mb-2" />
           <p className="text-sm text-muted-foreground">Start: 4th/September/2024</p>
         </CardContent>
-      </Card>
+      </Card> */}
+      <DashboardOverview
+        name={name}
+        ongoingCourse={ongoingCourse}
+        startDate={startDate}
+        currentDate={currentDate}
+        currentTask={currentTask}
+        activities={activities}
+        mentorRate={mentorRate}
+        medals={medals}
+        courses={courses}
+      />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
           <CardContent className="flex items-center p-6">
             <ClipboardList className="h-8 w-8 text-orange-500 mr-4" />
@@ -84,11 +111,11 @@ export default function HomePageStudent() {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </div> */}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="lg:col-span-2">
-          <CardHeader className="flex flex-row items-center justify-between">
+          {/* <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Performance Statistics</CardTitle>
             <Button variant="ghost">This Week <ChevronRight className="ml-2 h-4 w-4" /></Button>
           </CardHeader>
@@ -101,15 +128,17 @@ export default function HomePageStudent() {
                 <Bar dataKey="Content " fill="currentColor" radius={[4, 4, 0, 0]} className="fill-primary opacity-40" />
               </BarChart>
             </ResponsiveContainer>
-          </CardContent>
+          </CardContent> */}
+          <StudentGraph />
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Upcoming</CardTitle>
-            <Button variant="ghost">Full Calendar</Button>
+            {/* <Button variant="ghost">Full Calendar</Button> */}
+            <a href="/student/dashboard/calendar" className="text-blue-500 font-medium">Full Calendar</a>
           </CardHeader>
           <CardContent>
-            {[1, 2, 3, 4].map((_, i) => (
+            {[1, 2, 3, 4, 5].map((_, i) => (
               <Card key={i} className="mb-4">
                 <CardContent className="flex items-center p-4">
                   <div className="bg-orange-100 dark:bg-orange-900 p-3 rounded-full mr-4">
@@ -122,9 +151,9 @@ export default function HomePageStudent() {
                 </CardContent>
               </Card>
             ))}
-            <Button className="w-full">
-              <Plus className="mr-2 h-4 w-4" /> Add Event
-            </Button>
+            <button className="fixed bottom-10 right-10 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition-colors" title='New Action'>
+              <FaPlus size={20} />
+            </button>
           </CardContent>
         </Card>
       </div>
@@ -132,7 +161,8 @@ export default function HomePageStudent() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>What is New?</CardTitle>
-          <Button variant="ghost">Full Calendar</Button>
+          {/* <Button variant="ghost">Full Calendar</Button> */}
+          <a href="/student/dashboard/calendar" className="text-blue-500 font-medium">Full Calendar</a>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -156,7 +186,7 @@ export default function HomePageStudent() {
       </Card>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        {/* <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Available Course For You</CardTitle>
           <Button variant="ghost">Full Calendar</Button>
         </CardHeader>
@@ -172,7 +202,8 @@ export default function HomePageStudent() {
               </div>
             ))}
           </div>
-        </CardContent>
+        </CardContent> */}
+        <Courses />
       </Card>
     </div>
   )

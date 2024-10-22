@@ -1,3 +1,5 @@
+import { Card, CardContent } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import React from 'react';
 
 interface DashboardOverviewProps {
@@ -54,34 +56,27 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         },
     ]
     return (
-        <div className="p-6 bg-white rounded-xl">
+        <div className="p-6 rounded-xl">
             <div className="grid lg:grid-cols-2 grid-cols-1 gap-y-3 justify-between items-start">
                 <div>
-                    <p className="text-lg text-gray-700">
-                        Good Morning, <span className="text-blue-600 font-semibold">{name}</span>
-                    </p>
-                    <p className="text-sm text-gray-500 mt-1">We are happy that you came back</p>
-                    <div className="mt-4">
-                        <p className="text-gray-600">
-                            On-going: <span className="text-blue-600 font-semibold">{ongoingCourse}</span>
-                        </p>
-                        <div className="mt-2 flex items-center">
-                            <div className="w-32 h-2 bg-gray-300 rounded-full">
-                                <div className="w-24 h-2 bg-blue-500 rounded-full"></div>
-                            </div>
-                            <span className="ml-2 text-gray-500">Progress</span>
-                        </div>
-                        <p className="text-gray-600 mt-2">
-                            Start: <span className="text-blue-600 font-semibold">{startDate}</span>
-                        </p>
+                    <div>
+                        <h1 className="text-3xl font-bold">Good Morning, {name}</h1>
+                        <p className="text-muted-foreground">We are happy that you came back</p>
                     </div>
+                    <Card className='mt-8 w-full lg:w-4/5'>
+                        <CardContent className="py-6 px-3">
+                            <h3 className="font-semibold mb-2">On-going: <span className="text-blue-600 font-semibold">{ongoingCourse}</span></h3>
+                            <Progress value={40} className="mb-2" />
+                            <p className="text-sm text-muted-foreground">Start: <span className="font-semibold">{startDate}</span></p>
+                        </CardContent>
+                    </Card>
                 </div>
-                <div className="bg-blue-50 p-4 rounded-lg flex">
+                <div className="bg-blue-50 dark:bg-transparent dark:border px-3 py-6 rounded-lg flex">
                     <div>
                         <img src='/svgs/calendarDashboard.svg' alt="Calendar Illustration" className="" />
                     </div>
                     <div>
-                        <p className="text-gray-700">What are you doing Today?</p>
+                        <p className="text-2xl font-semibold text-muted-foreground">What are you doing Today?</p>
                         <p className="text-blue-600 font-semibold mt-2">{currentDate}</p>
                         <p className="mt-2 text-green-600 flex items-center">
 
@@ -91,18 +86,20 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     </div>
                 </div>
             </div>
-            <div className="grid lg:grid-cols-4 grid-cols-2 gap-6 lg:gap-[5%] mt-8">
+            <div className="grid lg:grid-cols-4 grid-cols-2 gap-6 lg:gap-[5%] mt-10">
                 {stats.map((stat, index) => (
-                    <div key={index} className="flex items-center justify-center gap-x-3 bg-blue-50 px-4 py-8 rounded-lg text-center">
-                        <div>
-                            <img src={stat.image} alt={stat.title} className="" />
-                        </div>
-                        <div>
-                            <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
-                            <p className="text-blue-600 text-xl font-semibold">{stat.title}</p>
-                            <p className="text-sm text-gray-400">{stat.status}</p>
-                        </div>
-                    </div>
+                    <Card key={index} className="flex items-center justify-center px-8 py-4 gap-x-3 rounded-lg text-center">
+                        <CardContent className="flex items-center p-6">
+                            <div>
+                                <img src={stat.image} alt={stat.title} className="" />
+                            </div>
+                            <div>
+                                <div className="text-2xl font-bold text-orange-500">{stat.value}</div>
+                                <div className="text-sm font-medium">{stat.title}</div>
+                                <div className="text-xs text-muted-foreground">{stat.status}</div>
+                            </div>
+                        </CardContent>
+                    </Card>
                 ))}
             </div>
         </div>

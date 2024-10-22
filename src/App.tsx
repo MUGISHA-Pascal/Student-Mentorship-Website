@@ -13,7 +13,7 @@ import Donate from "./pages/donate";
 import Register from "./pages/register";
 import Forgot from "./pages/forgot";
 import Footer from "./components/footer";
-import CoachHome from "./pages/coach";
+// import CoachHome from "./pages/coach";
 import AdminDashboard from './pages/dashboard/admin';
 import StudentDashboard from './pages/dashboard/student';
 import MentorDashboard from './pages/dashboard/mentor';
@@ -35,12 +35,19 @@ import StudentMentorProfil from './pages/Student/studentMentorProfil'
 import StudentCalendarPage from './pages/Student/studentCalendarPage '
 import StudentDocsPage from './pages/Student/studentDocsPage'
 import StudentSettingsPage from './pages/Student/studentSettingsPage'
-import HomePage from "./pages/coach/HomePage";
-import StudentsPage from "./pages/coach/studentsPage";
-import CalendarPage from "./pages/coach/calendarPage ";
-import ChatsPage from "./pages/coach/chatsPage";
-import DocsPage from "./pages/coach/docsPage";
-import SettingsPage from "./pages/coach/settimgsPage";
+import CoachHome from "./pages/Coach";
+import HomePage from "./pages/Coach/HomePage";
+import StudentsPage from "./pages/Coach/studentsPage";
+import CalendarPage from "./pages/Coach/calendarPage ";
+import ChatsPage from "./pages/Coach/chatsPage";
+import DocsPage from "./pages/Coach/docsPage";
+import SettingsPage from "./pages/Coach/settimgsPage";
+// import HomePage from "./pages/coach/HomePage";
+// import StudentsPage from "./pages/coach/studentsPage";
+// import CalendarPage from "./pages/coach/calendarPage ";
+// import ChatsPage from "./pages/coach/chatsPage";
+// import DocsPage from "./pages/coach/docsPage";
+// import SettingsPage from "./pages/coach/settimgsPage";
 // import JotFormEmbed from './components/home/formPage'
 
 interface LayoutProps {
