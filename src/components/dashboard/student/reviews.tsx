@@ -31,9 +31,9 @@ const Reviews: React.FC = () => {
   const visibleReviews = showAll ? reviewsData : reviewsData.slice(0, 4);
 
   return (
-    <div className="p-6 bg-white">
+    <div className="p-6">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-blue-600 underline">
+        <h2 className="text-xl font-semibold underline">
           {reviewsData.length} Reviews
         </h2>
         <button
@@ -48,7 +48,7 @@ const Reviews: React.FC = () => {
         {visibleReviews.map((review) => (
           <div
             key={review.id}
-            className="bg-gray-50 p-4 rounded-lg border shadow-md"
+            className="p-4 rounded-lg border shadow-md"
           >
             <div className="flex justify-between items-center mb-5">
               <h3 className="font-semibold">{review.name}</h3>

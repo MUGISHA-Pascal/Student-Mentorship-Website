@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { Plus, Video, BellDot, Home, Users, Calendar, MessageSquare, FileText } from 'lucide-react'
@@ -9,6 +10,8 @@ const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange }: { ex
 
   const handleResize = () => {
     if (window.innerWidth < 768) {
+      setExpanded(false);
+    } else if (window.innerWidth >= 768 && window.innerWidth < 1024) {
       setExpanded(false);
     } else {
       setExpanded(true);
@@ -81,9 +84,9 @@ function Header({ title }: { title: string }) {
         <button className="p-2 bg-background rounded-full shadow-sm border border-border">
           <Video className="w-6 h-6 text-destructive" />
         </button>
-        <Button variant="default" className="text-primary-foreground bg-primary hover:bg-primary/90">
+        {/* <Button variant="default" className="text-primary-foreground bg-primary hover:bg-primary/90">
           <Plus className="mr-2 h-4 w-4" />New Action
-        </Button>
+        </Button> */}
         <button className="p-2 bg-background rounded-full shadow-sm border border-border">
           <BellDot className="w-6 h-6 text-foreground" />
         </button>

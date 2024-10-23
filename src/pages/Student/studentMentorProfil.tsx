@@ -1,8 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
-import { Star,BookOpen, Users, Download } from 'lucide-react'
+import { Star, BookOpen, Users, Download } from 'lucide-react'
+import CoachIntro from '@/components/dashboard/student/coachIntro'
+import MentorExperience from '@/components/dashboard/student/mentorExperience'
+import Reviews from '@/components/dashboard/student/reviews'
+import coachImage from "/images/mentor_profile.png";
 
 export default function StudentMentorProfil() {
   const [newReview, setNewReview] = useState('')
@@ -79,7 +84,7 @@ export default function StudentMentorProfil() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="md:col-span-1">
           <Card>
             <CardContent className="pt-6">
@@ -141,7 +146,18 @@ export default function StudentMentorProfil() {
             </CardContent>
           </Card>
         </div>
-      </div>
+      </div> */}
+      <CoachIntro
+        image={coachImage}
+        name="Dr. Marcus"
+        fullName="Dr. John Doe"
+        phoneNumber="+250 780 000 000"
+        specialization="IT Monetization"
+        bio="Bio info about the coach on his background and also some experience info to give the student more interest."
+        reviews={31}
+      />
+      <MentorExperience />
+      <Reviews />
     </div>
   )
 }

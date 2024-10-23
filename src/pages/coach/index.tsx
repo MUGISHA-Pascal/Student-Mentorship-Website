@@ -9,9 +9,9 @@ import {
 } from "@/components/common/icons";
 import { SliderDemo } from "@/components/common/progress";
 import { StarRating } from "@/components/ui/star-rating";
-import PerformanceStatistics from "./components/chart-statistics";
 import { useMemo } from "react";
 import { CardProps, HeroCard } from "./components/hero-card";
+import PerformanceStatistics from "./components/chart-statistics";
 
 export default function CoachHome() {
   const heroCards = useMemo(

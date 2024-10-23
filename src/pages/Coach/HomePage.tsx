@@ -1,29 +1,11 @@
-import React from 'react'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
 import { Button } from "@/components/ui/button"
-import { ClipboardList, Users, GraduationCap, BookOpen, Plus } from 'lucide-react'
-import { Bar, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { GraduationCap, } from 'lucide-react'
+import DashboardMentorOverview from '@/components/dashboard/mentor/dashboardMentorOverview'
+import MentorGraph from '@/components/dashboard/mentor/mentorGraph'
 
-interface StatCardProps {
-  icon: React.ReactNode;
-  value: string | number;
-  label: string;
-  subtitle: string;
-}
-
-const StatCard: React.FC<StatCardProps> = ({ icon, value, label, subtitle }) => (
-  <Card className="bg-card text-card-foreground">
-    <CardContent className="flex items-center p-6">
-      <div className="mr-4 p-3 bg-primary/10 rounded-full">{icon}</div>
-      <div>
-        <div className="text-2xl font-bold">{value}</div>
-        <div className="text-sm font-medium text-muted-foreground">{label}</div>
-        <div className="text-xs text-muted-foreground">{subtitle}</div>
-      </div>
-    </CardContent>
-  </Card>
-)
 
 interface UpcomingEventProps {
   title: string;
@@ -44,25 +26,23 @@ const UpcomingEvent: React.FC<UpcomingEventProps> = ({ title, subtitle }) => (
   </Card>
 )
 
-const performanceData = [
-  { name: 'Jan', value: 30 },
-  { name: 'Feb', value: 40 },
-  { name: 'Mar', value: 45 },
-  { name: 'Apr', value: 50 },
-  { name: 'May', value: 55 },
-  { name: 'Jun', value: 60 },
-  { name: 'Jul', value: 65 },
-  { name: 'Aug', value: 70 },
-  { name: 'Sep', value: 75 },
-  { name: 'Oct', value: 80 },
-  { name: 'Nov', value: 85 },
-  { name: 'Dec', value: 90 },
-]
+
 
 export default function HomePage() {
+
+  const [name, setName] = useState("John Doe");
+  const [ongoingCourse, setOngoingCourse] = useState("Intermediate Piano Course");
+  const [startDate, setStartDate] = useState("4th/September/2024");
+  const [currentDate, setCurrentDate] = useState("9th/October/2024");
+  const [currentTask, setCurrentTask] = useState("Meeting with the Team");
+  const [activities, setActivities] = useState(12);
+  const [mentorRate, setMentorRate] = useState(80); // 80% rate
+  const [medals, setMedals] = useState(3);
+  const [courses, setCourses] = useState(12);
+
   return (
     <div className="p-6 space-y-6 bg-background text-foreground">
-      <div className="flex justify-between items-start">
+      {/* <div className="flex justify-between items-start">
         <div>
           <h2 className="text-3xl font-bold">Good Morning, Dr. Marcus <span className="text-yellow-500">★★★☆☆</span></h2>
           <p className="text-muted-foreground">We are happy that you came back</p>
@@ -85,37 +65,30 @@ export default function HomePage() {
           <Progress value={40} className="mb-2" />
           <p className="text-sm text-muted-foreground">Start: 4th/September/2024</p>
         </CardContent>
-      </Card>
+      </Card> */}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard icon={<ClipboardList className="h-6 w-6 text-primary" />} value="12" label="Activities" subtitle="Last week" />
-        <StatCard icon={<Users className="h-6 w-6 text-green-500" />} value="80%" label="Mentor-rate" subtitle="Last week" />
-        <StatCard icon={<GraduationCap className="h-6 w-6 text-red-500" />} value="3" label="Students" subtitle="Coached" />
-        <StatCard icon={<BookOpen className="h-6 w-6 text-orange-500" />} value="12" label="Courses" subtitle="Provided" />
-      </div>
+      <DashboardMentorOverview
+        name={name}
+        ongoingCourse={ongoingCourse}
+        startDate={startDate}
+        currentDate={currentDate}
+        currentTask={currentTask}
+        activities={activities}
+        mentorRate={mentorRate}
+        medals={medals}
+        courses={courses}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2 bg-card text-card-foreground">
-          <CardHeader>
-            <CardTitle>Performance Statistics</CardTitle>
-          </CardHeader>
-          <CardContent className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={performanceData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="value" fill="hsl(var(--primary))" />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
+        <Card className="lg:col-span-2">
+          <MentorGraph />
         </Card>
         <Card className="bg-card text-card-foreground">
           <CardHeader>
             <div className="flex justify-between items-center">
               <CardTitle>Upcoming</CardTitle>
-              <Button variant="ghost">Full Calendar</Button>
+              {/* <Button variant="ghost">Full Calendar</Button> */}
+              <a href="/dashboard/coach/calendar" className="text-blue-500 font-medium">Full Calendar</a>
             </div>
           </CardHeader>
           <CardContent>
@@ -123,9 +96,7 @@ export default function HomePage() {
             <UpcomingEvent title="Meeting With The Students" subtitle="More Students this year" />
             <UpcomingEvent title="Meeting With The Students" subtitle="More Students this year" />
             <UpcomingEvent title="Meeting With The Students" subtitle="More Students this year" />
-            <Button className="w-full">
-              <Plus className="mr-2 h-4 w-4" /> Add Event
-            </Button>
+            <UpcomingEvent title="Meeting With The Students" subtitle="More Students this year" />
           </CardContent>
         </Card>
       </div>
@@ -134,7 +105,8 @@ export default function HomePage() {
         <CardHeader>
           <div className="flex justify-between items-center">
             <CardTitle>What is New?</CardTitle>
-            <Button variant="ghost">Full Calendar</Button>
+            {/* <Button variant="ghost">Full Calendar</Button> */}
+            <a href="/dashboard/coach/calendar" className="text-blue-500 font-medium">Full Calendar</a>
           </div>
         </CardHeader>
         <CardContent>

@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Calendar as CalendarIcon, Clock, Plus, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import RecentMentorActivities from '../dashboard/mentor/recentMentorActivities'
+import UpcomingMentorActivities from '../dashboard/mentor/upcomingMentorActivities'
 
 const TodayCard = () => (
   <Card className="bg-primary/10 mb-6">
@@ -113,7 +116,7 @@ const CalendarView = () => {
 export default function CalendarPage() {
   return (
     <div className="p-4 sm:p-6 bg-background text-foreground min-h-screen">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <TodayCard />
           <div>
@@ -171,6 +174,33 @@ export default function CalendarPage() {
             <StudentAvailability name="Meeting With Students" status="Available" />
           </CardContent>
         </Card>
+      </div> */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-col-2 gap-x-5 items-center">
+        <div className="bg-blue-50 dark:bg-transparent dark:border px-3 py-6 rounded-lg flex">
+          <div>
+            <img src='/svgs/calendarDashboard.svg' alt="Calendar Illustration" className="" />
+          </div>
+          <div>
+            <p className="text-2xl font-semibold text-muted-foreground">What are you doing Today?</p>
+            <p className="text-blue-600 font-semibold mt-2">10/22/2024</p>
+            <p className="mt-2 text-green-600 flex items-center">
+              <span className="inline-block w-4 h-4 mr-2 bg-green-500 rounded-full"></span>
+              Meeting with students
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <h2 className="text-xl font-semibold mb-4">Upcoming Meetings</h2>
+          <UpcomingMeeting title="Meeting With The Mentors" date="9/12/2024" time="3:00 pm" />
+          <UpcomingMeeting title="Meeting With The Mentors" date="9/12/2024" time="3:00 pm" />
+        </div>
+      </div>
+      <div className="">
+        <RecentMentorActivities />
+      </div>
+      <div className="">
+        <UpcomingMentorActivities />
       </div>
     </div>
   )

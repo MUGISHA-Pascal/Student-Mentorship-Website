@@ -31,7 +31,7 @@ const CoachIntro: React.FC<CoachIntroProps> = ({
     };
 
     return (
-        <div className="w-full flex bg-white p-4 gap-x-5 rounded-lg">
+        <div className="w-full flex p-4 gap-x-5 rounded-lg">
             <div className="w-[35%] flex flex-col items-start">
                     <img
                         src={image}

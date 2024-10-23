@@ -12,7 +12,7 @@ interface Activity {
   date: string;
 }
 
-const RecentActivities: React.FC = () => {
+const RecentMentorActivities: React.FC = () => {
   const [eventTitle, setEventTitle] = useState('');
   const [showModal, setShowModal] = useState(false);
 
@@ -182,4 +182,4 @@ const RecentActivities: React.FC = () => {
   );
 };
 
-export default RecentActivities;
+export default RecentMentorActivities;

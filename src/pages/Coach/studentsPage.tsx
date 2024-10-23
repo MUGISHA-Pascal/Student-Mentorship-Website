@@ -1,31 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from 'react'
-import { Search, Filter, ChevronDown, MoreVertical, MessageSquare, UserPlus, Check, X } from 'lucide-react'
+import { Search, MoreVertical, UserPlus } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-
-interface StatCardProps {
-  icon: React.ReactNode;
-  value: string;
-  label: string;
-  subtitle: string;
-}
-
-const StatCard: React.FC<StatCardProps> = ({ icon, value, label, subtitle }) => (
-  <Card className="bg-card text-card-foreground">
-    <CardContent className="flex items-center p-4">
-      <div className="mr-4 p-3 bg-primary/10 rounded-full">{icon}</div>
-      <div>
-        <div className="text-xl sm:text-2xl font-bold">{value}</div>
-        <div className="text-sm font-medium text-muted-foreground">{label}</div>
-        <div className="text-xs text-muted-foreground">{subtitle}</div>
-      </div>
-    </CardContent>
-  </Card>
-)
+import MentorStatistics from '@/components/dashboard/mentor/mentorStatistics'
 
 interface StudentItemProps {
   student: {
@@ -39,8 +21,8 @@ interface StudentItemProps {
 }
 
 const StudentItem: React.FC<StudentItemProps> = ({ student, isWaitlist = false }) => (
-  <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-card text-card-foreground rounded-lg mb-2">
-    <div className="flex items-center mb-2 sm:mb-0">
+  <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 text-card-foreground rounded-lg mb-2 cursor-pointer bg-muted">
+    <div className="flex items-center mb-2 sm:mb-0 ">
       <input type="checkbox" className="mr-4" />
       <img src={student.avatar} alt={student.name} className="w-10 h-10 rounded-full mr-4" />
       <div>
@@ -56,10 +38,12 @@ const StudentItem: React.FC<StudentItemProps> = ({ student, isWaitlist = false }
   </div>
 )
 
-const StudentProfile: React.FC<{ student: {
-  email: React.ReactNode
-  address: React.ReactNode; avatar: string; name: string; field: string 
-} }> = ({ student }) => (
+const StudentProfile: React.FC<{
+  student: {
+    email: React.ReactNode
+    address: React.ReactNode; avatar: string; name: string; field: string
+  }
+}> = ({ student }) => (
   <div className="bg-card text-card-foreground p-6 rounded-lg">
     <img src={student.avatar} alt={student.name} className="w-24 h-24 rounded-full mx-auto mb-4" />
     <h3 className="text-xl font-bold text-center mb-2">{student.name}</h3>
@@ -137,8 +121,8 @@ export default function StudentsPage() {
   }
 
   const handleWaitlistStudentSelect = (studentId: number) => {
-    setSelectedWaitlistStudents(prev => 
-      prev.includes(studentId) 
+    setSelectedWaitlistStudents(prev =>
+      prev.includes(studentId)
         ? prev.filter(id => id !== studentId)
         : [...prev, studentId]
     )
@@ -157,7 +141,7 @@ export default function StudentsPage() {
   }
 
   const filteredStudents = students
-    .filter(student => 
+    .filter(student =>
       student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       student.email.toLowerCase().includes(searchQuery.toLowerCase())
     )
@@ -170,11 +154,15 @@ export default function StudentsPage() {
 
   return (
     <div className="p-4 sm:p-6 bg-background text-foreground min-h-screen">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <StatCard icon={<MessageSquare className="h-6 w-6 text-primary" />} value={students.length.toString()} label="Students" subtitle="Total" />
         <StatCard icon={<UserPlus className="h-6 w-6 text-green-500" />} value={waitlist.length.toString()} label="Waitlist" subtitle="Pending" />
         <StatCard icon={<Check className="h-6 w-6 text-red-500" />} value="3" label="Students" subtitle="Coached" />
         <StatCard icon={<X className="h-6 w-6 text-orange-500" />} value="12" label="Courses" subtitle="Provided" />
+      </div> */}
+
+      <div className="mb-7">
+        <MentorStatistics />
       </div>
 
       <div className="flex flex-col lg:flex-row">
@@ -187,21 +175,20 @@ export default function StudentsPage() {
                   <UserPlus className="mr-2 h-4 w-4" /> Add Student
                 </Button>
               </DialogTrigger>
-              <DialogContent>
+              {/* <DialogContent>
                 <DialogHeader>
                   <DialogTitle>Add New Student</DialogTitle>
                 </DialogHeader>
-                {/* Add form fields here */}
                 <p>Form to add a new student would go here</p>
-              </DialogContent>
+              </DialogContent> */}
             </Dialog>
           </div>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
             <div className="relative w-full sm:w-auto mb-2 sm:mb-0">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-              <Input 
-                className="pl-10 w-full sm:w-auto" 
-                placeholder="Search" 
+              <Input
+                className="pl-10 w-full sm:w-auto"
+                placeholder="Search"
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
               />
@@ -244,9 +231,9 @@ export default function StudentsPage() {
           <div className="space-y-2">
             {waitlist.map(student => (
               <div key={student.id} onClick={() => handleWaitlistStudentSelect(student.id)}>
-                <StudentItem 
-                  student={student} 
-                  isWaitlist 
+                <StudentItem
+                  student={student}
+                  isWaitlist
                 />
               </div>
             ))}

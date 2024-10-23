@@ -1,11 +1,28 @@
-import React, { useState } from 'react'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useEffect, useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import { Plus, Video, BellDot, Home, Users, Calendar, MessageSquare, Menu, FileText, Settings, PanelRightOpen } from 'lucide-react'
+import { Plus, Video, BellDot, Home, Users, Calendar, MessageSquare, FileText, Settings } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import ProfileSetupPopup from './coach/ProfileSetupPopup'
 import DarkModeToggle from './DarkModeToggle'
+import ProfileSetupPopup from './Coach/ProfileSetupPopup'
 
-const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange } : { expanded: boolean; setExpanded: (expanded: boolean) => void; activeSection: string; onSectionChange: (section: string) => void }) => {
+const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange }: { expanded: boolean; setExpanded: (expanded: boolean) => void; activeSection: string; onSectionChange: (section: string) => void }) => {
+
+  const handleResize = () => {
+    if (window.innerWidth >= 768 && window.innerWidth < 1024) {
+      setExpanded(false);
+    } else {
+      setExpanded(true);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <div className={`bg-background border-r border-border h-screen p-4 flex flex-col ${expanded ? 'w-64' : 'w-20'} transition-all duration-300`}>
       <div className="flex items-center mb-8 justify-between">
@@ -13,33 +30,40 @@ const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange } : { e
           <img src="/icons/logo.svg" alt="GOYA Logo" className="w-10 h-10 mr-2" />
           {expanded && <span className="text-2xl font-bold text-primary">GOYA</span>}
         </div>
-        <Button variant="ghost" size="icon" onClick={() => setExpanded(!expanded)}>
+        {/* <Button variant="ghost" size="icon" onClick={() => setExpanded(!expanded)}>
           {expanded ? <PanelRightOpen className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </Button>
+        </Button> */}
       </div>
       <nav className="space-y-2 flex-grow">
-        <SidebarLink icon={<Home />} label="Home" isActive={activeSection === '/dashboard/home'} onClick={() => onSectionChange('/dashboard/home')} to="/dashboard/coach/home" expanded={expanded} />
-        <SidebarLink icon={<Users />} label="Students" isActive={activeSection === '/dashboard/students'} onClick={() => onSectionChange('/dashboard/students')} to="/dashboard/coach/students" expanded={expanded} />
-        <SidebarLink icon={<Calendar />} label="Calendar" isActive={activeSection === '/dashboard/calendar'} onClick={() => onSectionChange('/dashboard/calendar')} to="/dashboard/coach/calendar" expanded={expanded} />
-        <SidebarLink icon={<MessageSquare />} label="Chats" isActive={activeSection === '/dashboard/chats'} onClick={() => onSectionChange('/dashboard/chats')} to="/dashboard/coach/chats" badge="2" expanded={expanded} />
-        <SidebarLink icon={<FileText />} label="Docs" isActive={activeSection === '/dashboard/docs'} onClick={() => onSectionChange('/dashboard/docs')} to="/dashboard/coach/docs" expanded={expanded} />
+        <SidebarLink icon={<Home />} label="Home" isActive={activeSection === '/dashboard/coach/home'} onClick={() => onSectionChange('/dashboard/coach/home')} to="/dashboard/coach/home" expanded={expanded} />
+        <SidebarLink icon={<Users />} label="Students" isActive={activeSection === '/dashboard/coach/students'} onClick={() => onSectionChange('/dashboard/coach/students')} to="/dashboard/coach/students" expanded={expanded} />
+        <SidebarLink icon={<Calendar />} label="Calendar" isActive={activeSection === '/dashboard/coach/calendar'} onClick={() => onSectionChange('/dashboard/coach/calendar')} to="/dashboard/coach/calendar" expanded={expanded} />
+        <SidebarLink icon={<MessageSquare />} label="Chats" isActive={activeSection === '/dashboard/coach/chats'} onClick={() => onSectionChange('/dashboard/coach/chats')} to="/dashboard/coach/chats" badge="2" expanded={expanded} />
+        <SidebarLink icon={<FileText />} label="Docs" isActive={activeSection === '/dashboard/coach/docs'} onClick={() => onSectionChange('/dashboard/coach/docs')} to="/dashboard/coach/docs" expanded={expanded} />
       </nav>
-      <SidebarLink icon={<Settings />} label="Settings" isActive={activeSection === '/dashboard/settings'} onClick={() => onSectionChange('/dashboard/settings')} to="/dashboard/coach/settings" expanded={expanded} />
+      <SidebarLink icon={<Settings />} label="Settings" isActive={activeSection === '/dashboard/coach/settings'} onClick={() => onSectionChange('/dashboard/settings')} to="/dashboard/coach/settings" expanded={expanded} />
     </div>
   )
 }
 
 function SidebarLink({ icon, label, to, isActive, badge, onClick, expanded }: { icon: React.ReactNode; label: string; badge?: string; to: string; isActive: boolean; onClick: () => void; expanded: boolean }) {
   return (
-    <Link 
-      to={to} 
-      onClick={onClick} 
-      className={`flex items-center space-x-2 p-2 rounded-lg ${isActive ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-accent'} ${expanded ? 'justify-start' : 'justify-center'}`}
+    <Link
+      to={to}
+      onClick={onClick}
+      className={`relative flex items-center space-x-2 p-2 rounded-lg group ${isActive ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-accent'} ${expanded ? 'justify-start' : 'justify-center'}`}
     >
       <div className={`flex items-center ${expanded ? 'mr-2' : 'mx-auto'}`}>
         {React.cloneElement(icon as React.ReactElement, { className: 'w-6 h-6' })}
       </div>
       {expanded && <span>{label}</span>}
+      {!expanded && (
+        <div
+          className={`absolute left-full -top-10 group-hover:top-2 rounded-md px-2 py-1 ml-6 bg-primary/10 text-primary text-sm invisible opacity-0 -translate-x-3 transition-all duration-800 group-hover:visible group-hover:opacity-100 group-hover:translate-x-0`}
+        >
+          {label}
+        </div>
+      )}
       {expanded && badge && (
         <span className="ml-auto bg-destructive text-destructive-foreground text-xs font-medium px-2 py-0.5 rounded-full">
           {badge}
@@ -57,9 +81,9 @@ function Header({ title }: { title: string }) {
         <button className="p-2 bg-background rounded-full shadow-sm border border-border">
           <Video className="w-6 h-6 text-destructive" />
         </button>
-        <Button variant="default" className="text-primary-foreground bg-primary hover:bg-primary/90">
+        {/* <Button variant="default" className="text-primary-foreground bg-primary hover:bg-primary/90">
           <Plus className="mr-2 h-4 w-4" />New Action
-        </Button>
+        </Button> */}
         <button className="p-2 bg-background rounded-full shadow-sm border border-border">
           <BellDot className="w-6 h-6 text-foreground" />
         </button>
@@ -95,11 +119,11 @@ export default function LayoutCoach() {
 
   return (
     <div className="flex h-screen bg-background text-foreground">
-      <Sidebar 
-        expanded={expanded} 
-        setExpanded={setExpanded} 
-        activeSection={location.pathname} 
-        onSectionChange={onSectionChange} 
+      <Sidebar
+        expanded={expanded}
+        setExpanded={setExpanded}
+        activeSection={location.pathname}
+        onSectionChange={onSectionChange}
       />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header title={getTitle(location.pathname)} />

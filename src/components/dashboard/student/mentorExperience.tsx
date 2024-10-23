@@ -1,3 +1,4 @@
+import { Card, CardContent } from "@/components/ui/card";
 import React, { useState } from "react";
 import { FaPlus, FaStar, FaTimes, FaUpload } from "react-icons/fa";
 
@@ -59,16 +60,18 @@ const MentorExperience: React.FC = () => {
         </div>
         <div className="flex flex-col gap-8">
           {stats.map((stat, index) => (
-            <div key={index} className="flex items-center justify-center gap-x-3 bg-blue-50 px-4 py-8 rounded-lg text-center">
-              <div>
-                <img src={stat.image} alt={stat.title} className="" />
-              </div>
-              <div>
-                <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
-                <p className="text-blue-600 text-xl font-semibold">{stat.title}</p>
-                <p className="text-sm text-gray-400">{stat.status}</p>
-              </div>
-            </div>
+            <Card key={index} className="flex items-center justify-center px-8 py-4 gap-x-3 rounded-lg text-center">
+              <CardContent className="flex items-center p-6">
+                <div>
+                  <img src={stat.image} alt={stat.title} className="" />
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-orange-500">{stat.value}</div>
+                  <div className="text-sm font-medium">{stat.title}</div>
+                  <div className="text-xs text-muted-foreground">{stat.status}</div>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>
@@ -79,7 +82,7 @@ const MentorExperience: React.FC = () => {
           className="w-[65%] flex items-center gap-2 bg-blue-500 text-white py-2 px-3 rounded-lg hover:bg-blue-600"
         >
           <FaUpload />
-          Upload a course
+          Download CV
         </button>
 
         {isModalOpen && (
@@ -120,10 +123,10 @@ const MentorExperience: React.FC = () => {
         )}
         <div className="">
           <div className="w-64 h-48 border border-blue-100 p-4 rounded-xl">
-            <h4 className="font-semibold text-blue-600 mb-3">Add a review</h4>
+            <h4 className="font-semibold mb-3">Add a review</h4>
             <textarea
               placeholder="Write your review"
-              className="w-full h-4/5 border p-2 rounded-md mb-4 focus:outline-none focus:border-blue-500"
+              className="w-full h-4/5 border p-2 rounded-md mb-4 focus:outline-none bg-transparent focus:border-blue-500"
             />
           </div>
           <div className="flex justify-between items-center mt-3">

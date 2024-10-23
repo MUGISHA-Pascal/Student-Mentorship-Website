@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Calendar as CalendarIcon, Clock, Plus, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import RecentActivities from '../dashboard/student/recentActivities'
+import UpcomingActivities from '@/components/dashboard/student/upcomingActivities'
 
 const TodayCard = () => (
   <Card className="bg-primary/10 mb-6">
@@ -113,64 +116,32 @@ const CalendarView = () => {
 export default function StudentCalendarPage() {
   return (
     <div className="p-4 sm:p-6 bg-background text-foreground min-h-screen">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <TodayCard />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-col-2 gap-x-5 items-center">
+        <div className="bg-blue-50 dark:bg-transparent dark:border px-3 py-6 rounded-lg flex">
           <div>
-          <div className="flex flex-col">
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Recent Activities</h2>
-              <Card>
-                <CardContent className="p-4">
-                  <div className="flex justify-between items-center mb-">
-                    <h3 className="font-semibold">Recent Activities</h3>
-                    <Button variant="link">Clear All</Button>
-                  </div>
-                  <RecentActivity title="Visit At The Piano school" date="9/16/2024" />
-                  <RecentActivity title="Visit At The Piano school" date="9/16/2024" />
-                  <RecentActivity title="Visit At The Piano school" date="9/16/2024" />
-                  <RecentActivity title="Visit At The Piano school" date="9/16/2024" />
-                </CardContent>
-              </Card>
-            </div>
-            <div>
-              <h2 className="p-4 text-xl font-semibold mb-">Upcoming Activities</h2>
-              <Card>
-                <CardContent className="p-4">
-                  <UpcomingActivity title="UI/UX Design Course By John Doe" date="9/17/2024" time="3:00 pm" />
-                  <UpcomingActivity title="UI/UX Design Course By John Doe" date="9/17/2024" time="3:00 pm" />
-                  <UpcomingActivity title="UI/UX Design Course By John Doe" date="9/17/2024" time="3:00 pm" />
-                  <div className="mt-4">
-                    <Button className="w-full">
-                      <Plus className="w-4 h-4 mr-2" /> Add Event
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+            <img src='/svgs/calendarDashboard.svg' alt="Calendar Illustration" className="" />
+          </div>
+          <div>
+            <p className="text-2xl font-semibold text-muted-foreground">What are you doing Today?</p>
+            <p className="text-blue-600 font-semibold mt-2">10/22/2024</p>
+            <p className="mt-2 text-green-600 flex items-center">
+              <span className="inline-block w-4 h-4 mr-2 bg-green-500 rounded-full"></span>
+              Meeting with students
+            </p>
           </div>
         </div>
-        </div>
+
         <div>
           <h2 className="text-xl font-semibold mb-4">Upcoming Meetings</h2>
           <UpcomingMeeting title="Meeting With The Mentors" date="9/12/2024" time="3:00 pm" />
           <UpcomingMeeting title="Meeting With The Mentors" date="9/12/2024" time="3:00 pm" />
-          <UpcomingMeeting title="Meeting With The Mentors" date="9/12/2024" time="3:00 pm" />
-          <CalendarView />
         </div>
       </div>
-
-      <div className="mt-6">
-        <h2 className="text-xl font-semibold mb-4">Mentors Availability</h2>
-        <Card>
-          <CardContent className="p-4">
-            <StudentAvailability name="Meeting With Mentors" status="Unavailable" />
-            <StudentAvailability name="Meeting With Mentors" status="Available" />
-            <StudentAvailability name="Meeting With Mentors" status="Excused" />
-            <StudentAvailability name="Meeting With Mentors" status="Unavailable" />
-            <StudentAvailability name="Meeting With Mentors" status="Available" />
-          </CardContent>
-        </Card>
+      <div className="">
+        <RecentActivities />
+      </div>
+      <div className="">
+        <UpcomingActivities />
       </div>
     </div>
   )

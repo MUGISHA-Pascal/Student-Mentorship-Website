@@ -11,7 +11,7 @@ const MentorStudent = () => {
         name="Dr. Marcus"
         fullName="Dr. John Doe"
         phoneNumber="+250 780 000 000"
-        specialization="Experience"
+        specialization="IT Monetization"
         bio="Bio info about the coach on his background and also some experience info to give the student more interest."
         reviews={31}
       />

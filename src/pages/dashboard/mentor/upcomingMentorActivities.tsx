@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaCalendarAlt } from 'react-icons/fa';
 
-const UpcomingActivities: React.FC = () => {
+const UpcomingMentorActivities: React.FC = () => {
   return (
     <div className="p-4 space-y-8 mt-5">
       <div className="flex flex-col md:flex-row md:space-x-8">
@@ -74,4 +74,4 @@ const Meetings: React.FC = () => {
   );
 };
 
-export default UpcomingActivities;
+export default UpcomingMentorActivities;
