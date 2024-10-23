@@ -160,7 +160,21 @@ const NewProfileSetupPopup: React.FC<{ isOpen: boolean; onClose: () => void }> =
       <Star key={i} className={`w-4 h-4 ${i < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
     ));
   };
-
+  const renderPersonalCareerCoach = () => (
+    <div className="hidden md:block">
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold flex justify-center items-center pt-12 text-gray-800">Personal Career Coach</h2>
+        <img src="/images/test.png" alt="Career Coach Illustration" className="mx-auto" />
+        <div className="text-center">
+          <p className="text-lg font-medium text-gray-800">Almost there!</p>
+          <p className="text-sm text-gray-600 mt-2">
+            "People work better when they know what the goal is and why. It is important that people look forward to coming to work in the morning and enjoy working"
+          </p>
+          <p className="text-sm text-blue-500">- Elon Musk</p>
+        </div>
+      </div>
+    </div>
+  );
   const renderCourseCard = (course: Course) => (
     <div key={course.id} className={`${course.color} p-4 rounded-lg shadow`}>
       <div className="flex items-start justify-between">
@@ -337,15 +351,16 @@ const NewProfileSetupPopup: React.FC<{ isOpen: boolean; onClose: () => void }> =
         );
       case 3:
         return (
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-800">Enter Your Personal details</h2>
-            <p className="text-sm text-gray-600">NB: This will appear on your profile</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
             <div className="space-y-4">
-              <div className="flex items-center justify-center">
-                <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center">
-                <Plus className="w-8 h-8 text-blue-500" />
+              <h2 className="text-xl font-semibold text-gray-800">Enter Your Personal details</h2>
+              <p className="text-sm text-gray-600">NB: This will appear on your profile</p>
+              <div className="space-y-4">
+                <div className="flex items-center justify-center">
+                  <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center">
+                    <Plus className="w-8 h-8 text-blue-500" />
+                  </div>
                 </div>
-              </div>
               <div className="grid grid-cols-2 gap-4">
                 <Input 
                   placeholder="Enter First Name" 
@@ -382,6 +397,8 @@ const NewProfileSetupPopup: React.FC<{ isOpen: boolean; onClose: () => void }> =
             <div className="flex justify-center mt-6">
               <Button onClick={handleFinish} className="bg-blue-500 text-white">Finish Setup</Button>
             </div>
+          </div>
+          {renderPersonalCareerCoach()}
           </div>
         );
       default:
