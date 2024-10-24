@@ -23,8 +23,21 @@ const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange } : { e
         <SidebarLink icon={<Calendar />} label="Calendar" isActive={activeSection === '/dashboard/calendar'} onClick={() => onSectionChange('/dashboard/calendar')} to="/dashboard/coach/calendar" expanded={expanded} />
         <SidebarLink icon={<MessageSquare />} label="Chats" isActive={activeSection === '/dashboard/chats'} onClick={() => onSectionChange('/dashboard/chats')} to="/dashboard/coach/chats" badge="2" expanded={expanded} />
         <SidebarLink icon={<FileText />} label="Docs" isActive={activeSection === '/dashboard/docs'} onClick={() => onSectionChange('/dashboard/docs')} to="/dashboard/coach/docs" expanded={expanded} />
+        <SidebarLink icon={<Settings />} label="Settings" isActive={activeSection === '/dashboard/settings'} onClick={() => onSectionChange('/dashboard/settings')} to="/dashboard/coach/settings" expanded={expanded} />
       </nav>
-      <SidebarLink icon={<Settings />} label="Settings" isActive={activeSection === '/dashboard/settings'} onClick={() => onSectionChange('/dashboard/settings')} to="/dashboard/coach/settings" expanded={expanded} />
+      
+      <button className="w-full flex items-center justify-center gap-2 bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600">
+          {expanded ? (
+            <>
+              <Video className="w-5 h-5" />
+              Start Meeting
+            </>
+          ) : (
+            <Video className="w-5 h-5" />
+          )}
+        </button>
+
+        
     </div>
   )
 }
@@ -57,9 +70,10 @@ function Header({ title }: { title: string }) {
         <button className="p-2 bg-background rounded-full shadow-sm border border-border">
           <Video className="w-6 h-6 text-destructive" />
         </button>
-        <Button variant="default" className="text-primary-foreground bg-primary hover:bg-primary/90">
-          <Plus className="mr-2 h-4 w-4" />New Action
-        </Button>
+        <button className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+            <Plus className="w-4 h-4" />
+            New Action
+          </button>
         <button className="p-2 bg-background rounded-full shadow-sm border border-border">
           <BellDot className="w-6 h-6 text-foreground" />
         </button>
@@ -106,7 +120,7 @@ export default function LayoutCoach() {
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-4">
           <Outlet />
         </main>
-        <ProfileSetupPopup isOpen={isProfileSetupOpen} onClose={() => setIsProfileSetupOpen(false)} />
+        <ProfileSetupPopup isOpen={isProfileSetupOpen} onClose={() => setIsProfileSetupOpen(false)} careersJsonUrl={'../utils/json/careers.json'} />
       </div>
     </div>
   )
