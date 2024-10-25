@@ -35,13 +35,13 @@ const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange }: { ex
         </Button> */}
       </div>
       <nav className="space-y-2 flex-grow">
-        <SidebarLink icon={<Home />} label="Home" isActive={activeSection === '/dashboard/coach/home'} onClick={() => onSectionChange('/dashboard/coach/home')} to="/dashboard/coach/home" expanded={expanded} />
-        <SidebarLink icon={<Users />} label="Students" isActive={activeSection === '/dashboard/coach/students'} onClick={() => onSectionChange('/dashboard/coach/students')} to="/dashboard/coach/students" expanded={expanded} />
-        <SidebarLink icon={<Calendar />} label="Calendar" isActive={activeSection === '/dashboard/coach/calendar'} onClick={() => onSectionChange('/dashboard/coach/calendar')} to="/dashboard/coach/calendar" expanded={expanded} />
-        <SidebarLink icon={<MessageSquare />} label="Chats" isActive={activeSection === '/dashboard/coach/chats'} onClick={() => onSectionChange('/dashboard/coach/chats')} to="/dashboard/coach/chats" badge="2" expanded={expanded} />
-        <SidebarLink icon={<FileText />} label="Docs" isActive={activeSection === '/dashboard/coach/docs'} onClick={() => onSectionChange('/dashboard/coach/docs')} to="/dashboard/coach/docs" expanded={expanded} />
+        <SidebarLink icon={<Home />} label="Home" isActive={activeSection === '/mentor/dashboard/home'} onClick={() => onSectionChange('/mentor/dashboard/home')} to="/mentor/dashboard/home" expanded={expanded} />
+        <SidebarLink icon={<Users />} label="Students" isActive={activeSection === '/mentor/dashboard/students'} onClick={() => onSectionChange('/mentor/dashboard/students')} to="/mentor/dashboard/students" expanded={expanded} />
+        <SidebarLink icon={<Calendar />} label="Calendar" isActive={activeSection === '/mentor/dashboard/calendar'} onClick={() => onSectionChange('/mentor/dashboard/calendar')} to="/mentor/dashboard/calendar" expanded={expanded} />
+        <SidebarLink icon={<MessageSquare />} label="Chats" isActive={activeSection === '/mentor/dashboard/chats'} onClick={() => onSectionChange('/mentor/dashboard/chats')} to="/mentor/dashboard/chats" badge="2" expanded={expanded} />
+        <SidebarLink icon={<FileText />} label="Docs" isActive={activeSection === '/mentor/dashboard/docs'} onClick={() => onSectionChange('/mentor/dashboard/docs')} to="/mentor/dashboard/docs" expanded={expanded} />
       </nav>
-      {/* <SidebarLink icon={<Settings />} label="Settings" isActive={activeSection === '/dashboard/coach/settings'} onClick={() => onSectionChange('/dashboard/settings')} to="/dashboard/coach/settings" expanded={expanded} /> */}
+      {/* <SidebarLink icon={<Settings />} label="Settings" isActive={activeSection === '/mentor/dashboard/settings'} onClick={() => onSectionChange('/dashboard/settings')} to="/mentor/dashboard/settings" expanded={expanded} /> */}
     </div>
   )
 }
@@ -106,12 +106,12 @@ export default function LayoutCoach() {
 
   const titles: { [key: string]: string } = {
     '/dashboard': 'Dashboard',
-    '/dashboard/coach/home': 'Mentor',
-    '/dashboard/coach/students': 'Your Students',
-    '/dashboard/coach/calendar': 'Your Calendar',
-    '/dashboard/coach/chats': 'Chats',
-    '/dashboard/coach/docs': 'Your Documents',
-    '/dashboard/coach/settings': 'Your Profile',
+    '/mentor/dashboard/home': 'Mentor',
+    '/mentor/dashboard/students': 'Your Students',
+    '/mentor/dashboard/calendar': 'Your Calendar',
+    '/mentor/dashboard/chats': 'Chats',
+    '/mentor/dashboard/docs': 'Your Documents',
+    '/mentor/dashboard/settings': 'Your Profile',
   }
   const getTitle = (path: string) => {
     return titles[path as keyof typeof titles] || 'Dashboard'

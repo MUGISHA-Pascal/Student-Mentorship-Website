@@ -88,7 +88,7 @@ export default function HomePage() {
             <div className="flex justify-between items-center">
               <CardTitle>Upcoming</CardTitle>
               {/* <Button variant="ghost">Full Calendar</Button> */}
-              <a href="/dashboard/coach/calendar" className="text-blue-500 font-medium">Full Calendar</a>
+              <a href="/mentor/dashboard/calendar" className="text-blue-500 font-medium">Full Calendar</a>
             </div>
           </CardHeader>
           <CardContent>
@@ -106,7 +106,7 @@ export default function HomePage() {
           <div className="flex justify-between items-center">
             <CardTitle>What is New?</CardTitle>
             {/* <Button variant="ghost">Full Calendar</Button> */}
-            <a href="/dashboard/coach/calendar" className="text-blue-500 font-medium">Full Calendar</a>
+            <a href="/mentor/dashboard/calendar" className="text-blue-500 font-medium">Full Calendar</a>
           </div>
         </CardHeader>
         <CardContent>
