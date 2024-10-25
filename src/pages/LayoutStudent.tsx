@@ -37,14 +37,14 @@ const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange }: { ex
         </Button> */}
       </div>
       <nav className="space-y-2 flex-grow">
-        <SidebarLink icon={<Home />} label="Home" isActive={activeSection === '/dashboard/student/home'} onClick={() => onSectionChange('/dashboard/student/home')} to="/dashboard/student/home" expanded={expanded} />
-        <SidebarLink icon={<Users />} label="Mentor" isActive={activeSection === '/dashboard/student/mentor'} onClick={() => onSectionChange('/dashboard/student/mentor')} to="/dashboard/student/mentor" expanded={expanded} />
-        <SidebarLink icon={<Calendar />} label="Calendar" isActive={activeSection === '/dashboard/student/calendar'} onClick={() => onSectionChange('/dashboard/student/calendar')} to="/dashboard/student/calendar" expanded={expanded} />
-        <SidebarLink icon={<MessageSquare />} label="Chats" isActive={activeSection === '/dashboard/student/chat'} onClick={() => onSectionChange('/dashboard/student/chat')} to="/dashboard/student/chat" badge="2" expanded={expanded} />
-        <SidebarLink icon={<FileText />} label="Docs" isActive={activeSection === '/dashboard/student/docs'} onClick={() => onSectionChange('/dashboard/student/docs')} to="/dashboard/student/docs" expanded={expanded} />
+        <SidebarLink icon={<Home />} label="Home" isActive={activeSection === '/student/dashboard'} onClick={() => onSectionChange('/student/dashboard')} to="/student/dashboard" expanded={expanded} />
+        <SidebarLink icon={<Users />} label="Mentor" isActive={activeSection === '/student/dashboard/mentor'} onClick={() => onSectionChange('/student/dashboard/mentor')} to="/student/dashboard/mentor" expanded={expanded} />
+        <SidebarLink icon={<Calendar />} label="Calendar" isActive={activeSection === '/student/dashboard/calendar'} onClick={() => onSectionChange('/student/dashboard/calendar')} to="/student/dashboard/calendar" expanded={expanded} />
+        <SidebarLink icon={<MessageSquare />} label="Chats" isActive={activeSection === '/student/dashboard/chat'} onClick={() => onSectionChange('/student/dashboard/chat')} to="/student/dashboard/chat" badge="2" expanded={expanded} />
+        <SidebarLink icon={<FileText />} label="Docs" isActive={activeSection === '/student/dashboard/docs'} onClick={() => onSectionChange('/student/dashboard/docs')} to="/student/dashboard/docs" expanded={expanded} />
         {/* <SidebarLink icon={<FileText />} label="Parent" isActive={activeSection === '/dashboard/docs'} onClick={() => onSectionChange('/dashboard/docs')} to="/dashboard/docs" expanded={expanded} /> */}
       </nav>
-      {/* <SidebarLink icon={<Settings />} label="Settings" isActive={activeSection === '/dashboard/settings'} onClick={() => onSectionChange('/dashboard/student/settings')} to="/dashboard/student/settings" expanded={expanded} /> */}
+      {/* <SidebarLink icon={<Settings />} label="Settings" isActive={activeSection === '/dashboard/settings'} onClick={() => onSectionChange('/student/dashboard/settings')} to="/student/dashboard/settings" expanded={expanded} /> */}
     </div>
   )
 }
@@ -108,13 +108,13 @@ export default function LayoutStudent() {
   };
 
   const titles: { [key: string]: string } = {
-    '/dashboard/student': 'Student',
-    '/dashboard/student/home': 'Student',
-    '/dashboard/student/mentor': 'Your Mentor',
-    '/dashboard/student/calendar': 'Your Calendar',
-    '/dashboard/student/chat': 'Chats',
-    '/dashboard/student/docs': 'Your Documents',
-    '/dashboard/student/settings': 'Your Profile',
+    '/student/dashboard': 'Student',
+    '/student/dashboard/home': 'Student',
+    '/student/dashboard/mentor': 'Your Mentor',
+    '/student/dashboard/calendar': 'Your Calendar',
+    '/student/dashboard/chat': 'Chats',
+    '/student/dashboard/docs': 'Your Documents',
+    '/student/dashboard/settings': 'Your Profile',
   }
   const getTitle = (path: string) => {
     return titles[path as keyof typeof titles] || 'Dashboard'

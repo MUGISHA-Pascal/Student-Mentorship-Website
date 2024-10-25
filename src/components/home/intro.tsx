@@ -17,9 +17,9 @@ const Intro = () => {
                         <span className="text-blue-500">Mentor</span> <span className="text-green-500">Passion</span> <span className="text-orange-500">UnlockInnovation</span>{">>>"}
                     </p>
                     <button>
-                        <Link to='/form'>
+                        <Link to='/register'>
                             <button className="flex items-center justify-center gap-x-2 md:gap-x-5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm md:text-lg py-2 px-2 md:py-3 md:px-4 rounded-xl text-nowrap">
-                                Apply Now!
+                                Get Started now
                                 <div className="flex items-center justify-center">
                                     <FaMinus className="rotate-90 h-4" />
                                     <FaArrowRight className="w-3" />

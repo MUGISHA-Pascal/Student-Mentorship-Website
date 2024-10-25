@@ -41,7 +41,7 @@ const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange }: { ex
         <SidebarLink icon={<MessageSquare />} label="Chats" isActive={activeSection === '/dashboard/coach/chats'} onClick={() => onSectionChange('/dashboard/coach/chats')} to="/dashboard/coach/chats" badge="2" expanded={expanded} />
         <SidebarLink icon={<FileText />} label="Docs" isActive={activeSection === '/dashboard/coach/docs'} onClick={() => onSectionChange('/dashboard/coach/docs')} to="/dashboard/coach/docs" expanded={expanded} />
       </nav>
-      <SidebarLink icon={<Settings />} label="Settings" isActive={activeSection === '/dashboard/coach/settings'} onClick={() => onSectionChange('/dashboard/settings')} to="/dashboard/coach/settings" expanded={expanded} />
+      {/* <SidebarLink icon={<Settings />} label="Settings" isActive={activeSection === '/dashboard/coach/settings'} onClick={() => onSectionChange('/dashboard/settings')} to="/dashboard/coach/settings" expanded={expanded} /> */}
     </div>
   )
 }
