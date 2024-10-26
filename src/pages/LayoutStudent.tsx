@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import { Plus, Video, BellDot, Home, Users, Calendar, MessageSquare, FileText } from 'lucide-react'
-import { Button } from "@/components/ui/button"
+import { Video, BellDot, Home, Users, Calendar, MessageSquare, FileText } from 'lucide-react'
 import StudentProfilSetup from './Student/StudentProfilSetup'
 import DarkModeToggle from './DarkModeToggle'
 

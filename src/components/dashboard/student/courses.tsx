@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { MoreVertical } from 'lucide-react';
 import React, { useState } from 'react';
-import { FaEllipsisH } from 'react-icons/fa';
 
 interface Course {
     title: string;
@@ -32,9 +30,9 @@ const Courses: React.FC = () => {
         setShowAll(!showAll);
     };
 
-    const handleMore = () => {
+    // const handleMore = () => {
 
-    }
+    // }
 
     const visibleCourses = showAll ? courses : courses.slice(0, 5);
 

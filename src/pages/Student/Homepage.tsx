@@ -1,36 +1,23 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
-import { Badge } from "@/components/ui/badge"
-import { ClipboardList, Users, Award, BookOpen, ChevronRight, Plus } from 'lucide-react'
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
+import { Users } from 'lucide-react'
 import { useState } from "react"
 import DashboardOverview from "@/components/dashboard/student/dashboardOverview"
 import StudentGraph from "@/components/dashboard/student/studentGraph"
 import Courses from "@/components/dashboard/student/courses"
 import { FaPlus } from "react-icons/fa"
 
-const performanceData = [
-  { name: 'Jan', Content: 20, "Content ": 30 },
-  { name: 'Feb', Content: 30, "Content ": 40 },
-  { name: 'Mar', Content: 40, "Content ": 45 },
-  { name: 'Apr', Content: 20, "Content ": 25 },
-  { name: 'May', Content: 30, "Content ": 30 },
-  { name: 'Jun', Content: 40, "Content ": 40 },
-]
 
 export default function HomePageStudent() {
 
-  const [name, setName] = useState("John Doe");
-  const [ongoingCourse, setOngoingCourse] = useState("Intermediate Piano Course");
-  const [startDate, setStartDate] = useState("4th/September/2024");
-  const [currentDate, setCurrentDate] = useState("9th/October/2024");
-  const [currentTask, setCurrentTask] = useState("Meeting with the Team");
-  const [activities, setActivities] = useState(12);
-  const [mentorRate, setMentorRate] = useState(80); // 80% rate
-  const [medals, setMedals] = useState(3);
-  const [courses, setCourses] = useState(12);
+  const [name] = useState("John Doe");
+  const [ongoingCourse] = useState("Intermediate Piano Course");
+  const [startDate] = useState("4th/September/2024");
+  const [currentDate] = useState("9th/October/2024");
+  const [currentTask] = useState("Meeting with the Team");
+  const [activities] = useState(12);
+  const [mentorRate] = useState(80); // 80% rate
+  const [medals] = useState(3);
+  const [courses] = useState(12);
 
   return (
     <div className="p-6 space-y-6 bg-background text-foreground">

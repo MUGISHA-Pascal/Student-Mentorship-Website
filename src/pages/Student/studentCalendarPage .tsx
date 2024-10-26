@@ -1,30 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Calendar as CalendarIcon, Clock, Plus, ChevronLeft, ChevronRight } from 'lucide-react'
-import { Button } from "@/components/ui/button"
+import { Calendar as CalendarIcon } from 'lucide-react'
 import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import RecentActivities from '../dashboard/student/recentActivities'
 import UpcomingActivities from '@/components/dashboard/student/upcomingActivities'
-
-const TodayCard = () => (
-  <Card className="bg-primary/10 mb-6">
-    <CardContent className="flex flex-col sm:flex-row items-center p-4 sm:p-6">
-      <div className="mb-4 sm:mb-0 sm:mr-6">
-        <img src="/svgs/calendar.svg?height=100&width=100" alt="Calendar illustration" className="w-20 h-20 sm:w-24 sm:h-24" />
-      </div>
-      <div className="text-center sm:text-left">
-        <h2 className="text-xl sm:text-2xl font-bold mb-2">What are you doing Today?</h2>
-        <p className="text-lg font-semibold text-primary mb-2">9th/10/2024</p>
-        <div className="flex justify-center sm:justify-start">
-          <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100">
-            <CalendarIcon className="w-4 h-4 mr-2" />
-            Meeting With The Musicians
-          </Badge>
-        </div>
-      </div>
-    </CardContent>
-  </Card>
-)
 
 const UpcomingMeeting = ({ title, date, time }: { title: string; date: string; time: string }) => (
   <Card className="mb-4">
@@ -40,78 +17,6 @@ const UpcomingMeeting = ({ title, date, time }: { title: string; date: string; t
     </CardContent>
   </Card>
 )
-
-const RecentActivity = ({ title, date }: { title: string; date: string }) => (
-  <div className="flex items-center justify-between py-2 border-b border-border">
-    <div className="flex items-center">
-      <input type="checkbox" className="mr-2" />
-      <span className="text-sm sm:text-base">{title}</span>
-    </div>
-    <div className="flex items-center">
-      <span className="text-xs sm:text-sm text-muted-foreground mr-2">{date}</span>
-      <Button variant="destructive" size="sm">
-        x
-      </Button>
-    </div>
-  </div>
-)
-
-const UpcomingActivity = ({ title, date, time }: { title: string; date: string; time: string }) => (
-  <div className="flex flex-col sm:flex-row sm:items-center justify-between py-2 border-b border-border">
-    <div className="mb-2 sm:mb-0">
-      <h4 className="font-semibold">{title}</h4>
-      <div className="flex items-center text-sm text-muted-foreground">
-        <CalendarIcon className="w-4 h-4 mr-1" />
-        <span>{date}</span>
-        <Clock className="w-4 h-4 ml-2 mr-1" />
-        <span>{time}</span>
-      </div>
-    </div>
-    <Button className="w-full sm:w-auto mt-2 sm:mt-0">Add To Schedule</Button>
-  </div>
-)
-
-const StudentAvailability = ({ name, status }: { name: string; status: string }) => (
-  <div className="flex flex-col sm:flex-row sm:items-center justify-between py-2 border-b border-border">
-    <div className="flex items-center mb-2 sm:mb-0">
-      <Badge variant={status === 'Available' ? 'default' : status === 'Unavailable' ? 'destructive' : 'outline'} className="mr-2" />
-      <span>{name}</span>
-    </div>
-    <div className="flex flex-col sm:flex-row sm:space-x-2">
-      <Button variant="outline" className="mb-2 sm:mb-0">Message</Button>
-      <Button>Accept</Button>
-    </div>
-  </div>
-)
-
-const CalendarView = () => {
-  const days = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']
-  const dates = Array.from({ length: 30 }, (_, i) => i + 1)
-
-  return (
-    <Card>
-      <CardContent className="p-4">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="font-semibold">Sep 2022</h3>
-          <div className="flex">
-            <Button variant="ghost" size="sm"><ChevronLeft className="w-4 h-4" /></Button>
-            <Button variant="ghost" size="sm"><ChevronRight className="w-4 h-4" /></Button>
-          </div>
-        </div>
-        <div className="grid grid-cols-7 gap-2">
-          {days.map(day => (
-            <div key={day} className="text-center text-xs sm:text-sm font-medium text-muted-foreground">{day}</div>
-          ))}
-          {dates.map(date => (
-            <Button key={date} variant={date === 25 ? 'default' : 'ghost'} className="w-full text-xs sm:text-sm p-1 sm:p-2">
-              {date}
-            </Button>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
 
 export default function StudentCalendarPage() {
   return (

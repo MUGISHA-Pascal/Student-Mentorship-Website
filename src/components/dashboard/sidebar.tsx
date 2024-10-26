@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { FaAngleDoubleLeft, FaAngleDoubleRight, FaEllipsisV } from "react-icons/fa";
+
+import { FaEllipsisV } from "react-icons/fa";
 import logo from "/icons/logo.svg";
 import profile from "/images/testimonial.png";
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
@@ -85,7 +85,7 @@ interface SidebarItemProps {
   alert?: boolean;
 }
 
-export const SidebarItem: React.FC<SidebarItemProps> = ({ icon, text, linkTo, active, alert }) => {
+export const SidebarItem: React.FC<SidebarItemProps> = ({ icon, text, linkTo, alert }) => {
   const { expanded } = useContext(SidebarContext)!;
   const location = useLocation(); 
   const isActive = location.pathname === linkTo;

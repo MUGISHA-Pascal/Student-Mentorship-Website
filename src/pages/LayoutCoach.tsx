@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import { Plus, Video, BellDot, Home, Users, Calendar, MessageSquare, FileText, Settings } from 'lucide-react'
-import { Button } from "@/components/ui/button"
+import { Video, BellDot, Home, Users, Calendar, MessageSquare, FileText } from 'lucide-react'
 import DarkModeToggle from './DarkModeToggle'
 import ProfileSetupPopup from './Coach/ProfileSetupPopup'
 
@@ -35,7 +33,7 @@ const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange }: { ex
         </Button> */}
       </div>
       <nav className="space-y-2 flex-grow">
-        <SidebarLink icon={<Home />} label="Home" isActive={activeSection === '/mentor/dashboard/home'} onClick={() => onSectionChange('/mentor/dashboard/home')} to="/mentor/dashboard/home" expanded={expanded} />
+        <SidebarLink icon={<Home />} label="Home" isActive={activeSection === '/mentor/dashboard'} onClick={() => onSectionChange('/mentor/dashboard')} to="/mentor/dashboard" expanded={expanded} />
         <SidebarLink icon={<Users />} label="Students" isActive={activeSection === '/mentor/dashboard/students'} onClick={() => onSectionChange('/mentor/dashboard/students')} to="/mentor/dashboard/students" expanded={expanded} />
         <SidebarLink icon={<Calendar />} label="Calendar" isActive={activeSection === '/mentor/dashboard/calendar'} onClick={() => onSectionChange('/mentor/dashboard/calendar')} to="/mentor/dashboard/calendar" expanded={expanded} />
         <SidebarLink icon={<MessageSquare />} label="Chats" isActive={activeSection === '/mentor/dashboard/chats'} onClick={() => onSectionChange('/mentor/dashboard/chats')} to="/mentor/dashboard/chats" badge="2" expanded={expanded} />
@@ -106,7 +104,7 @@ export default function LayoutCoach() {
 
   const titles: { [key: string]: string } = {
     '/dashboard': 'Dashboard',
-    '/mentor/dashboard/home': 'Mentor',
+    '/mentor/dashboard': 'Mentor',
     '/mentor/dashboard/students': 'Your Students',
     '/mentor/dashboard/calendar': 'Your Calendar',
     '/mentor/dashboard/chats': 'Chats',

@@ -1,87 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Textarea } from "@/components/ui/textarea"
-import { Star, BookOpen, Users, Download } from 'lucide-react'
 import CoachIntro from '@/components/dashboard/student/coachIntro'
 import MentorExperience from '@/components/dashboard/student/mentorExperience'
 import Reviews from '@/components/dashboard/student/reviews'
 import coachImage from "/images/mentor_profile.png";
 
 export default function StudentMentorProfil() {
-  const [newReview, setNewReview] = useState('')
-
-  interface StatCardProps {
-    icon: React.ReactNode;
-    value: string | number;
-    label: string;
-    subtitle: string;
-  }
-  const renderStars = (rating: number) => {
-    return Array(5).fill(0).map((_, i) => (
-      <Star key={i} className={`w-4 h-4 ${i < rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} />
-    ))
-  }
-  const StatCard: React.FC<StatCardProps> = ({ icon, value, label, subtitle }) => (
-    <Card className="bg-card text-card-foreground">
-      <CardContent className="flex items-center p-6">
-        <div className="mr-4 p-3 bg-primary/10 rounded-full">{icon}</div>
-        <div>
-          <div className="text-2xl font-bold">{value}</div>
-          <div className="text-sm font-medium text-muted-foreground">{label}</div>
-          <div className="text-xs text-muted-foreground">{subtitle}</div>
-        </div>
-      </CardContent>
-    </Card>
-  )
-
-  const renderExperienceTimeline = () => {
-    const experiences = [
-      { title: 'Musician Manager At Hope Music', period: '2018 - 2024' },
-      { title: 'Musician Manager At Hope Music', period: '2018 - 2024' },
-      { title: 'Musician Manager At Hope Music', period: '2018 - 2024' },
-      { title: 'Musician Manager At Hope Music', period: '2018 - 2024' },
-      { title: 'Musician Manager At Hope Music', period: '2018 - 2024' },
-      { title: 'Musician Manager At Hope Music', period: '2018 - 2024' },
-    ]
-
-    return experiences.map((exp, index) => (
-      <div key={index} className="flex items-center mb-4">
-        <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-4">
-          {index + 1}
-        </div>
-        <div>
-          <h4 className="font-semibold">{exp.title}</h4>
-          <p className="text-sm text-gray-500">{exp.period}</p>
-        </div>
-      </div>
-    ))
-  }
-
-  const renderReviews = () => {
-    const reviews = [
-      { name: 'John Doe', date: '2 days ago', content: 'I was really impressed by this mentor due how caring he is', rating: 3 },
-      { name: 'John Doe', date: '2 days ago', content: 'I was really impressed by this mentor due how caring he is', rating: 3 },
-      { name: 'John Doe', date: '2 days ago', content: 'I was really impressed by this mentor due how caring he is', rating: 3 },
-      { name: 'John Doe', date: '2 days ago', content: 'I was really impressed by this mentor due how caring he is', rating: 3 },
-      { name: 'John Doe', date: '2 days ago', content: 'I was really impressed by this mentor due how caring he is', rating: 3 },
-    ]
-
-    return reviews.map((review, index) => (
-      <Card key={index} className="mb-4">
-        <CardContent className="pt-4">
-          <div className="flex justify-between items-center mb-2">
-            <h4 className="font-semibold">{review.name}</h4>
-            <span className="text-sm text-gray-500">{review.date}</span>
-          </div>
-          <p className="text-sm mb-2">{review.content}</p>
-          <div className="flex">{renderStars(review.rating)}</div>
-        </CardContent>
-      </Card>
-    ))
-  }
-
+  
   return (
     <div className="container mx-auto px-4 py-8">
       {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

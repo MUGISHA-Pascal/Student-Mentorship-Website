@@ -69,13 +69,6 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
     }
   };
 
-  const handleBack = () => {
-    if (step > 1) {
-      setStep(step - 1);
-    }
-  };
-
-
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
