@@ -5,6 +5,5 @@ services:
     image: goya-frontend:latest
     build:
       context: .
-    ports:
-      - 3085:4173
+    network_mode: host
     restart: always

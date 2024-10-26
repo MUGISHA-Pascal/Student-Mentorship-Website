@@ -11,7 +11,7 @@ type OTPVerificationProps = {
     handleBack: () => void;
 };
 
-const OtpVerification: React.FC<OTPVerificationProps> = ({ handleOTPVerification, handleOTPResend, otp, setOtp, isSubmitting, handleBack }: OTPVerificationProps) => {
+const OTPVerification: React.FC<OTPVerificationProps> = ({ handleOTPVerification, handleOTPResend, otp, setOtp, isSubmitting, handleBack }: OTPVerificationProps) => {
 
     const isButtonDisabled = otp.length !== 6;
 
@@ -81,4 +81,4 @@ const OtpVerification: React.FC<OTPVerificationProps> = ({ handleOTPVerification
     )
 }
 
-export default OtpVerification
+export default OTPVerification
