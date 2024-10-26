@@ -16,14 +16,30 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      await login(email, password);
+      const response = await login(email, password);
+      const { user } = response;
       if (rememberMe) {
         localStorage.setItem("email", email);
       } else {
         localStorage.removeItem("email");
       }
       toast.success("Login successful!", { position: "top-right", autoClose: 5000 });
-      navigate('/');
+      if (user.role === 'ADMIN') {
+        navigate('/admin/dashboard');
+      } else if (user.role === 'STUDENT') {
+        navigate('/student/dashboard');
+      }
+      else if (user.role === 'EMPLOYER') {
+        navigate('/employer/dashboard');
+      }
+      else if (user.role === 'FAMILY') {
+        navigate('/family/dashboard');
+      }
+      else if (user.role === 'MENTOR') {
+        navigate('/mentor/dashboard');
+      } else {
+        navigate('/notfound');
+      }
     } catch (error) {
       toast.error("Login failed. Incorrect email or password.", { position: "top-right", autoClose: 5000 });
     }

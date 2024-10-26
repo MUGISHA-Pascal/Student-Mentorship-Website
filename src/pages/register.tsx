@@ -46,7 +46,7 @@ const Register: React.FC = () => {
     try {
       const payload = { firstName, lastName, email, dob, gender, password, role };
       console.log(payload);
-      
+
       // const response = await axios.post('https://api.goyoungafrica.org/api/v1/auth/register', payload);
       const response = await axios.post('http://localhost:3000/api/v1/auth/register', payload);
       // const { user } = response.data;
@@ -64,6 +64,14 @@ const Register: React.FC = () => {
   }
 
   const handleModelToggle = async () => {
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match!', { position: "top-right", autoClose: 5000 });
+      return;
+    }
+    if (password.length < 8) {
+      toast.error('Password must be at least 8 characters long!', { position: "top-right", autoClose: 5000 });
+      return;
+    }
     setIsModalOpen(true);
   }
 
