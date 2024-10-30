@@ -193,7 +193,7 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose, 
                     placeholder="Or enter it manually" 
                     value={currentExperience.career}
                     onChange={(e) => setCurrentExperience({ ...currentExperience, career: e.target.value })}
-                    className="w-full"
+                    className="w-full dark:text-black"
                   />
                   <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -202,7 +202,7 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose, 
                         type="date" 
                         value={currentExperience.from}
                         onChange={(e) => setCurrentExperience({ ...currentExperience, from: e.target.value })}
-                        className="w-full"
+                        className="w-full dark:text-black"
                       />
                     </div>
                     <div>
@@ -211,12 +211,12 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose, 
                         type="date" 
                         value={currentExperience.to}
                         onChange={(e) => setCurrentExperience({ ...currentExperience, to: e.target.value })}
-                        className="w-full"
+                        className="w-full dark:text-black"
                       />
                     </div>
                   </div>
                   <Button onClick={handleAddExperience} className="w-full bg-blue-500 text-white">Add</Button>
-                  <Button onClick={handleResetExperience} variant="outline" className="w-full border-blue-500 text-blue-500">Reset</Button>
+                  <Button onClick={handleResetExperience} variant="outline" className="w-full border-blue-500 text-blue-500 dark:bg-red-500 dark:text-white">Reset</Button>
                 </CardContent>
               </Card>
               <div className="flex items-center justify-center h-full">
@@ -228,8 +228,8 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose, 
                   <div className="space-y-2">
                     {experiences.map((exp, index) => (
                       <div key={index} className="text-sm">
-                        <p className="font-medium text-gray-800">{exp.career}</p>
-                        <p className="text-gray-500">{exp.from} - {exp.to}</p>
+                        <p className="font-medium text-gray-800 dark:text-black">{exp.career}</p>
+                        <p className="text-gray-500 dark:text-black">{exp.from} - {exp.to}</p>
                       </div>
                     ))}
                   </div>

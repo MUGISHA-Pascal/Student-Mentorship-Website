@@ -64,7 +64,7 @@ const UpcomingActivity = ({ title, date, time }: { title: string; date: string; 
         <span>{time}</span>
       </div>
     </div>
-    <Button className="w-full sm:w-auto mt-2 sm:mt-0">Add To Schedule</Button>
+    <Button className="w-full sm:w-auto mt-2 sm:mt-0 dark:text-white">Add To Schedule</Button>
   </div>
 )
 
@@ -76,7 +76,7 @@ const StudentAvailability = ({ name, status }: { name: string; status: string })
     </div>
     <div className="flex flex-col sm:flex-row sm:space-x-2">
       <Button variant="outline" className="mb-2 sm:mb-0">Message</Button>
-      <Button>Accept</Button>
+      <Button className='dark:text-white'>Accept</Button>
     </div>
   </div>
 )
@@ -141,8 +141,8 @@ export default function StudentCalendarPage() {
                   <UpcomingActivity title="UI/UX Design Course By John Doe" date="9/17/2024" time="3:00 pm" />
                   <UpcomingActivity title="UI/UX Design Course By John Doe" date="9/17/2024" time="3:00 pm" />
                   <div className="mt-4">
-                    <Button className="w-full">
-                      <Plus className="w-4 h-4 mr-2" /> Add Event
+                    <Button className="w-full dark:text-white">
+                      <Plus className="w-4 h-4 mr-2 " /> Add Event
                     </Button>
                   </div>
                 </CardContent>

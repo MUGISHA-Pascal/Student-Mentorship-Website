@@ -203,6 +203,7 @@ const NewProfileSetupPopup: React.FC<{ isOpen: boolean; onClose: () => void }> =
             Details
           </Button>
           <Button 
+            className='dark:text-white'
             size="sm"
             onClick={() => {
               setSelectedCourse(course);

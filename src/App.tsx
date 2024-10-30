@@ -27,6 +27,7 @@ import StudentDocsPage from './pages/Student/studentDocsPage'
 import StudentSettingsPage from './pages/Student/studentSettingsPage'
 
 // import JotFormEmbed from './components/home/formPage'
+import MeetingPage from './pages/Meeting/MeetingView';
 
 
 interface LayoutProps {
@@ -66,20 +67,18 @@ const App = () => {
         <Route path="/members" element={<Members />} />
         <Route path="/login" element={<Layout showNavbar={false} showFooter={false}><Login /></Layout>} />
         <Route path="/register" element={<Layout showNavbar={false} showFooter={false}><Register /></Layout>} />
-        {/* <Route path="/form" element={<JotFormEmbed />} /> */}
         <Route path="/forgot" element={<Layout showNavbar={false} showFooter={false}><Forgot /></Layout>} />
         <Route path="/donate" element={<Layout showNavbar={false} showFooter={false}><Donate /></Layout>} />
 
-        {/* Protected dashboard routes */}
-        {/* <Route path="/dashboard" element={<PrivateRoute><LayoutCoach /></PrivateRoute>}> */}
-          <Route path="/dashboard/coach" element={<LayoutCoach />}>
+      
+        <Route path="/dashboard/coach" element={<LayoutCoach />}>
           <Route index element={<Navigate replace to="/dashboard/coach/home" />} />
           <Route path="home" element={<HomePage />} />
           <Route path="students" element={<StudentsPage />} />
           <Route path="calendar" element={<CalendarPage />} />
           <Route path="chats" element={<ChatsPage />} />
           <Route path="docs" element={<DocsPage />} />
-          <Route path="settings" element={<SettingsPage />} /> 
+          <Route path="settings" element={<SettingsPage />} />
         </Route>
         
         <Route path="/dashboard/student" element={<LayoutStudent />}>
@@ -90,10 +89,9 @@ const App = () => {
           <Route path="docs" element={<StudentDocsPage />} />
           <Route path="calendar" element={<StudentCalendarPage />} /> 
           <Route path="settings" element={<StudentSettingsPage />} /> 
-           
-          
         </Route>
-
+        <Route path="/dashboard/meeting" element={<MeetingPage />} >
+        </Route>
 
       </Routes>
     </Router>

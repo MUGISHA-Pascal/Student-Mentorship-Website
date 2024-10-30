@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import { Plus, Video, BellDot, Home, Users, Calendar, MessageSquare, Menu, FileText, Settings, PanelRightOpen } from 'lucide-react'
+import { Video, Home, Users, Calendar, MessageSquare, Menu, FileText, Settings, PanelRightOpen } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import ProfileSetupPopup from '../pages/Coach/ProfileSetupPopup'
-import DarkModeToggle from './DarkModeToggle'
+import { useNavigate } from 'react-router-dom';
+import { Header } from './Header'
 
-const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange } : { expanded: boolean; setExpanded: (expanded: boolean) => void; activeSection: string; onSectionChange: (section: string) => void }) => {
+const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange } : { expanded: boolean; setExpanded: (expanded: boolean)  =>  void; activeSection: string; onSectionChange: (section: string) => void }) => {
+  const navigate = useNavigate();
   return (
     <div className={`bg-background border-r border-border h-screen p-4 flex flex-col ${expanded ? 'w-64' : 'w-20'} transition-all duration-300`}>
       <div className="flex items-center mb-8 justify-between">
@@ -26,18 +28,19 @@ const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange } : { e
         <SidebarLink icon={<Settings />} label="Settings" isActive={activeSection === '/dashboard/settings'} onClick={() => onSectionChange('/dashboard/settings')} to="/dashboard/coach/settings" expanded={expanded} />
       </nav>
       
-      <button className="w-full flex items-center justify-center gap-2 bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600">
-          {expanded ? (
-            <>
-              <Video className="w-5 h-5" />
-              Start Meeting
-            </>
-          ) : (
+      <button 
+        onClick={() => navigate('/dashboard/meeting')}
+        className="w-full flex items-center justify-center gap-2 bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600"
+      >
+        {expanded ? (
+          <>
             <Video className="w-5 h-5" />
-          )}
-        </button>
-
-        
+            Start Meeting
+          </>
+        ) : (
+          <Video className="w-5 h-5" />
+        )}
+      </button>
     </div>
   )
 }
@@ -62,27 +65,28 @@ function SidebarLink({ icon, label, to, isActive, badge, onClick, expanded }: { 
   );
 }
 
-function Header({ title }: { title: string }) {
-  return (
-    <header className="flex justify-between items-center p-4 border-b border-border bg-background">
-      <h1 className="text-2xl font-semibold">{title}</h1>
-      <div className="flex items-center space-x-4">
-        <button className="p-2 bg-background rounded-full shadow-sm border border-border">
-          <Video className="w-6 h-6 text-destructive" />
-        </button>
-        <button className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-            <Plus className="w-4 h-4" />
-            New Action
-          </button>
-        <button className="p-2 bg-background rounded-full shadow-sm border border-border">
-          <BellDot className="w-6 h-6 text-foreground" />
-        </button>
-        <DarkModeToggle />
-        <img src="/svgs/avatar1.svg" alt="Profile" className="w-10 h-10 rounded-full" />
-      </div>
-    </header>
-  )
-}
+// old header included in the layout
+// function Header({ title }: { title: string }) {
+//   return (
+//     <header className="flex justify-between items-center p-4 border-b border-border bg-background">
+//       <h1 className="text-2xl font-semibold">{title}</h1>
+//       <div className="flex items-center space-x-4">
+//         <button className="p-2 bg-background rounded-full shadow-sm border border-border">
+//           <Video className="w-6 h-6 text-destructive" />
+//         </button>
+//         <button className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+//             <Plus className="w-4 h-4" />
+//             New Action
+//           </button>
+//         <button className="p-2 bg-background rounded-full shadow-sm border border-border">
+//           <BellDot className="w-6 h-6 text-foreground" />
+//         </button>
+//         <DarkModeToggle />
+//         <img src="/svgs/avatar1.svg" alt="Profile" className="w-10 h-10 rounded-full" />
+//       </div>
+//     </header>
+//   )
+// }
 
 export default function LayoutCoach() {
   const [expanded, setExpanded] = useState(true);
@@ -93,6 +97,7 @@ export default function LayoutCoach() {
     // Handle section change logic here
     console.log('Section changed:', section);
   };
+  const showProfileSetup = !location.pathname.includes('/meeting');
 
   const titles: { [key: string]: string } = {
     '/dashboard': 'Dashboard',
@@ -102,6 +107,7 @@ export default function LayoutCoach() {
     '/dashboard/coach/chats': 'Chats',
     '/dashboard/coach/docs': 'Your Documents',
     '/dashboard/coach/settings': 'Your Profile',
+    '/dashboard/coach/meeting' : 'Call'
   }
   const getTitle = (path: string) => {
     return titles[path as keyof typeof titles] || 'Dashboard'
@@ -120,7 +126,13 @@ export default function LayoutCoach() {
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-4">
           <Outlet />
         </main>
-        <ProfileSetupPopup isOpen={isProfileSetupOpen} onClose={() => setIsProfileSetupOpen(false)} careersJsonUrl={'../utils/json/careers.json'} />
+        {showProfileSetup && (
+          <ProfileSetupPopup 
+            isOpen={isProfileSetupOpen} 
+            onClose={() => setIsProfileSetupOpen(false)} 
+            careersJsonUrl={'../utils/json/careers.json'} 
+          />
+        )}
       </div>
     </div>
   )

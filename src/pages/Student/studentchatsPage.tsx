@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Search, Edit2, Plus, ChevronDown, Send, ChevronLeft, ChevronRight, UserCircle, Settings } from 'lucide-react'
+import { Search, Edit2, Plus, ChevronDown, Send, UserCircle, Settings } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -79,9 +79,9 @@ const DirectMessageItem: React.FC<{ dm: DirectMessage; isActive: boolean; isColl
 
 const MessageBubble: React.FC<{ message: Message }> = ({ message }) => (
   <div className={`flex ${message.isOwn ? 'justify-end' : 'justify-start'} mb-4`}>
-    <div className={`max-w-[70%] p-3 rounded-lg ${message.isOwn ? 'bg-primary text-primary-foreground' : 'bg-secondary'}`}>
+    <div className={`max-w-[70%] p-3 rounded-lg ${message.isOwn ? 'bg-primary text-white' : 'bg-secondary'}`}>
       <p className="text-sm">{message.content}</p>
-      <p className="text-xs text-muted-foreground mt-1">{message.timestamp}</p>
+      <p className="text-xs mt-1">{message.timestamp}</p>
     </div>
   </div>
 )
@@ -158,9 +158,9 @@ export default function StudentChatsPage() {
     }
   }, [activeChannel])
 
-  const toggleCollapse = () => {
-    setIsCollapsed(!isCollapsed)
-  }
+  // const toggleCollapse = () => {
+  //   setIsCollapsed(!isCollapsed)
+  // }
 
   const handleSendMessage = () => {
     if (newMessage.trim() && socketRef.current) {
@@ -204,9 +204,10 @@ export default function StudentChatsPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="ghost" size="icon" onClick={toggleCollapse} className={isCollapsed ? '' : 'ml-2'}>
+          
+          {/* <Button variant="ghost" size="icon" onClick={toggleCollapse} className={isCollapsed ? '' : 'ml-2'}>
             {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-          </Button>
+          </Button> */}
         </div>
         <div className="flex-1 overflow-y-auto p-4">
           <div className={`flex justify-between items-center mb-2 ${isCollapsed ? 'hidden' : 'block'}`}>

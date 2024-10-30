@@ -38,7 +38,7 @@ export default function HomePageStudent() {
       <Card>
         <CardContent className="p-6">
           <h3 className="font-semibold mb-2">On-going: Intermediate Piano Course</h3>
-          <Progress value={40} className="mb-2" />
+          <Progress value={40} className="mb-2 " />
           <p className="text-sm text-muted-foreground">Start: 4th/September/2024</p>
         </CardContent>
       </Card>
@@ -122,8 +122,8 @@ export default function HomePageStudent() {
                 </CardContent>
               </Card>
             ))}
-            <Button className="w-full">
-              <Plus className="mr-2 h-4 w-4" /> Add Event
+            <Button className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+              <Plus className="mr-2 h-4 w-4 " /> Add Event
             </Button>
           </CardContent>
         </Card>

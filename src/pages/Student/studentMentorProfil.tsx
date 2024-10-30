@@ -103,7 +103,7 @@ export default function StudentMentorProfil() {
             <CardContent className="pt-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-semibold">Experience Timeline</h3>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className='bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600'>
                   <Download className="w-4 h-4 mr-2" />
                   Download CV
                 </Button>
@@ -133,7 +133,7 @@ export default function StudentMentorProfil() {
                   <div className="flex">
                     {renderStars(0)}
                   </div>
-                  <Button>Post</Button>
+                  <Button className='bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600'>Post</Button>
                 </div>
               </div>
               {renderReviews()}

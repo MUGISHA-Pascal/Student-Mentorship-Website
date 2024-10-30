@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import { Search, Filter, ChevronDown, MoreVertical, MessageSquare, UserPlus, Check, X } from 'lucide-react'
+import { Search, MoreVertical, MessageSquare, UserPlus, Check, X } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Label } from "@/components/ui/label"
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 interface StatCardProps {
   icon: React.ReactNode;
@@ -29,6 +38,7 @@ const StatCard: React.FC<StatCardProps> = ({ icon, value, label, subtitle }) => 
 
 interface StudentItemProps {
   student: {
+    id: number;
     field: React.ReactNode
     email: React.ReactNode
     contact: React.ReactNode
@@ -36,9 +46,10 @@ interface StudentItemProps {
     name: string;
   };
   isWaitlist?: boolean;
+  onRemove: (id: number) => void;
 }
 
-const StudentItem: React.FC<StudentItemProps> = ({ student, isWaitlist = false }) => (
+const StudentItem: React.FC<StudentItemProps> = ({ student, isWaitlist = false, onRemove }) => (
   <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-card text-card-foreground rounded-lg mb-2">
     <div className="flex items-center mb-2 sm:mb-0">
       <input type="checkbox" className="mr-4" />
@@ -51,7 +62,21 @@ const StudentItem: React.FC<StudentItemProps> = ({ student, isWaitlist = false }
     <div className="flex flex-col sm:flex-row sm:items-center mt-2 sm:mt-0">
       <div className="mb-2 sm:mb-0 sm:mr-4 text-primary">{student.email}</div>
       <div className="mb-2 sm:mb-0 sm:mr-4 px-3 py-1 bg-secondary text-secondary-foreground rounded-full">{student.field}</div>
-      {!isWaitlist && <MoreVertical className="text-muted-foreground hidden sm:block" />}
+      {!isWaitlist && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => onRemove(student.id)}>
+              Remove
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
     </div>
   </div>
 )
@@ -87,6 +112,7 @@ const StudentProfile: React.FC<{ student: {
     </div>
   </div>
 )
+
 interface Student {
   id: number;
   name: string;
@@ -113,6 +139,14 @@ export default function StudentsPage() {
   const [sortBy, setSortBy] = useState('name')
   const [filterField, setFilterField] = useState('All')
   const [selectedWaitlistStudents, setSelectedWaitlistStudents] = useState<number[]>([])
+  const [newStudent, setNewStudent] = useState<Omit<Student, 'id' | 'avatar'>>({
+    name: '',
+    contact: '',
+    email: '',
+    field: '',
+    address: ''
+  })
+  const [isAddStudentDialogOpen, setIsAddStudentDialogOpen] = useState(false)
 
   useEffect(() => {
     if (students.length > 0 && !selectedStudent) {
@@ -149,11 +183,39 @@ export default function StudentsPage() {
     setStudents(prev => [...prev, ...approvedStudents])
     setWaitlist(prev => prev.filter(student => !selectedWaitlistStudents.includes(student.id)))
     setSelectedWaitlistStudents([])
+    toast.success(`Approved ${approvedStudents.length} student(s) from the waitlist.`)
   }
 
   const handleRemoveWaitlist = () => {
+    const removedCount = selectedWaitlistStudents.length
     setWaitlist(prev => prev.filter(student => !selectedWaitlistStudents.includes(student.id)))
     setSelectedWaitlistStudents([])
+    toast.info(`Removed ${removedCount} student(s) from the waitlist.`)
+  }
+
+  const handleAddStudent = (e: React.FormEvent) => {
+    e.preventDefault()
+    const newId = Math.max(...students.map(s => s.id), 0) + 1
+    const newStudentWithId: Student = {
+      ...newStudent,
+      id: newId,
+      avatar: `https://i.pravatar.cc/150?img=${newId}` // Generate a random avatar
+    }
+    setStudents(prev => [...prev, newStudentWithId])
+    setNewStudent({ name: '', contact: '', email: '', field: '', address: '' })
+    setIsAddStudentDialogOpen(false)
+    toast.success(`${newStudentWithId.name} has been added to the student list.`)
+  }
+
+  const handleRemoveStudent = (id: number) => {
+    const studentToRemove = students.find(student => student.id === id)
+    if (studentToRemove) {
+      setStudents(prev => prev.filter(student => student.id !== id))
+      toast.success(`${studentToRemove.name} has been removed from the student list.`)
+      if (selectedStudent && selectedStudent.id === id) {
+        setSelectedStudent(null)
+      }
+    }
   }
 
   const filteredStudents = students
@@ -170,6 +232,7 @@ export default function StudentsPage() {
 
   return (
     <div className="p-4 sm:p-6 bg-background text-foreground min-h-screen">
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <StatCard icon={<MessageSquare className="h-6 w-6 text-primary" />} value={students.length.toString()} label="Students" subtitle="Total" />
         <StatCard icon={<UserPlus className="h-6 w-6 text-green-500" />} value={waitlist.length.toString()} label="Waitlist" subtitle="Pending" />
@@ -181,7 +244,7 @@ export default function StudentsPage() {
         <div className="w-full lg:w-2/3 lg:pr-6 mb-6 lg:mb-0">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
             <h2 className="text-xl font-semibold mb-2 sm:mb-0">Students List</h2>
-            <Dialog>
+            <Dialog open={isAddStudentDialogOpen} onOpenChange={setIsAddStudentDialogOpen}>
               <DialogTrigger asChild>
                 <Button>
                   <UserPlus className="mr-2 h-4 w-4" /> Add Student
@@ -191,8 +254,78 @@ export default function StudentsPage() {
                 <DialogHeader>
                   <DialogTitle>Add New Student</DialogTitle>
                 </DialogHeader>
-                {/* Add form fields here */}
-                <p>Form to add a new student would go here</p>
+                <form onSubmit={handleAddStudent}>
+                  <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="name" className="text-right">
+                        Name
+                      </Label>
+                      <Input
+                        id="name"
+                        value={newStudent.name}
+                        onChange={(e) => setNewStudent({ ...newStudent, name: e.target.value })}
+                        className="col-span-3"
+                      />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="email" className="text-right">
+                        Email
+                      </Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={newStudent.email}
+                        onChange={(e) =>   setNewStudent({ ...newStudent, email: e.target.value })}
+                        className="col-span-3"
+                      />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="contact" className="text-right">
+                        Contact
+                      </Label>
+                      <Input
+                        id="contact"
+                        value={newStudent.contact}
+                        onChange={(e) => setNewStudent({ ...newStudent, contact: e.target.value })}
+                        className="col-span-3"
+                      />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="field" className="text-right">
+                        Field
+                      </Label>
+                      <Select
+                        onValueChange={(value) => setNewStudent({ ...newStudent, field: value })}
+                        value={newStudent.field}
+                      >
+                        <SelectTrigger className="col-span-3">
+                          <SelectValue placeholder="Select a field" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Music & Dancing">Music & Dancing</SelectItem>
+                          <SelectItem value="Software Engineering">Software Engineering</SelectItem>
+                          <SelectItem value="Photography">Photography</SelectItem>
+                          <SelectItem value="Digital Marketing">Digital Marketing</SelectItem>
+                          <SelectItem value="Web Development">Web Development</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="address" className="text-right">
+                        Address
+                      </Label>
+                      <Input
+                        id="address"
+                        value={newStudent.address}
+                        onChange={(e) => setNewStudent({ ...newStudent, address: e.target.value })}
+                        className="col-span-3"
+                      />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button type="submit">Add Student</Button>
+                  </DialogFooter>
+                </form>
               </DialogContent>
             </Dialog>
           </div>
@@ -217,8 +350,7 @@ export default function StudentsPage() {
                   <SelectItem value="Software Engineering">Software Engineering</SelectItem>
                   <SelectItem value="Photography">Photography</SelectItem>
                   <SelectItem value="Digital Marketing">Digital Marketing</SelectItem>
-                  <SelectItem value=">Web Developement">Web Developement</SelectItem>
-                  {/* Add more fields as needed */}
+                  <SelectItem value="Web Development">Web Development</SelectItem>
                 </SelectContent>
               </Select>
               <Select onValueChange={handleSort} defaultValue="name">
@@ -235,7 +367,7 @@ export default function StudentsPage() {
           <div className="space-y-2">
             {filteredStudents.map(student => (
               <div key={student.id} onClick={() => handleStudentSelect(student)}>
-                <StudentItem student={student} />
+                <StudentItem student={student} onRemove={handleRemoveStudent} />
               </div>
             ))}
           </div>
@@ -247,6 +379,7 @@ export default function StudentsPage() {
                 <StudentItem 
                   student={student} 
                   isWaitlist 
+                  onRemove={() => {}} // This is a placeholder since we don't remove waitlist students directly
                 />
               </div>
             ))}
