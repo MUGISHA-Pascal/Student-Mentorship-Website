@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react'
 import { X, Search, Upload } from 'lucide-react'
 import { Button } from "@/components/ui/button"

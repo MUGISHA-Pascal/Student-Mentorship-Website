@@ -31,6 +31,7 @@ import CalendarPage from "./pages/Coach/calendarPage ";
 import ChatsPage from "./pages/Coach/chatsPage";
 import DocsPage from "./pages/Coach/docsPage";
 import SettingsPage from "./pages/Coach/settimgsPage";
+import MeetingPage from "./pages/Meeting/MeetingView";
 // import JotFormEmbed from './components/home/formPage'
 
 interface LayoutProps {
@@ -146,6 +147,7 @@ const App = () => {
         </Route>
         
         {/* <Route path="/form" element={<JotFormEmbed />} /> */}
+        <Route path="/meeting" element={<ProtectedRoute element={<MeetingPage />} />} />
       </Routes>
     </Router>
   );

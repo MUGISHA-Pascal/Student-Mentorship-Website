@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, Outlet, useLocation } from 'react-router-dom'
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Video, BellDot, Home, Users, Calendar, MessageSquare, FileText } from 'lucide-react'
 import DarkModeToggle from './DarkModeToggle'
 import ProfileSetupPopup from './Coach/ProfileSetupPopup'
@@ -72,11 +72,16 @@ function SidebarLink({ icon, label, to, isActive, badge, onClick, expanded }: { 
 }
 
 function Header({ title }: { title: string }) {
+  const navigate = useNavigate();
   return (
     <header className="flex justify-between items-center p-4 border-b border-border bg-background">
       <h1 className="text-2xl font-semibold">{title}</h1>
       <div className="flex items-center space-x-4">
-        <button className="p-2 bg-background rounded-full shadow-sm border border-border">
+        <button className="p-2 bg-background rounded-full shadow-sm border border-border"
+          onClick={() => {
+            navigate('/meeting')
+          }}
+        >
           <Video className="w-6 h-6 text-destructive" />
         </button>
         {/* <Button variant="default" className="text-primary-foreground bg-primary hover:bg-primary/90">
