@@ -32,6 +32,7 @@ import ChatsPage from "./pages/Coach/chatsPage";
 import DocsPage from "./pages/Coach/docsPage";
 import SettingsPage from "./pages/Coach/settimgsPage";
 import MeetingPage from "./pages/Meeting/MeetingView";
+import WaitingApproval from "./pages/waiting-approval";
 // import JotFormEmbed from './components/home/formPage'
 
 interface LayoutProps {
@@ -148,6 +149,7 @@ const App = () => {
         
         {/* <Route path="/form" element={<JotFormEmbed />} /> */}
         <Route path="/meeting" element={<ProtectedRoute element={<MeetingPage />} />} />
+        <Route path="/waiting-approval" element={<ProtectedRoute element={<WaitingApproval />} />} />
       </Routes>
     </Router>
   );

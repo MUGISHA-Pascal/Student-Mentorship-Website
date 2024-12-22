@@ -1,24 +1,12 @@
 import React, { useState } from 'react'
-import { X, Search, Upload } from 'lucide-react'
+import { X, Search, Upload, Check } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import SelectMentorPhoto from '@/components/dashboard/mentor/selectMentorPhoto'
 import careersData from '@/utils/json/careers.json'
-
-import { jwtDecode } from 'jwt-decode';
-
-import axios from 'axios';
-
-const token = localStorage.getItem('authToken');
-if (token) {
-  const decodedToken = jwtDecode(token); // Decode token to access the user ID
-  const userId = decodedToken.id; // Assuming the token contains user ID
-  console.log(userId);
-}
-
-
+import { useNavigate } from 'react-router-dom'
 
 interface ProfileSetupPopupProps {
   isOpen: boolean;
@@ -36,13 +24,15 @@ const ProgressBar = ({ currentStep, totalSteps }: { currentStep: number; totalSt
     <div className="w-full flex items-center justify-between">
       {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step) => (
         <React.Fragment key={step}>
-          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${step === currentStep ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'
-            }`}>
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+            step === currentStep ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'
+          }`}>
             {step}
           </div>
           {step < totalSteps && (
-            <div className={`flex-1 h-1 ${step < currentStep ? 'bg-blue-500' : 'bg-white'
-              }`} />
+            <div className={`flex-1 h-1 ${
+              step < currentStep ? 'bg-blue-500' : 'bg-white'
+            }`} />
           )}
         </React.Fragment>
       ))}
@@ -59,11 +49,8 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
   const [experienceTimeline, setExperienceTimeline] = useState<ExperienceEntry[]>([]);
-  //Step 1
-  const [bio, setBio] = useState('');
-  const [image, setImage] = useState('');
-
-
+  const [showSubmitted, setShowSubmitted] = useState(false);
+  const navigate = useNavigate();
 
   const handleAddCareer = (career: string) => {
     if (!selectedCareers.includes(career)) {
@@ -80,9 +67,7 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
     if (step < 3) {
       setStep(step + 1);
     } else {
-      // Handle finish setup
-      console.log("Profile setup completed");
-      onClose();
+      setShowSubmitted(true);
     }
   };
 
@@ -94,11 +79,11 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
       if (fileExtension === 'pdf' || fileExtension === 'docx') {
         console.log("File uploaded:", file);
         setSelectedFileName(file.name);
+      } else {
         alert('Please upload a valid .pdf or .docx file.');
       }
     }
   };
-
 
   const handleAddExperience = () => {
     if (selectedCareer && startDate && endDate) {
@@ -115,88 +100,10 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
     setEndDate('');
   };
 
-
-  // const handleUpdateCoach = async () => {
-  //   const token = localStorage.getItem('authToken');  // Assuming token is stored in localStorage
-  //   if (token) {
-  //     const decodedToken = jwtDecode(token);
-  //     console.log(decodedToken);
-  //      // Decode the token to get user ID
-  //     const userId = decodedToken.id;  // Get user ID from token payload
-
-  //     try {
-  //       const response = await axios.put(`http://localhost:3000/api/v1/coach/coaches/${userId}`, {
-  //         bio,  // Use bio from state
-  //         image,  // Use image path from state
-  //       }, {
-  //         headers: {
-  //           'Authorization': `Bearer ${token}`,
-  //           'Content-Type': 'application/json',
-  //         }
-  //       });
-
-  //       if (response.status === 200) {
-  //         handleNext();  // Move to next step after successful update
-  //         console.log("Coach profile updated:", response.data);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error updating coach:", error);
-  //     }
-  //   } else {
-  //     console.log("No authentication token found.");
-  //   }
-  // };
-
-  const handleUpdateCoach = async () => {
-    const token = localStorage.getItem('authToken'); // Assuming the token is stored in localStorage
-
-    if (!token) {
-      console.log("No authentication token found.");
-      return;
-    }
-
-    try {
-      // Step 1: Get the userId from the coach table using `getEntityFromToken` API
-      const { id: tokenId } = jwtDecode(token); // Decode token to get the token `id`
-      console.log("Token ID:", tokenId);
-
-      const userIdResponse = await axios.get(`http://localhost:3000/api/v1/get-entity`, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Pass the token for authorization
-        },
-        params: {
-          table: 'coach', // Specify the table
-          field: 'userId', // Specify the field to fetch
-        },
-      });
-
-      const userId = userIdResponse.data.userId; // Extract userId from response
-      console.log("Mapped userId from coach table:", userId);
-
-      // Step 2: Update the coach profile using the fetched `userId`
-      const response = await axios.put(
-        `http://localhost:3000/api/v1/coach/coaches/${userId}`,
-        {
-          bio, // Use bio from state
-          image, // Use image path from state
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Pass the token for authentication
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        handleNext(); // Move to next step after successful update
-        console.log("Coach profile updated:", response.data);
-      }
-    } catch (error) {
-      console.error("Error updating coach:", error.response?.data || error.message);
-    }
+  const handleComplete = () => {
+    onClose();
+    navigate('/waiting-approval');
   };
-
 
   const renderStep = () => {
     switch (step) {
@@ -223,7 +130,7 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
               <Button
                 className='w-full rounded-full bg-blue-500 hover:bg-blue-600'
                 size="sm"
-                onClick={handleUpdateCoach}
+                onClick={handleNext}
               >
                 Continue
               </Button>
@@ -277,7 +184,6 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
             </div>
             <div className="flex space-x-2">
               <div className="relative flex w-4/5 items-center">
-                {/* <span className="text-sm text-gray-800">Upload a professional CV</span> */}
                 <input
                   type="file"
                   accept=".pdf,.docx"
@@ -302,9 +208,7 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
             <Button
               className='w-full rounded-full bg-blue-500 hover:bg-blue-600'
               size="sm"
-              onClick={() => {
-                handleNext();
-              }}
+              onClick={handleNext}
             >
               Continue
             </Button>
@@ -392,44 +296,58 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[95vw] w-[1200px] h-[95vh] p-0 overflow-hidden backdrop-blur-sm bg-blue-100 bg-opacity-60">
-        <div className="relative h-full flex flex-col">
-          <div className="absolute top-0 left-0 right-0 p-4 z-10">
-            <ProgressBar currentStep={step} totalSteps={3} />
-          </div>
-          <div className="flex-grow overflow-y-auto p-6 pt-20">
-            <h1 className="text-2xl font-bold mb-6 text-gray-800">Setup Your Profile</h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-              <div className="p-2 rounded-lg">
-                {renderStep()}
-              </div>
-              <div className="hidden md:block">
-                <div className="space-y-4">
-                  <h2 className="text-xl font-semibold flex justify-center items-center pt-12 text-gray-800">Personal Career Coach</h2>
-                  <img src="/images/test.png" alt="Career Coach Illustration" className="mx-auto" />
-                  <div className="text-center">
-                    <p className="text-lg font-medium text-gray-800">Almost there!</p>
-                    <p className="text-sm text-gray-600 mt-2">
-                      "People work better when they know what the goal is and why. It is important that people look forward to coming to work in the morning and enjoy working"
-                    </p>
-                    <p className="text-sm text-blue-500">- Elon Musk</p>
+    <>
+      <Dialog open={isOpen && !showSubmitted} onOpenChange={onClose}>
+        <DialogContent className="max-w-[95vw] w-[1200px] h-[95vh] p-0 overflow-hidden backdrop-blur-sm bg-blue-100 bg-opacity-60">
+          <div className="relative h-full flex flex-col">
+            <div className="absolute top-0 left-0 right-0 p-4 z-10">
+              <ProgressBar currentStep={step} totalSteps={3} />
+            </div>
+            <div className="flex-grow overflow-y-auto p-6 pt-20">
+              <h1 className="text-2xl font-bold mb-6 text-gray-800">Setup Your Profile</h1>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+                <div className="p-2 rounded-lg">
+                  {renderStep()}
+                </div>
+                <div className="hidden md:block">
+                  <div className="space-y-4">
+                    <h2 className="text-xl font-semibold flex justify-center items-center pt-12 text-gray-800">Personal Career Coach</h2>
+                    <img src="/images/test.png" alt="Career Coach Illustration" className="mx-auto" />
+                    <div className="text-center">
+                      <p className="text-lg font-medium text-gray-800">Almost there!</p>
+                      <p className="text-sm text-gray-600 mt-2">
+                        "People work better when they know what the goal is and why. It is important that people look forward to coming to work in the morning and enjoy working"
+                      </p>
+                      <p className="text-sm text-blue-500">- Elon Musk</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          {/* <div className="p-4 border-t flex justify-between border-none">
-            <Button onClick={handleBack} className="bg-blue-500 text-white" disabled={step === 1}>
-              Back
+        </DialogContent>
+      </Dialog>
+      
+      <Dialog open={showSubmitted} onOpenChange={() => setShowSubmitted(false)}>
+        <DialogContent className="max-w-md p-6">
+          <div className="flex flex-col items-center justify-center text-center space-y-6">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+              <Check className="w-8 h-8 text-green-500" />
+            </div>
+            <h2 className="text-2xl font-semibold text-gray-800">Application submitted!</h2>
+            <p className="text-gray-600">
+              Thank you for applying to be a mentor. We will review your application and get back to you soon.
+            </p>
+            <Button 
+              onClick={handleComplete}
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white"
+            >
+              Go back to portal
             </Button>
-            <Button onClick={handleNext} className="bg-blue-500 text-white">
-              {step === 3 ? 'Finish Setup' : 'Continue'}
-            </Button>
-          </div> */}
-        </div>
-      </DialogContent>
-    </Dialog>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }
 
