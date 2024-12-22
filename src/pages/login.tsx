@@ -17,27 +17,38 @@ const Login = () => {
   const handleLogin = async () => {
     try {
       const response = await login(email, password);
-      const { user } = response;
+      const { user, token } = response;
+
+      console.log("The user role is", user.role);
+      
+
+      localStorage.setItem('token', token);
+
       if (rememberMe) {
         localStorage.setItem("email", email);
       } else {
         localStorage.removeItem("email");
       }
-      toast.success("Login successful!", { position: "top-right", autoClose: 5000 });
       if (user.role === 'ADMIN') {
+        toast.success("Login successful!", { position: "top-right", autoClose: 5000 });
         navigate('/admin/dashboard');
       } else if (user.role === 'STUDENT') {
+        toast.success("Login successful!", { position: "top-right", autoClose: 5000 });
         navigate('/student/dashboard');
       }
       else if (user.role === 'EMPLOYER') {
+        toast.success("Login successful!", { position: "top-right", autoClose: 5000 });
         navigate('/employer/dashboard');
       }
       else if (user.role === 'FAMILY') {
+        toast.success("Login successful!", { position: "top-right", autoClose: 5000 });
         navigate('/family/dashboard');
       }
-      else if (user.role === 'MENTOR') {
+      else if (user.role === 'COACH') {
+        toast.success("Login successful!", { position: "top-right", autoClose: 5000 });
         navigate('/mentor/dashboard');
       } else {
+        toast.error("Login Failed!", { position: "top-right", autoClose: 5000 });
         navigate('/notfound');
       }
     } catch (error) {

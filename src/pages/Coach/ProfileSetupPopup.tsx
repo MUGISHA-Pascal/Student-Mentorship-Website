@@ -7,6 +7,19 @@ import { Dialog, DialogContent } from "@/components/ui/dialog"
 import SelectMentorPhoto from '@/components/dashboard/mentor/selectMentorPhoto'
 import careersData from '@/utils/json/careers.json'
 
+import { jwtDecode } from 'jwt-decode';
+
+import axios from 'axios';
+
+const token = localStorage.getItem('authToken');
+if (token) {
+  const decodedToken = jwtDecode(token); // Decode token to access the user ID
+  const userId = decodedToken.id; // Assuming the token contains user ID
+  console.log(userId);
+}
+
+
+
 interface ProfileSetupPopupProps {
   isOpen: boolean;
   onClose: () => void;
@@ -46,6 +59,11 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
   const [experienceTimeline, setExperienceTimeline] = useState<ExperienceEntry[]>([]);
+  //Step 1
+  const [bio, setBio] = useState('');
+  const [image, setImage] = useState('');
+
+
 
   const handleAddCareer = (career: string) => {
     if (!selectedCareers.includes(career)) {
@@ -98,6 +116,88 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
   };
 
 
+  // const handleUpdateCoach = async () => {
+  //   const token = localStorage.getItem('authToken');  // Assuming token is stored in localStorage
+  //   if (token) {
+  //     const decodedToken = jwtDecode(token);
+  //     console.log(decodedToken);
+  //      // Decode the token to get user ID
+  //     const userId = decodedToken.id;  // Get user ID from token payload
+
+  //     try {
+  //       const response = await axios.put(`http://localhost:3000/api/v1/coach/coaches/${userId}`, {
+  //         bio,  // Use bio from state
+  //         image,  // Use image path from state
+  //       }, {
+  //         headers: {
+  //           'Authorization': `Bearer ${token}`,
+  //           'Content-Type': 'application/json',
+  //         }
+  //       });
+
+  //       if (response.status === 200) {
+  //         handleNext();  // Move to next step after successful update
+  //         console.log("Coach profile updated:", response.data);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error updating coach:", error);
+  //     }
+  //   } else {
+  //     console.log("No authentication token found.");
+  //   }
+  // };
+
+  const handleUpdateCoach = async () => {
+    const token = localStorage.getItem('authToken'); // Assuming the token is stored in localStorage
+
+    if (!token) {
+      console.log("No authentication token found.");
+      return;
+    }
+
+    try {
+      // Step 1: Get the userId from the coach table using `getEntityFromToken` API
+      const { id: tokenId } = jwtDecode(token); // Decode token to get the token `id`
+      console.log("Token ID:", tokenId);
+
+      const userIdResponse = await axios.get(`http://localhost:3000/api/v1/get-entity`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Pass the token for authorization
+        },
+        params: {
+          table: 'coach', // Specify the table
+          field: 'userId', // Specify the field to fetch
+        },
+      });
+
+      const userId = userIdResponse.data.userId; // Extract userId from response
+      console.log("Mapped userId from coach table:", userId);
+
+      // Step 2: Update the coach profile using the fetched `userId`
+      const response = await axios.put(
+        `http://localhost:3000/api/v1/coach/coaches/${userId}`,
+        {
+          bio, // Use bio from state
+          image, // Use image path from state
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Pass the token for authentication
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        handleNext(); // Move to next step after successful update
+        console.log("Coach profile updated:", response.data);
+      }
+    } catch (error) {
+      console.error("Error updating coach:", error.response?.data || error.message);
+    }
+  };
+
+
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -107,20 +207,23 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
             <p className="text-sm text-gray-600">NB: This will appear on your profile</p>
             <div className="space-y-4">
               <div className="flex items-center justify-center">
-                <SelectMentorPhoto />
+                <SelectMentorPhoto setImage={setImage} />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              {/* <div className="grid grid-cols-2 gap-4">
                 <Input placeholder="Enter First Name" className="bg-white text-gray-800" />
                 <Input placeholder="Enter Last Name" className="bg-white text-gray-800" />
               </div>
-              <Input placeholder="Confirm Your Email Address" className="bg-white text-gray-800" />
-              <Textarea placeholder="Enter Your Short Bio" className="bg-white text-gray-800" />
+              <Input placeholder="Confirm Your Email Address" className="bg-white text-gray-800" /> */}
+              <Textarea
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                placeholder="Enter Your Short Bio"
+                className="bg-white text-gray-800 h-40"
+              />
               <Button
                 className='w-full rounded-full bg-blue-500 hover:bg-blue-600'
                 size="sm"
-                onClick={() => {
-                  handleNext();
-                }}
+                onClick={handleUpdateCoach}
               >
                 Continue
               </Button>
@@ -278,9 +381,9 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
                 </div>
               </div>
             </div>
-              <Button onClick={handleNext} className="bg-blue-500 text-white rounded-full w-full mt-20">
-                Finish Setup
-              </Button>
+            <Button onClick={handleNext} className="bg-blue-500 text-white rounded-full w-full mt-20">
+              Finish Setup
+            </Button>
           </div>
         );
       default:
