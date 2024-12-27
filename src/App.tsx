@@ -33,7 +33,7 @@ import DocsPage from "./pages/Coach/docsPage";
 import SettingsPage from "./pages/Coach/settimgsPage";
 import MeetingPage from "./pages/Meeting/MeetingView";
 import WaitingApproval from "./pages/waiting-approval";
-// import JotFormEmbed from './components/home/formPage'
+import JotFormEmbed from './components/home/formPage'
 
 interface LayoutProps {
   children: ReactNode;
@@ -80,6 +80,23 @@ const ProtectedRoute = ({ element }: { element: ReactNode }) => {
   }, [isAuthenticated]);
   return isAuthenticated ? element : <Navigate to="/login" />;
 };
+
+// const ProtectedRoute = ({ element }: { element: React.ReactNode }) => {
+//   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
+//   // Check token presence in localStorage
+//   useEffect(() => {
+//     const token = localStorage.getItem('authToken');
+//     if (!token) {
+//       toast.error('You must be logged in to access that page!', {
+//         position: 'top-right',
+//         autoClose: 2000,
+//       });
+//     }
+//   }, [isAuthenticated]);
+
+//   return isAuthenticated && localStorage.getItem('authToken') ? element : <Navigate to="/login" />;
+// };
 
 
 const App = () => {
@@ -146,10 +163,11 @@ const App = () => {
           <Route path="docs" element={<DocsPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
-        
-        {/* <Route path="/form" element={<JotFormEmbed />} /> */}
+
+        <Route path="/mentor/form" element={<ProtectedRoute element={<JotFormEmbed />} />} />
         <Route path="/meeting" element={<ProtectedRoute element={<MeetingPage />} />} />
-        <Route path="/waiting-approval" element={<ProtectedRoute element={<WaitingApproval />} />} />
+        {/* <Route path="/waiting-approval" element={<ProtectedRoute element={<WaitingApproval />} />} /> */}
+        <Route path="/mentor/waiting-approval" element={<ProtectedRoute element={<WaitingApproval />} />} />
       </Routes>
     </Router>
   );

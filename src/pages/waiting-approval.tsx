@@ -37,7 +37,7 @@ const WaitingApproval: React.FC = () => {
           <span className="text-gray-800">Collaborate</span>
         </div>
 
-        <div className="absolute left-[20%] top-[40%] bg-white rounded-full px-3 py-3 shadow-lg">
+        <div className="absolute left-[20%] top-[40%] bg-white rounded-full px-3 py-3 shadow-lg flex items-center gap-2">
           <img 
             src="https://i.pravatar.cc/150?img=2" 
             alt="Collaborator" 
@@ -95,7 +95,7 @@ const WaitingApproval: React.FC = () => {
           <div className="mt-8">
             <Button 
               className="bg-blue-500 hover:bg-blue-600 text-white px-8"
-              onClick={() => window.history.back()}
+              onClick={() => navigate('/')}
             >
               <ArrowLeft className="mr-2 h-4 w-4" /> Go back to site
             </Button>

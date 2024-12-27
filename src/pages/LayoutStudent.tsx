@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Video, BellDot, Home, Users, Calendar, MessageSquare, FileText } from 'lucide-react'
+import axios from 'axios'
 import StudentProfilSetup from './Student/StudentProfilSetup'
 import DarkModeToggle from './DarkModeToggle'
 
@@ -93,9 +94,9 @@ function Header({ title }: { title: string }) {
         {/* <Button variant="default" className="text-primary-foreground bg-primary hover:bg-primary/90">
           <Plus className="mr-2 h-4 w-4" />New Action
         </Button> */}
-        <button 
-        title='Notifications'
-        className="p-2 bg-background rounded-full shadow-sm border border-border"
+        <button
+          title='Notifications'
+          className="p-2 bg-background rounded-full shadow-sm border border-border"
         >
           <BellDot className="w-6 h-6 text-foreground" />
         </button>
@@ -115,6 +116,29 @@ export default function LayoutStudent() {
     // Handle section change logic here
     console.log('Section changed:', section);
   };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('authToken'); // Ensure the token is stored in localStorage
+        if (!token) throw new Error('Token not found');
+        // console.log("The token is ", token);
+
+
+        const response = await axios.get('http://localhost:3000/api/v1/user', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const { filledProfile } = response.data.user;
+
+        setIsProfileSetupOpen(!filledProfile)
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const titles: { [key: string]: string } = {
     '/student/dashboard': 'Student',
@@ -142,7 +166,9 @@ export default function LayoutStudent() {
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-4">
           <Outlet />
         </main>
-        <StudentProfilSetup isOpen={isProfileSetupOpen} onClose={() => setIsProfileSetupOpen(false)} />
+        {isProfileSetupOpen && (
+          <StudentProfilSetup isOpen={isProfileSetupOpen} onClose={() => setIsProfileSetupOpen(false)} />
+        )}
       </div>
     </div>
   )

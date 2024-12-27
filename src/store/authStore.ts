@@ -26,6 +26,8 @@ export const useAuthStore = create<AuthState>((set) => ({
       const user = response.data.user;
 
       localStorage.setItem('authToken', response.data.token);
+      // console.log("The token from aut is", response.data.token);
+      
       set({ isAuthenticated: true });
 
      return { user };

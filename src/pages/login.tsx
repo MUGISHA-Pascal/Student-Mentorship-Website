@@ -17,15 +17,15 @@ const Login = () => {
   const handleLogin = async () => {
     try {
       const response = await login(email, password);
-      const { user, token } = response;
 
-      console.log("The user role is", user.role);
-      
+      const { user }: { user: { role: string; filledForm?: boolean; approved?: boolean } } = response;
 
-      localStorage.setItem('token', token);
+      // console.log("The user role is", user.role);
 
-      if (rememberMe) {
+      if (rememberMe == true) {
         localStorage.setItem("email", email);
+        // console.log("Email is", email);
+
       } else {
         localStorage.removeItem("email");
       }
@@ -44,8 +44,17 @@ const Login = () => {
         toast.success("Login successful!", { position: "top-right", autoClose: 5000 });
         navigate('/family/dashboard');
       }
-      else if (user.role === 'COACH') {
-        toast.success("Login successful!", { position: "top-right", autoClose: 5000 });
+      else if (user.role === 'MENTOR') {
+        // if (!user.filledForm) {
+        //   toast.info("Please complete the mentor form.", { position: "top-right", autoClose: 5000 });
+        //   navigate('/mentor/form');
+        // } else if (!user.approved) {
+        //   toast.info("Your account is awaiting approval.", { position: "top-right", autoClose: 5000 });
+        //   navigate('/mentor/waiting-approval');
+        // } else {
+        //   toast.success("Login successful!", { position: "top-right", autoClose: 5000 });
+        //   navigate('/mentor/dashboard');
+        // }
         navigate('/mentor/dashboard');
       } else {
         toast.error("Login Failed!", { position: "top-right", autoClose: 5000 });

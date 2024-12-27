@@ -1,25 +1,26 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Video, BellDot, Home, Users, Calendar, MessageSquare, FileText } from 'lucide-react'
+import axios from 'axios'
 import DarkModeToggle from './DarkModeToggle'
 import ProfileSetupPopup from './Coach/ProfileSetupPopup'
 
 const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange }: { expanded: boolean; setExpanded: (expanded: boolean) => void; activeSection: string; onSectionChange: (section: string) => void }) => {
 
-  const handleResize = () => {
+  const handleResize = useCallback(() => {
     if (window.innerWidth >= 768 && window.innerWidth < 1024) {
       setExpanded(false);
     } else {
       setExpanded(true);
     }
-  };
+  }, [setExpanded]);
 
   useEffect(() => {
     window.addEventListener("resize", handleResize);
     handleResize();
 
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [handleResize]);
 
   return (
     <div className={`bg-background border-r border-border h-screen p-4 flex flex-col ${expanded ? 'w-64' : 'w-20'} transition-all duration-300`}>
@@ -107,6 +108,29 @@ export default function LayoutCoach() {
     console.log('Section changed:', section);
   };
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('authToken'); // Ensure the token is stored in localStorage
+        if (!token) throw new Error('Token not found');
+        // console.log("The token is ", token);
+
+
+        const response = await axios.get('http://localhost:3000/api/v1/user', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const { filledProfile } = response.data.user;
+
+        setIsProfileSetupOpen(!filledProfile)
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   const titles: { [key: string]: string } = {
     '/dashboard': 'Dashboard',
     '/mentor/dashboard': 'Mentor',
@@ -133,7 +157,9 @@ export default function LayoutCoach() {
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-4">
           <Outlet />
         </main>
-        <ProfileSetupPopup isOpen={isProfileSetupOpen} onClose={() => setIsProfileSetupOpen(false)} />
+        {isProfileSetupOpen && (
+          <ProfileSetupPopup isOpen={isProfileSetupOpen} onClose={() => setIsProfileSetupOpen(false)} />
+        )}
       </div>
     </div>
   )

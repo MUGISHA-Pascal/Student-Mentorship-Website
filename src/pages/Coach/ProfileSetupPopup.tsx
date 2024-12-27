@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react'
 import { X, Search, Upload, Check } from 'lucide-react'
 import { Button } from "@/components/ui/button"
@@ -24,15 +25,13 @@ const ProgressBar = ({ currentStep, totalSteps }: { currentStep: number; totalSt
     <div className="w-full flex items-center justify-between">
       {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step) => (
         <React.Fragment key={step}>
-          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-            step === currentStep ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'
-          }`}>
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${step === currentStep ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'
+            }`}>
             {step}
           </div>
           {step < totalSteps && (
-            <div className={`flex-1 h-1 ${
-              step < currentStep ? 'bg-blue-500' : 'bg-white'
-            }`} />
+            <div className={`flex-1 h-1 ${step < currentStep ? 'bg-blue-500' : 'bg-white'
+              }`} />
           )}
         </React.Fragment>
       ))}
@@ -43,12 +42,14 @@ const ProgressBar = ({ currentStep, totalSteps }: { currentStep: number; totalSt
 const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }) => {
   const [step, setStep] = useState(1);
   const [selectedCareers, setSelectedCareers] = useState<string[]>([]);
+  const [image, setImage] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
   const [selectedCareer, setSelectedCareer] = useState<string>('');
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
   const [experienceTimeline, setExperienceTimeline] = useState<ExperienceEntry[]>([]);
+  const [bio, setBio] = useState<string>('');
   const [showSubmitted, setShowSubmitted] = useState(false);
   const navigate = useNavigate();
 
@@ -128,7 +129,7 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
                 className="bg-white text-gray-800 h-40"
               />
               <Button
-                className='w-full rounded-full bg-blue-500 hover:bg-blue-600'
+                className='w-full rounded-full bg-blue-500 hover:bg-blue-600 text-white font-semibold'
                 size="sm"
                 onClick={handleNext}
               >
@@ -327,7 +328,7 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
           </div>
         </DialogContent>
       </Dialog>
-      
+
       <Dialog open={showSubmitted} onOpenChange={() => setShowSubmitted(false)}>
         <DialogContent className="max-w-md p-6">
           <div className="flex flex-col items-center justify-center text-center space-y-6">
@@ -338,7 +339,7 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
             <p className="text-gray-600">
               Thank you for applying to be a mentor. We will review your application and get back to you soon.
             </p>
-            <Button 
+            <Button
               onClick={handleComplete}
               className="w-full bg-blue-500 hover:bg-blue-600 text-white"
             >
