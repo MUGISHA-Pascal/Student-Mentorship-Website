@@ -45,17 +45,17 @@ const Login = () => {
         navigate('/family/dashboard');
       }
       else if (user.role === 'MENTOR') {
-        // if (!user.filledForm) {
-        //   toast.info("Please complete the mentor form.", { position: "top-right", autoClose: 5000 });
-        //   navigate('/mentor/form');
-        // } else if (!user.approved) {
-        //   toast.info("Your account is awaiting approval.", { position: "top-right", autoClose: 5000 });
-        //   navigate('/mentor/waiting-approval');
-        // } else {
-        //   toast.success("Login successful!", { position: "top-right", autoClose: 5000 });
-        //   navigate('/mentor/dashboard');
-        // }
-        navigate('/mentor/dashboard');
+        if (!user.filledForm) {
+          toast.info("Please complete the mentor form.", { position: "top-right", autoClose: 5000 });
+          navigate('/mentor/form');
+        } else if (!user.approved) {
+          toast.info("Your account is awaiting approval.", { position: "top-right", autoClose: 5000 });
+          navigate('/mentor/waiting-approval');
+        } else {
+          toast.success("Login successful!", { position: "top-right", autoClose: 5000 });
+          navigate('/mentor/dashboard');
+        }
+        // navigate('/mentor/dashboard');
       } else {
         toast.error("Login Failed!", { position: "top-right", autoClose: 5000 });
         navigate('/notfound');

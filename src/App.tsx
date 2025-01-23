@@ -31,7 +31,8 @@ import CalendarPage from "./pages/Coach/calendarPage ";
 import ChatsPage from "./pages/Coach/chatsPage";
 import DocsPage from "./pages/Coach/docsPage";
 import SettingsPage from "./pages/Coach/settimgsPage";
-import MeetingPage from "./pages/Meeting/MeetingView";
+// import MeetingPage from "./pages/Meeting/MeetingView";
+import MeetingLayout from "./pages/Meeting/meetingLayout";
 import WaitingApproval from "./pages/waiting-approval";
 import JotFormEmbed from './components/home/formPage'
 
@@ -165,7 +166,8 @@ const App = () => {
         </Route>
 
         <Route path="/mentor/form" element={<ProtectedRoute element={<JotFormEmbed />} />} />
-        <Route path="/meeting" element={<ProtectedRoute element={<MeetingPage />} />} />
+        <Route path="/meeting/:id" element={<ProtectedRoute element={<MeetingLayout />} />} />
+        <Route path="/meetingg" element={<MeetingLayout />} />
         {/* <Route path="/waiting-approval" element={<ProtectedRoute element={<WaitingApproval />} />} /> */}
         <Route path="/mentor/waiting-approval" element={<ProtectedRoute element={<WaitingApproval />} />} />
       </Routes>

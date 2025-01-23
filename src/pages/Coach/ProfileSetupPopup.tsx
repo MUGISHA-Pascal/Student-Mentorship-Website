@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState } from 'react'
-import { X, Search, Upload, Check } from 'lucide-react'
+import React, { useEffect, useState } from 'react'
+import { X, Search, Upload } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -8,6 +8,9 @@ import { Dialog, DialogContent } from "@/components/ui/dialog"
 import SelectMentorPhoto from '@/components/dashboard/mentor/selectMentorPhoto'
 import careersData from '@/utils/json/careers.json'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios';
+import { useUserStore } from "@/store/userStore";
+import { v4 as uuidv4 } from 'uuid';
 
 interface ProfileSetupPopupProps {
   isOpen: boolean;
@@ -45,6 +48,7 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
   const [image, setImage] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedCareer, setSelectedCareer] = useState<string>('');
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
@@ -52,6 +56,16 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
   const [bio, setBio] = useState<string>('');
   const [showSubmitted, setShowSubmitted] = useState(false);
   const navigate = useNavigate();
+
+  const { user, fetchUser } = useUserStore();
+  const userId = user?.id || null;
+
+  useEffect(() => {
+    if (!userId) {
+      fetchUser(); // Fetch user data if not already available
+    }
+  }, [userId, fetchUser]);
+
 
   const handleAddCareer = (career: string) => {
     if (!selectedCareers.includes(career)) {
@@ -72,18 +86,15 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
     }
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const fileExtension = file.name.split('.').pop()?.toLowerCase();
+  const handleReset = () => {
+    setSelectedCareer('');
+    setStartDate('');
+    setEndDate('');
+  };
 
-      if (fileExtension === 'pdf' || fileExtension === 'docx') {
-        console.log("File uploaded:", file);
-        setSelectedFileName(file.name);
-      } else {
-        alert('Please upload a valid .pdf or .docx file.');
-      }
-    }
+  const handleComplete = () => {
+    onClose();
+    navigate('/waiting-approval');
   };
 
   const handleAddExperience = () => {
@@ -95,16 +106,71 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
     }
   };
 
-  const handleReset = () => {
-    setSelectedCareer('');
-    setStartDate('');
-    setEndDate('');
+  const handleFileUpload = async (files: FileList, type: string) => {
+    if (files.length > 1) {
+      alert('Please upload only one file at a time.');
+      return;
+    }
+
+    const file = files[0];
+    if (type === 'cv' && image && file.name === image) {
+      alert('The image and CV cannot be the same file!');
+      return;
+    }
+    if (type === 'image' && selectedFile && file.name === selectedFile.name) {
+      alert('The image and CV cannot be the same file!');
+      return;
+    }
+
+    const newFile = {
+      id: uuidv4(),
+      name: file.name,
+      inputFile: file,
+      startTime: Date.now(),
+      uploadedBytes: 0,
+    };
+
+    if (type === 'cv') {
+      setSelectedFile(file);
+      setSelectedFileName(file.name);
+    } else if (type === 'image') {
+      setImage(file.name);
+    }
   };
 
-  const handleComplete = () => {
-    onClose();
-    navigate('/waiting-approval');
+
+
+  const handleSubmit = async () => {
+    const formData = new FormData();
+    formData.append('bio', bio);
+    console.log(bio);
+
+    if (image) formData.append('image', image);
+    console.log(image);
+
+    if (selectedCareers.length === 1) formData.append('career', selectedCareers[0]); // Changed from `careerIds` to `career`
+  console.log("career", selectedCareers[0]);
+    
+    if (experienceTimeline.length) formData.append('workExperience', JSON.stringify(experienceTimeline));
+    console.log("Timeline", experienceTimeline);
+    
+    if (selectedFile) formData.append('cv', selectedFile);
+    console.log(image);
+
+    try {
+      console.log("Updating data: ", formData);
+
+      await axios.put(`http://localhost:3000/api/v1/coach/coaches/${userId}`, formData);
+      alert('Profile updated successfully!');
+      setShowSubmitted(true);
+    } catch (error) {
+      alert('Failed to update profile.');
+      console.log("Error while updating profile: ", error);
+      
+    }
   };
+
+
 
   const renderStep = () => {
     switch (step) {
@@ -117,11 +183,6 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
               <div className="flex items-center justify-center">
                 <SelectMentorPhoto setImage={setImage} />
               </div>
-              {/* <div className="grid grid-cols-2 gap-4">
-                <Input placeholder="Enter First Name" className="bg-white text-gray-800" />
-                <Input placeholder="Enter Last Name" className="bg-white text-gray-800" />
-              </div>
-              <Input placeholder="Confirm Your Email Address" className="bg-white text-gray-800" /> */}
               <Textarea
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
@@ -144,7 +205,9 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
             <h2 className="text-xl font-semibold text-gray-800">Select the course To continue</h2>
             <p className="text-sm text-gray-600">NB: This will determine the whole learning process within this platform</p>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-800">Search and select the careers that you are fit to coach in</label>
+              <label className="text-sm font-medium text-gray-800">
+                Search and select the careers that you are fit to coach in
+              </label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <Input
@@ -162,35 +225,66 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
                       <div
                         key={index}
                         className="cursor-pointer hover:bg-gray-100 p-1 text-gray-800"
-                        onClick={() => handleAddCareer(career)}
+                        onClick={() => {
+                          setSelectedCareer(career); // Update the selected career
+                          setSearchTerm(''); // Clear the search term
+                        }}
                       >
-                        {career} - Search suggestion
+                        {career}
                       </div>
                     ))}
                 </div>
               )}
             </div>
-            <div className="space-y-2 flex items-center gap-x-3">
-              <div className="flex gap-2">
+            <div className="mt-4">
+              <Button
+                onClick={() => {
+                  if (selectedCareer && !selectedCareers.includes(selectedCareer)) {
+                    setSelectedCareers((prev) => [...prev, selectedCareer]); // Add to selected careers
+                    setSelectedCareer(''); // Reset the selected career
+                  }
+                }}
+                disabled={!selectedCareer}
+                className="bg-blue-500 text-white px-4 py-2 rounded-full"
+              >
+                Add Career
+              </Button>
+            </div>
+            <div className="mt-4">
+              <h4 className="font-medium text-gray-800">Selected Careers:</h4>
+              <div className="flex flex-wrap gap-2">
                 {selectedCareers.map((career, index) => (
-                  <>
-                    <label className="text-sm font-medium text-gray-800">Selected Careers:</label>
-                    <span key={index} className="bg-blue-500 text-white px-2 py-1 rounded-full text-sm flex items-center">
-                      {career}
-                      <X className="ml-1 w-4 h-4 cursor-pointer text-red-500" onClick={() => handleRemoveCareer(career)} />
-                    </span>
-                  </>
+                  <span
+                    key={index}
+                    className="flex items-center bg-blue-500 text-white px-3 py-1 rounded-full"
+                  >
+                    {career}
+                    <X
+                      className="ml-2 cursor-pointer text-white"
+                      onClick={() => setSelectedCareers(selectedCareers.filter((c) => c !== career))}
+                    />
+                  </span>
                 ))}
               </div>
             </div>
             <div className="flex space-x-2">
               <div className="relative flex w-4/5 items-center">
-                <input
+                {/* <input
                   type="file"
-                  accept=".pdf,.docx"
                   id="cv-upload"
                   className="absolute left-20 opacity-0 bg-red-300 z-50 cursor-pointer"
-                  onChange={(e) => handleFileUpload(e)}
+                  // onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+                  onChange={(e) => {
+                    if (e.target.files) {
+                        handleFileUpload(e.target.files);
+                    }
+                }}
+                /> */}
+                <input
+                  type="file"
+                  id="cv-upload"
+                  className="absolute left-20 opacity-0 bg-red-300 z-50 cursor-pointer"
+                  onChange={(e) => e.target.files && handleFileUpload(e.target.files, 'cv')}
                 />
                 <label htmlFor="cv-upload">
                   <Button variant="outline" size="sm" className="bg-blue-500 text-white ml-3">
@@ -286,7 +380,7 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
                 </div>
               </div>
             </div>
-            <Button onClick={handleNext} className="bg-blue-500 text-white rounded-full w-full mt-20">
+            <Button onClick={handleSubmit} className="bg-blue-500 text-white rounded-full w-full mt-20">
               Finish Setup
             </Button>
           </div>
@@ -325,26 +419,6 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({ isOpen, onClose }
                 </div>
               </div>
             </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={showSubmitted} onOpenChange={() => setShowSubmitted(false)}>
-        <DialogContent className="max-w-md p-6">
-          <div className="flex flex-col items-center justify-center text-center space-y-6">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-              <Check className="w-8 h-8 text-green-500" />
-            </div>
-            <h2 className="text-2xl font-semibold text-gray-800">Application submitted!</h2>
-            <p className="text-gray-600">
-              Thank you for applying to be a mentor. We will review your application and get back to you soon.
-            </p>
-            <Button
-              onClick={handleComplete}
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white"
-            >
-              Go back to portal
-            </Button>
           </div>
         </DialogContent>
       </Dialog>
