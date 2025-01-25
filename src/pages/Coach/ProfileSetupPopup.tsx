@@ -201,7 +201,6 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
       console.log("Error while updating profile: ", error);
     }
   };
-
   const renderStep = () => {
     switch (step) {
       case 1:
