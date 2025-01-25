@@ -2,20 +2,17 @@ import React, { useState } from "react";
 import { Edit } from "lucide-react";
 import Image from "/public/svgs/profile-avatar.svg";
 
-// Add setImage as a prop to pass the image to the parent component
-const SelectMentorPhoto: React.FC<{ setImage: (image: string) => void }> = ({ setImage }) => {
+// Add setImage as a prop to pass the image file to the parent component
+const SelectMentorPhoto: React.FC<{ setImage: (image: File) => void }> = ({
+  setImage,
+}) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const imageUrl = reader.result as string;
-        setSelectedImage(imageUrl);  // Update local state
-        setImage(imageUrl);  // Pass the selected image to the parent component
-      };
-      reader.readAsDataURL(file); // Read the image file
+      setSelectedImage(URL.createObjectURL(file)); // Display the image preview
+      setImage(file); // Pass the file object to the parent component
     }
   };
 
@@ -31,7 +28,10 @@ const SelectMentorPhoto: React.FC<{ setImage: (image: string) => void }> = ({ se
           alt="Profile"
           className="w-full h-full object-cover rounded-full border border-gray-200"
         />
-        <div className="absolute bottom-4 right-0 flex items-center justify-center bg-blue-600 rounded-full p-2" title="Change photo">
+        <div
+          className="absolute bottom-4 right-0 flex items-center justify-center bg-blue-600 rounded-full p-2"
+          title="Change photo"
+        >
           <Edit className="text-white w-4 h-4" />
         </div>
       </label>
