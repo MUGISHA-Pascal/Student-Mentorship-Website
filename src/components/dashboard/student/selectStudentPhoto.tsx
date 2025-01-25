@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { Edit } from "lucide-react";
 import Image from "/public/svgs/profile-avatar.svg";
 
-const SelectStudentPhoto: React.FC = () => {
+const SelectStudentPhoto: React.FC<{ setImage: (imag: File) => void }> = ({
+  setImage,
+}) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -11,6 +13,7 @@ const SelectStudentPhoto: React.FC = () => {
       const reader = new FileReader();
       reader.onload = () => setSelectedImage(reader.result as string);
       reader.readAsDataURL(file);
+      setImage(file);
     }
   };
 
@@ -26,7 +29,10 @@ const SelectStudentPhoto: React.FC = () => {
           alt="Profile"
           className="w-full h-full object-cover rounded-full border border-gray-200"
         />
-        <div className="absolute bottom-4 right-0 flex items-center justify-center bg-blue-600 rounded-full p-2" title="Change photo">
+        <div
+          className="absolute bottom-4 right-0 flex items-center justify-center bg-blue-600 rounded-full p-2"
+          title="Change photo"
+        >
           <Edit className="text-white w-4 h-4" />
         </div>
       </label>
