@@ -8,6 +8,7 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import MentorStatistics from '@/components/dashboard/mentor/mentorStatistics'
 import AdminStatistics from '@/components/dashboard/admin/adminStatistics'
+import axios from 'axios'
 
 interface StudentItemProps {
   student: {
@@ -82,16 +83,18 @@ interface Student {
 }
 
 export default function AdminStudentsPage() {
-  const [students, setStudents] = useState<Student[]>([
-    { id: 1, name: 'John Doe', contact: 'Contact', email: 'johndoe@example.com', field: 'Music & Dancing', avatar: 'https://i.pravatar.cc/150?img=1', address: 'Nyabiku, West' },
-    { id: 2, name: 'Jane Smith', contact: 'Contact', email: 'janesmith@example.com', field: 'Software Engineering', avatar: 'https://i.pravatar.cc/150?img=2', address: 'Nyabiku, East' },
-    { id: 3, name: 'Bob Johnson', contact: 'Contact', email: 'bobjohnson@example.com', field: 'Photography', avatar: 'https://i.pravatar.cc/150?img=3', address: 'Nyabiku, North' },
-    { id: 4, name: 'Alice Williams', contact: 'Contact', email: 'alicewilliams@example.com', field: 'Digital Marketing', avatar: 'https://i.pravatar.cc/150?img=4', address: 'Nyabiku, South' },
-  ])
-  const [waitlist, setWaitlist] = useState<Student[]>([
-    { id: 5, name: 'Charlie Brown', contact: 'Contact', email: 'charliebrown@example.com', field: 'Music & Dancing', avatar: 'https://i.pravatar.cc/150?img=5', address: 'Nyabiku, Central' },
-    { id: 6, name: 'Diana Clark', contact: 'Contact', email: 'dianaclark@example.com', field: 'Web Development', avatar: 'https://i.pravatar.cc/150?img=6', address: 'Nyabiku, Downtown' },
-  ])
+  // const [students, setStudents] = useState<Student[]>([
+  //   { id: 1, name: 'John Doe', contact: 'Contact', email: 'johndoe@example.com', field: 'Music & Dancing', avatar: 'https://i.pravatar.cc/150?img=1', address: 'Nyabiku, West' },
+  //   { id: 2, name: 'Jane Smith', contact: 'Contact', email: 'janesmith@example.com', field: 'Software Engineering', avatar: 'https://i.pravatar.cc/150?img=2', address: 'Nyabiku, East' },
+  //   { id: 3, name: 'Bob Johnson', contact: 'Contact', email: 'bobjohnson@example.com', field: 'Photography', avatar: 'https://i.pravatar.cc/150?img=3', address: 'Nyabiku, North' },
+  //   { id: 4, name: 'Alice Williams', contact: 'Contact', email: 'alicewilliams@example.com', field: 'Digital Marketing', avatar: 'https://i.pravatar.cc/150?img=4', address: 'Nyabiku, South' },
+  // ])
+  // const [waitlist, setWaitlist] = useState<Student[]>([
+  //   { id: 5, name: 'Charlie Brown', contact: 'Contact', email: 'charliebrown@example.com', field: 'Music & Dancing', avatar: 'https://i.pravatar.cc/150?img=5', address: 'Nyabiku, Central' },
+  //   { id: 6, name: 'Diana Clark', contact: 'Contact', email: 'dianaclark@example.com', field: 'Web Development', avatar: 'https://i.pravatar.cc/150?img=6', address: 'Nyabiku, Downtown' },
+  // ])
+  const [students, setStudents] = useState<Student[]>([])
+  const [waitlist, setWaitlist] = useState<Student[]>([])
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState('name')
@@ -103,6 +106,24 @@ export default function AdminStudentsPage() {
       setSelectedStudent(students[0])
     }
   }, [students, selectedStudent])
+
+  useEffect(() => {
+    axios.get('http://localhost:3000/api/v1/admin/students')
+      .then(response => {
+        const fetchedStudents = response.data.map((student: any) => ({
+          id: student.id,
+          name: `${student.firstName} ${student.lastName}`,
+          email: student.email,
+          field: 'N/A', // Modify as needed if there's a field
+          avatar: `https://i.pravatar.cc/150?u=${student.email}`,
+          approved: student.approved,
+        }));
+
+        setStudents(fetchedStudents.filter(student => student.approved));
+        setWaitlist(fetchedStudents.filter(student => !student.approved));
+      })
+      .catch(error => console.error('Error fetching students:', error));
+  }, []);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query)

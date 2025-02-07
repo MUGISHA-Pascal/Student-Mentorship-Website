@@ -8,13 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import MentorStatistics from '@/components/dashboard/mentor/mentorStatistics'
 
 interface StudentItemProps {
-  student: {
-    field: React.ReactNode
-    email: React.ReactNode
-    contact: React.ReactNode
-    avatar: string;
-    name: string;
-  };
+  student: Student;
   isWaitlist?: boolean;
 }
 
@@ -22,15 +16,14 @@ const StudentItem: React.FC<StudentItemProps> = ({ student, isWaitlist = false }
   <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 text-card-foreground rounded-lg mb-2 cursor-pointer bg-muted">
     <div className="flex items-center mb-2 sm:mb-0 ">
       <input type="checkbox" className="mr-4" />
-      <img src={student.avatar} alt={student.name} className="w-10 h-10 rounded-full mr-4" />
+      <img src='/images/avatar.png' alt={student.user.firstName} className="w-10 h-10 rounded-full mr-4" />
       <div>
-        <div className="font-medium">{student.name}</div>
-        <div className="text-sm text-muted-foreground">{student.contact}</div>
+        <div className="font-medium">{student.user.firstName} {student.user.lastName}</div>
+        <div className="text-sm text-muted-foreground">{student.user.email}</div>
       </div>
     </div>
     <div className="flex flex-col sm:flex-row sm:items-center mt-2 sm:mt-0">
-      <div className="mb-2 sm:mb-0 sm:mr-4 text-primary">{student.email}</div>
-      <div className="mb-2 sm:mb-0 sm:mr-4 px-3 py-1 bg-secondary text-secondary-foreground rounded-full">{student.field}</div>
+      <div className="mb-2 sm:mb-0 sm:mr-4 text-primary">{student.educationLevel}</div>
       {!isWaitlist && <MoreVertical className="text-muted-foreground hidden sm:block" />}
     </div>
   </div>
@@ -70,26 +63,25 @@ const StudentProfile: React.FC<{
   </div>
 )
 interface Student {
-  id: number;
-  name: string;
-  contact: string;
+  id: string; // UUID string
+  userId: string;
+  bio: string | null;
+  educationLevel: string | null;
   email: string;
-  field: string;
-  avatar: string;
-  address: string;
+  firstName: string;
+  lastName: string;
+  status: 'WAITLIST' | 'APPROVED';
+  user: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
 }
 
+
 export default function StudentsPage() {
-  const [students, setStudents] = useState<Student[]>([
-    { id: 1, name: 'John Doe', contact: 'Contact', email: 'johndoe@example.com', field: 'Music & Dancing', avatar: 'https://i.pravatar.cc/150?img=1', address: 'Nyabiku, West' },
-    { id: 2, name: 'Jane Smith', contact: 'Contact', email: 'janesmith@example.com', field: 'Software Engineering', avatar: 'https://i.pravatar.cc/150?img=2', address: 'Nyabiku, East' },
-    { id: 3, name: 'Bob Johnson', contact: 'Contact', email: 'bobjohnson@example.com', field: 'Photography', avatar: 'https://i.pravatar.cc/150?img=3', address: 'Nyabiku, North' },
-    { id: 4, name: 'Alice Williams', contact: 'Contact', email: 'alicewilliams@example.com', field: 'Digital Marketing', avatar: 'https://i.pravatar.cc/150?img=4', address: 'Nyabiku, South' },
-  ])
-  const [waitlist, setWaitlist] = useState<Student[]>([
-    { id: 5, name: 'Charlie Brown', contact: 'Contact', email: 'charliebrown@example.com', field: 'Music & Dancing', avatar: 'https://i.pravatar.cc/150?img=5', address: 'Nyabiku, Central' },
-    { id: 6, name: 'Diana Clark', contact: 'Contact', email: 'dianaclark@example.com', field: 'Web Development', avatar: 'https://i.pravatar.cc/150?img=6', address: 'Nyabiku, Downtown' },
-  ])
+  const [students, setStudents] = useState<Student[]>([])
+  const [waitlist, setWaitlist] = useState<Student[]>([])
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState('name')
@@ -97,10 +89,22 @@ export default function StudentsPage() {
   const [selectedWaitlistStudents, setSelectedWaitlistStudents] = useState<number[]>([])
 
   useEffect(() => {
-    if (students.length > 0 && !selectedStudent) {
-      setSelectedStudent(students[0])
-    }
-  }, [students, selectedStudent])
+    fetch(`http://localhost:3000/api/v1/coach/students/988784a2-7b03-473e-b221-1ee62a34da18`)
+      .then(res => res.json())
+      .then(data => {
+        const approved = data.filter((student: Student) => student.status === 'APPROVED');
+        const pending = data.filter((student: Student) => student.status === 'WAITLIST');
+        setStudents(approved);
+        setWaitlist(pending);
+        if (approved.length > 0) setSelectedStudent(approved[0]);
+      });
+  }, []);
+
+  // useEffect(() => {
+  //   if (students.length > 0 && !selectedStudent) {
+  //     setSelectedStudent(students[0])
+  //   }
+  // }, [students, selectedStudent])
 
   const handleSearch = (query: string) => {
     setSearchQuery(query)
@@ -118,47 +122,82 @@ export default function StudentsPage() {
     setSelectedStudent(student)
   }
 
-  const handleWaitlistStudentSelect = (studentId: number) => {
-    setSelectedWaitlistStudents(prev =>
-      prev.includes(studentId)
-        ? prev.filter(id => id !== studentId)
-        : [...prev, studentId]
-    )
-  }
+  // const handleWaitlistStudentSelect = (studentId: number) => {
+  //   setSelectedWaitlistStudents(prev =>
+  //     prev.includes(studentId)
+  //       ? prev.filter(id => id !== studentId)
+  //       : [...prev, studentId]
+  //   )
+  // }
 
-  const handleApproveWaitlist = () => {
-    const approvedStudents = waitlist.filter(student => selectedWaitlistStudents.includes(student.id))
-    setStudents(prev => [...prev, ...approvedStudents])
-    setWaitlist(prev => prev.filter(student => !selectedWaitlistStudents.includes(student.id)))
-    setSelectedWaitlistStudents([])
-  }
+  // const handleApproveWaitlist = () => {
+  //   const approvedStudents = waitlist.filter(student => selectedWaitlistStudents.includes(student.id))
+  //   setStudents(prev => [...prev, ...approvedStudents])
+  //   setWaitlist(prev => prev.filter(student => !selectedWaitlistStudents.includes(student.id)))
+  //   setSelectedWaitlistStudents([])
+  // }
 
-  const handleRemoveWaitlist = () => {
-    setWaitlist(prev => prev.filter(student => !selectedWaitlistStudents.includes(student.id)))
-    setSelectedWaitlistStudents([])
-  }
+  const handleApproval = async (studentId : string, approve : boolean) => {
+    try {
+      // Send API request to update the student's status
+      const response = await fetch(
+        `http://localhost:3000/api/v1/coach/988784a2-7b03-473e-b221-1ee62a34da18/student/status`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            studentId,
+            status: approve ? 'APPROVED' : 'WAITLIST',
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to update student status');
+      }
+
+      // Update the frontend state based on the approval action
+      if (approve) {
+        const approvedStudent = waitlist.find((s) => s.id === studentId);
+        if (approvedStudent) {
+          setStudents((prev) => [...prev, { ...approvedStudent, status: 'APPROVED' }]);
+          setWaitlist((prev) => prev.filter((s) => s.id !== studentId));
+        }
+      } else {
+        const demotedStudent = students.find((s) => s.id === studentId);
+        if (demotedStudent) {
+          setWaitlist((prev) => [...prev, { ...demotedStudent, status: 'WAITLIST' }]);
+          setStudents((prev) => prev.filter((s) => s.id !== studentId));
+        }
+      }
+
+      setSelectedWaitlistStudents([]); // Clear selection after the operation
+    } catch (error) {
+      console.error('Error updating student status:', error);
+    }
+  };
+
+
+  // const handleRemoveWaitlist = () => {
+  //   setWaitlist(prev => prev.filter(student => !selectedWaitlistStudents.includes(student.id)))
+  //   setSelectedWaitlistStudents([])
+  // }
 
   const filteredStudents = students
     .filter(student =>
-      student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      student.email.toLowerCase().includes(searchQuery.toLowerCase())
+      student.user.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      student.user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      student.user.lastName.toLowerCase().includes(searchQuery.toLowerCase())
     )
-    .filter(student => filterField === 'All' || student.field === filterField)
+    // .filter(student => filterField === 'All' || student.field === filterField)
     .sort((a, b) => {
-      if (sortBy === 'name') return a.name.localeCompare(b.name)
+      if (sortBy === 'name') return a.firstName.localeCompare(b.firstName)
       if (sortBy === 'email') return a.email.localeCompare(b.email)
       return 0
     })
 
   return (
     <div className="p-4 sm:p-6 bg-background text-foreground min-h-screen">
-      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <StatCard icon={<MessageSquare className="h-6 w-6 text-primary" />} value={students.length.toString()} label="Students" subtitle="Total" />
-        <StatCard icon={<UserPlus className="h-6 w-6 text-green-500" />} value={waitlist.length.toString()} label="Waitlist" subtitle="Pending" />
-        <StatCard icon={<Check className="h-6 w-6 text-red-500" />} value="3" label="Students" subtitle="Coached" />
-        <StatCard icon={<X className="h-6 w-6 text-orange-500" />} value="12" label="Courses" subtitle="Provided" />
-      </div> */}
-
       <div className="mb-7">
         <MentorStatistics />
       </div>
@@ -173,12 +212,6 @@ export default function StudentsPage() {
                   <UserPlus className="mr-2 h-4 w-4" /> Add Student
                 </Button>
               </DialogTrigger>
-              {/* <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Add New Student</DialogTitle>
-                </DialogHeader>
-                <p>Form to add a new student would go here</p>
-              </DialogContent> */}
             </Dialog>
           </div>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
@@ -228,17 +261,34 @@ export default function StudentsPage() {
           <h2 className="text-xl font-semibold mt-8 mb-4">Waitlist (Pending Approvals)</h2>
           <div className="space-y-2">
             {waitlist.map(student => (
-              <div key={student.id} onClick={() => handleWaitlistStudentSelect(student.id)}>
-                <StudentItem
-                  student={student}
-                  isWaitlist
-                />
+              // <div key={student.id} onClick={() => handleWaitlistStudentSelect(student.id)}>
+              //   <StudentItem
+              //     student={student}
+              //     isWaitlist
+              //   />
+              // </div>
+              <div key={student.id} className="flex items-center justify-between bg-muted p-4 rounded-lg">
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    className="mr-4"
+                    checked={selectedWaitlistStudents.includes(student.id)}
+                    onChange={() => setSelectedWaitlistStudents(prev =>
+                      prev.includes(student.id) ? prev.filter(id => id !== student.id) : [...prev, student.id]
+                    )}
+                  />
+                  <img src="/images/avatar.png" alt={student.user.firstName} className="w-10 h-10 rounded-full mr-4" />
+                  <div>
+                    <div className="font-medium">{student.user.firstName} {student.user.lastName}</div>
+                    <div className="text-sm text-muted-foreground">{student.user.email}</div>
+                  </div>
+                </div>
+                <div className="flex space-x-2">
+                  <Button variant="outline" onClick={() => handleApproval(student.id, true)}>Approve</Button>
+                  <Button variant="destructive" onClick={() => handleApproval(student.id, false)}>Reject</Button>
+                </div>
               </div>
             ))}
-          </div>
-          <div className="mt-4 flex justify-end space-x-2">
-            <Button onClick={handleApproveWaitlist} disabled={selectedWaitlistStudents.length === 0}>Approve</Button>
-            <Button variant="destructive" onClick={handleRemoveWaitlist} disabled={selectedWaitlistStudents.length === 0}>Remove</Button>
           </div>
         </div>
         <div className="w-full lg:w-1/3">

@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
-import { Search, Star, ArrowLeft, Bookmark } from "lucide-react";
+import { Search, Star, ArrowLeft, Bookmark, File, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -10,6 +11,7 @@ import SelectStudentPhoto from "@/components/dashboard/student/selectStudentPhot
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useUserStore } from "@/store/userStore";
+import { useNavigate } from "react-router-dom";
 
 interface Course {
   id: string;
@@ -122,6 +124,7 @@ const NewProfileSetupPopup: React.FC<{
   );
   // const [showCoachDetails, setShowCoachDetails] = useState<string | null>(null);
   const [mentors, setMentors] = useState<Coach[] | null>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchUser();
@@ -154,9 +157,10 @@ const NewProfileSetupPopup: React.FC<{
         setMentors(null);
       }
       setStep(step - 1);
-    } else {
-      onClose();
     }
+    // else {
+    //   onClose();
+    // }
   };
 
   const handleNext = () => {
@@ -166,34 +170,36 @@ const NewProfileSetupPopup: React.FC<{
   };
 
   const handleFinish = async () => {
-    const formData = new FormData();
+    navigate('/student/welcome')
+    // const formData = new FormData();
 
-    formData.append("bio", personalDetails.bio);
-    formData.append("educationLevel", personalDetails.educationLevel);
+    // formData.append("bio", personalDetails.bio);
+    // formData.append("educationLevel", personalDetails.educationLevel);
 
-    if (image) {
-      formData.append("image", image);
-    }
-    try {
-      await axios.put(
-        `http://localhost:3000/api/v1/student/update/${user!.id}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+    // if (image) {
+    //   formData.append("image", image);
+    // }
+    // try {
+    //   await axios.put(
+    //     `http://localhost:3000/api/v1/student/update/${user!.id}`,
+    //     formData,
+    //     {
+    //       headers: {
+    //         "Content-Type": "multipart/form-data",
+    //       },
+    //     }
+    //   );
 
-      // console.log("Profile setup completed", {
-      //   selectedCourse,
-      //   selectedCoach,
-      //   personalDetails,
-      // });
-      onClose();
-    } catch (error) {
-      console.log(error);
-    }
+    //   // console.log("Profile setup completed", {
+    //   //   selectedCourse,
+    //   //   selectedCoach,
+    //   //   personalDetails,
+    //   // });
+    //   // onClose();
+    //   navigate('/student/welcome')
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   console.log("Checking the user data:", user);
@@ -204,9 +210,8 @@ const NewProfileSetupPopup: React.FC<{
       .map((_, i) => (
         <Star
           key={i}
-          className={`w-4 h-4 ${
-            i < rating ? "text-yellow-400 fill-current" : "text-gray-300"
-          }`}
+          className={`w-4 h-4 ${i < rating ? "text-yellow-400 fill-current" : "text-gray-300"
+            }`}
         />
       ));
   };
@@ -286,7 +291,7 @@ const NewProfileSetupPopup: React.FC<{
 
   const handleCourseSelect = (course: Course) => {
     setSelectedCourse(course);
-    fetchMentors(course.id);
+    // fetchMentors(course.id);
     handleNext();
   };
 
@@ -342,33 +347,27 @@ const NewProfileSetupPopup: React.FC<{
     }
 
     return (
-      <div key={course.id} className={`${course.color} p-4 rounded-lg shadow`}>
+      <div key={course.id} className={`${course.color} p-4 rounded-lg border border-gray-500 mr-1`}>
         <div className="flex items-start justify-between">
           <div>
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                <img
-                  src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/spotify-icon.png"
-                  className="rounded-full"
-                  alt={`${course.title} icon`}
-                />
+              <div className="w-8 h-8 bg-[#132F43] rounded-full flex items-center justify-center">
+                <File color="white" />
               </div>
               <h3 className="font-semibold text-gray-800">{course.title}</h3>
             </div>
           </div>
-          <Bookmark className="w-6 h-6 text-gray-400" />
         </div>
         <div className="mt-4 flex justify-end items-center">
-          <div className="space-x-2">
+          <div className="flex space-x-2">
             <Button
-              variant="outline"
-              size="sm"
               onClick={() => setShowCourseDetails(course.id)}
+              className="w-1/2 bg-[#132F43] hover:bg-[#204b69] text-white"
             >
               Details
             </Button>
             <Button
-              size="sm"
+              className="w-1/2 bg-white border border-[#132F43] text-[#132F43] hover:bg-[#132F43] hover:text-white transition-all duration-300"
               onClick={() => {
                 setSelectedCourse(course);
                 handleCourseSelect(course);
@@ -379,16 +378,40 @@ const NewProfileSetupPopup: React.FC<{
           </div>
         </div>
         {showCourseDetails === course.id && (
-          <div className="block lg:hidden md:hidden mt-4 p-4 bg-white rounded-lg">
-            <h4 className="font-semibold text-gray-800 mb-2">Course Details</h4>
-            <p className="text-sm text-gray-600">{course.description}</p>
-            <Button
-              variant="link"
-              className="mt-2 p-0 text-red-400 hover:text-red-600 !no-underline"
-              onClick={() => setShowCourseDetails(null)}
-            >
-              Hide details
-            </Button>
+          <div className="block lg:hidden md:hidden mt-4 p-3 bg-white rounded-lg">
+            <div className="flex items-center justify-between space-x-2">
+              <div className="w-8 h-8 bg-[#132F43] rounded-full flex items-center justify-center">
+                <File color="white" />
+              </div>
+              <button title="Hide details" className="rounded-full w-8 h-8 p-0 flex items-center justify-center bg-gray-100" onClick={() => setShowCourseDetails(null)}>
+                <X size={16} />
+              </button>
+            </div>
+
+            <div className="mt-2">
+              <div className="w-full border border-blue-200 shadow-sm shadow-blue-200 rounded-lg py-4 px-2 flex">
+                <div className="">
+                  <p className="font-semibold mb-2">Course description</p>
+                  <p className="text-sm text-gray-600">
+                    {course.description}
+                  </p>
+                </div>
+              </div>
+              <div className="flex justify-between mt-2 gap-x-3">
+                <Button
+                  size="sm"
+                  className="w-1/2 bg-[#132F43] hover:bg-[#204b69] text-white"
+                >
+                  Enroll
+                </Button>
+                <Button
+                  size="sm"
+                  className="w-1/2 bg-white border border-[#132F43] text-[#132F43] hover:bg-[#132F43] hover:text-white transition-all duration-300"
+                >
+                  Enquiry
+                </Button>
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -430,23 +453,57 @@ const NewProfileSetupPopup: React.FC<{
                 <div className="col-span-2 px-2">
                   {showCourseDetails && (
                     <div className="hidden lg:block md:block px-4 py-3 bg-white rounded-lg">
-                      <h4 className="font-semibold text-gray-800 mb-2">
-                        Course Details
-                      </h4>
-                      <p className="text-sm text-gray-600">
-                        {
-                          courses?.find(
-                            (course) => course.id === showCourseDetails
-                          )?.description
-                        }
-                      </p>
-                      <Button
-                        variant="link"
-                        className="mt-2 p-0 text-red-400 hover:text-red-600 !no-underline"
-                        onClick={() => setShowCourseDetails(null)}
-                      >
-                        Hide details
-                      </Button>
+                      <div className="flex items-center justify-between space-x-2">
+                        <div className="w-8 h-8 bg-[#132F43] rounded-full flex items-center justify-center">
+                          <File color="white" />
+                        </div>
+                        <button title="Hide details" className="rounded-full w-8 h-8 p-0 flex items-center justify-center bg-gray-100" onClick={() => setShowCourseDetails(null)}>
+                          <X size={16} />
+                        </button>
+                      </div>
+                      <div className="my-5">
+                        <h3 className="font-semibold text-xl text-gray-800">
+                          {
+                            courses?.find(
+                              (course) => course.id === showCourseDetails
+                            )?.title
+                          }
+                        </h3>
+                      </div>
+                      <div className="">
+                        <div className="w-full border border-blue-200 shadow-sm shadow-blue-200 rounded-lg py-4 px-2 flex">
+                          <div className="w-2/5">
+                            <img
+                              src="/images/course-description.png"
+                              alt="GOYoungAfrica Logo"
+                              width={400}
+                              height={200}
+                            />
+                          </div>
+                          <div className="w-3/5">
+                            <p className="font-semibold mb-2">Course description</p>
+                            <p className="text-sm text-gray-600">
+                              {
+                                courses?.find(
+                                  (course) => course.id === showCourseDetails
+                                )?.description
+                              }
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex justify-between mt-2 gap-x-3">
+                          <Button
+                            className="w-1/2 bg-[#132F43] hover:bg-[#204b69] text-white"
+                          >
+                            Enroll
+                          </Button>
+                          <Button
+                            className="w-1/2 bg-white border border-[#132F43] text-[#132F43] hover:bg-[#132F43] hover:text-white transition-all duration-300"
+                          >
+                            Enquiry
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -455,6 +512,79 @@ const NewProfileSetupPopup: React.FC<{
           </div>
         );
       case 2:
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold text-gray-800">
+                Enter Your Personal details
+              </h2>
+              <p className="text-sm text-gray-600">
+                NB: This will appear on your profile
+              </p>
+              <div className="space-y-4">
+                <div className="flex items-center justify-center">
+                  <SelectStudentPhoto setImage={setImage} />
+                </div>
+
+                <Input
+                  placeholder="Enter Your Highest Education Level"
+                  className="bg-white text-gray-800"
+                  value={personalDetails.educationLevel}
+                  onChange={(e) =>
+                    setPersonalDetails({
+                      ...personalDetails,
+                      educationLevel: e.target.value,
+                    })
+                  }
+                />
+                <Textarea
+                  placeholder="Enter Your Bio"
+                  className="bg-white text-gray-800"
+                  value={personalDetails.bio}
+                  onChange={(e) =>
+                    setPersonalDetails({
+                      ...personalDetails,
+                      bio: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div className="flex justify-center mt-6">
+                <Button
+                  onClick={handleFinish}
+                  className="bg-[#132F43] hover:bg-[#204b69] text-white"
+                >
+                  Finish Setup
+                </Button>
+              </div>
+            </div>
+
+            <div className="hidden md:block">
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold flex justify-center items-center pt-12 text-gray-800">
+                  Personal Career Coach
+                </h2>
+                <img
+                  src="/images/test.png"
+                  alt="Career Coach Illustration"
+                  className="mx-auto"
+                />
+                <div className="text-center">
+                  <p className="text-lg font-medium text-gray-800">
+                    Almost there!
+                  </p>
+                  <p className="text-sm text-gray-600 mt-2">
+                    "People work better when they know what the goal is and why.
+                    It is important that people look forward to coming to work
+                    in the morning and enjoy working"
+                  </p>
+                  <p className="text-sm text-blue-500">- Elon Musk</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      case 3:
         return (
           <div className="space-y-5">
             <h2 className="text-xl font-semibold text-gray-800">
@@ -481,11 +611,10 @@ const NewProfileSetupPopup: React.FC<{
                     .map((coach) => (
                       <div
                         key={coach.id}
-                        className={`bg-white p-4 rounded-lg shadow ${
-                          selectedCoach?.id === coach.id
-                            ? "border border-blue-500 bg-zinc-200"
-                            : ""
-                        }`}
+                        className={`bg-white p-4 rounded-lg shadow ${selectedCoach?.id === coach.id
+                          ? "border border-blue-500 bg-zinc-200"
+                          : ""
+                          }`}
                       >
                         <div className="flex items-center space-x-4">
                           <img
@@ -580,79 +709,6 @@ const NewProfileSetupPopup: React.FC<{
             </div>
           </div>
         );
-      case 3:
-        return (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold text-gray-800">
-                Enter Your Personal details
-              </h2>
-              <p className="text-sm text-gray-600">
-                NB: This will appear on your profile
-              </p>
-              <div className="space-y-4">
-                <div className="flex items-center justify-center">
-                  <SelectStudentPhoto setImage={setImage} />
-                </div>
-
-                <Input
-                  placeholder="Enter Your Highest Education Level"
-                  className="bg-white text-gray-800"
-                  value={personalDetails.educationLevel}
-                  onChange={(e) =>
-                    setPersonalDetails({
-                      ...personalDetails,
-                      educationLevel: e.target.value,
-                    })
-                  }
-                />
-                <Textarea
-                  placeholder="Enter Your Short Bio"
-                  className="bg-white text-gray-800"
-                  value={personalDetails.bio}
-                  onChange={(e) =>
-                    setPersonalDetails({
-                      ...personalDetails,
-                      bio: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div className="flex justify-center mt-6">
-                <Button
-                  onClick={handleFinish}
-                  className="bg-blue-500 text-white"
-                >
-                  Finish Setup
-                </Button>
-              </div>
-            </div>
-
-            <div className="hidden md:block">
-              <div className="space-y-4">
-                <h2 className="text-xl font-semibold flex justify-center items-center pt-12 text-gray-800">
-                  Personal Career Coach
-                </h2>
-                <img
-                  src="/images/test.png"
-                  alt="Career Coach Illustration"
-                  className="mx-auto"
-                />
-                <div className="text-center">
-                  <p className="text-lg font-medium text-gray-800">
-                    Almost there!
-                  </p>
-                  <p className="text-sm text-gray-600 mt-2">
-                    "People work better when they know what the goal is and why.
-                    It is important that people look forward to coming to work
-                    in the morning and enjoy working"
-                  </p>
-                  <p className="text-sm text-blue-500">- Elon Musk</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
       default:
         return null;
     }
@@ -663,7 +719,7 @@ const NewProfileSetupPopup: React.FC<{
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[95vw] w-[1200px] h-[95vh] p-0 overflow-hidden backdrop-blur-sm bg-blue-100 bg-opacity-60">
+      <DialogContent className="max-w-[95vw] w-[1200px] h-[95vh] p-0 overflow-hidden backdrop-blur-sm bg-blue-100 bg-opacity-60" onInteractOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
         <div className="relative h-full flex flex-col">
           <div className="p-4 flex items-center justify-center shadow-sm">
             <Button

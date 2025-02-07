@@ -42,6 +42,7 @@ import AdminAssessmentsPage from "./pages/Admin/adminAssessmentsPage";
 import AdminCalendarPage from "./pages/Admin/adminCalendarPage";
 import AdminChatsPage from "./pages/Admin/adminChatsPage";
 import LayoutAdmin from "./pages/LayoutAdmin";
+import StudentWaitingPage from "./pages/Student/studentWaitingPage";
 
 interface LayoutProps {
   children: ReactNode;
@@ -162,6 +163,7 @@ const App = () => {
           <Route path="settings" element={<StudentSettingsPage />} />
         </Route>
 
+        <Route path="student/welcome"  element={<StudentWaitingPage />} />
 
         <Route path="/mentor/dashboard" element={<ProtectedRoute element={<LayoutCoach />} />}>
           <Route index element={<HomePage />} />

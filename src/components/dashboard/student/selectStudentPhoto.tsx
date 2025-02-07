@@ -30,7 +30,7 @@ const SelectStudentPhoto: React.FC<{ setImage: (imag: File) => void }> = ({
           className="w-full h-full object-cover rounded-full border border-gray-200"
         />
         <div
-          className="absolute bottom-4 right-0 flex items-center justify-center bg-blue-600 rounded-full p-2"
+          className="absolute bottom-4 right-0 flex items-center justify-center bg-[#132F43] rounded-full p-2"
           title="Change photo"
         >
           <Edit className="text-white w-4 h-4" />
