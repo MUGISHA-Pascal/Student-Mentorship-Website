@@ -36,74 +36,11 @@ interface Coach {
   experience: { role: string; period: string }[];
 }
 
-// const courses: Course[] = [
-//   {
-//     id: "1",
-//     title: "Music and Song Production",
-//     avatar:
-//       "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/spotify-icon.png",
-//     rating: 4,
-//     reviews: 42,
-//     price: "$10.5-$15.5",
-//     color: "bg-green-100",
-//     description:
-//       "Learn the art and science of music production. This course covers everything from basic sound theory to advanced mixing techniques.",
-//   },
-//   {
-//     id: "2",
-//     title: "Music and Song Production",
-//     avatar:
-//       "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/spotify-icon.png",
-//     rating: 4,
-//     reviews: 42,
-//     price: "$10.5-$15.5",
-//     color: "bg-yellow-100",
-//     description:
-//       "Dive deep into songwriting and production. Explore melody creation, lyric writing, and how to produce your songs professionally.",
-//   },
-//   {
-//     id: "3",
-//     title: "Music and Song Production",
-//     avatar:
-//       "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/spotify-icon.png",
-//     rating: 4,
-//     reviews: 42,
-//     price: "$10.5-$15.5",
-//     color: "bg-purple-100",
-//     description:
-//       "Master the tools of modern music production. Get hands-on experience with industry-standard software and hardware.",
-//   },
-//   {
-//     id: "4",
-//     title: "Advanced Music Theory",
-//     avatar:
-//       "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/spotify-icon.png",
-//     rating: 5,
-//     reviews: 38,
-//     price: "$12.5-$18.5",
-//     color: "bg-blue-100",
-//     description:
-//       "Deepen your understanding of music theory. This course covers advanced concepts in harmony, rhythm, and composition.",
-//   },
-//   {
-//     id: "5",
-//     title: "Advanced Music Theory",
-//     avatar:
-//       "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/spotify-icon.png",
-//     rating: 5,
-//     reviews: 38,
-//     price: "$12.5-$18.5",
-//     color: "bg-blue-100",
-//     description:
-//       "Deepen your understanding of music theory. This course covers advanced concepts in harmony, rhythm, and composition.",
-//   },
-// ];
-
 const NewProfileSetupPopup: React.FC<{
   isOpen: boolean;
   onClose: () => void;
 }> = ({ isOpen, onClose }) => {
-  const { user, fetchUser, loading, error } = useUserStore();
+  const { user, role, fetchUser, loading, error } = useUserStore();
   const [step, setStep] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
@@ -158,9 +95,6 @@ const NewProfileSetupPopup: React.FC<{
       }
       setStep(step - 1);
     }
-    // else {
-    //   onClose();
-    // }
   };
 
   const handleNext = () => {
@@ -169,37 +103,38 @@ const NewProfileSetupPopup: React.FC<{
     }
   };
 
-  const handleFinish = async () => {
-    navigate('/student/welcome')
-    // const formData = new FormData();
+  const handleUpdateProfile = async () => {
+    // setStep(2);
+    const formData = new FormData();
 
-    // formData.append("bio", personalDetails.bio);
-    // formData.append("educationLevel", personalDetails.educationLevel);
+    formData.append("bio", personalDetails.bio);
+    formData.append("educationLevel", personalDetails.educationLevel);
 
-    // if (image) {
-    //   formData.append("image", image);
-    // }
-    // try {
-    //   await axios.put(
-    //     `http://localhost:3000/api/v1/student/update/${user!.id}`,
-    //     formData,
-    //     {
-    //       headers: {
-    //         "Content-Type": "multipart/form-data",
-    //       },
-    //     }
-    //   );
+    if (image) {
+      formData.append("image", image);
+    }
+    try {
+      await axios.put(
+        `http://localhost:3000/api/v1/student/update/${user!.id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
-    //   // console.log("Profile setup completed", {
-    //   //   selectedCourse,
-    //   //   selectedCoach,
-    //   //   personalDetails,
-    //   // });
-    //   // onClose();
-    //   navigate('/student/welcome')
-    // } catch (error) {
-    //   console.log(error);
-    // }
+      //   // console.log("Profile setup completed", {
+      //   //   selectedCourse,
+      //   //   selectedCoach,
+      //   //   personalDetails,
+      //   // });
+      //   // onClose();
+      toast.success("Profile updated successfully");
+      setStep(2);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   console.log("Checking the user data:", user);
@@ -292,7 +227,7 @@ const NewProfileSetupPopup: React.FC<{
   const handleCourseSelect = (course: Course) => {
     setSelectedCourse(course);
     // fetchMentors(course.id);
-    handleNext();
+    navigate('/student/welcome')
   };
 
   const sendRequest = async (studentId: string, coachId: string) => {
@@ -313,6 +248,27 @@ const NewProfileSetupPopup: React.FC<{
       }
     } catch (error) {
       console.error("Error:", error);
+    }
+  };
+
+  const enrollStudent = async (careerId: string) => {
+    if (!role) {
+      toast.error("Student not found.");
+      return;
+    }
+
+    try {
+      const response = await axios.post("http://localhost:3000/api/v1/student/enroll", {
+        studentId: role.id,
+        careerId: careerId,
+      });
+      toast.success(`${response.data.message}!`);
+      // Navigate to a dashboard or welcome page after enrollment
+      // toast.success("You've successfully enrolled in ");
+      navigate("/student/welcome");
+    } catch (error) {
+      console.error("Enrollment failed:", error);
+      toast.error("Enrollment failed. Please try again later.");
     }
   };
 
@@ -351,7 +307,7 @@ const NewProfileSetupPopup: React.FC<{
         <div className="flex items-start justify-between">
           <div>
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-[#132F43] rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 bg-[#132F43] rounded-full flex items-center justify-center p-2">
                 <File color="white" />
               </div>
               <h3 className="font-semibold text-gray-800">{course.title}</h3>
@@ -368,10 +324,11 @@ const NewProfileSetupPopup: React.FC<{
             </Button>
             <Button
               className="w-1/2 bg-white border border-[#132F43] text-[#132F43] hover:bg-[#132F43] hover:text-white transition-all duration-300"
-              onClick={() => {
-                setSelectedCourse(course);
-                handleCourseSelect(course);
-              }}
+              // onClick={() => {
+              //   setSelectedCourse(course);
+              //   handleCourseSelect(course);
+              // }}
+              onClick={() => enrollStudent(course.id)}
             >
               Enroll
             </Button>
@@ -383,7 +340,7 @@ const NewProfileSetupPopup: React.FC<{
               <div className="w-8 h-8 bg-[#132F43] rounded-full flex items-center justify-center">
                 <File color="white" />
               </div>
-              <button title="Hide details" className="rounded-full w-8 h-8 p-0 flex items-center justify-center bg-gray-100" onClick={() => setShowCourseDetails(null)}>
+              <button title="Hide details" className="rounded-full w-8 h-8 p-0 flex items-center justify-center bg-gray-100 hover:bg-gray-200" onClick={() => setShowCourseDetails(null)}>
                 <X size={16} />
               </button>
             </div>
@@ -397,19 +354,24 @@ const NewProfileSetupPopup: React.FC<{
                   </p>
                 </div>
               </div>
-              <div className="flex justify-between mt-2 gap-x-3">
+              <div className="flex justify-end mt-2 gap-x-3">
                 <Button
                   size="sm"
                   className="w-1/2 bg-[#132F43] hover:bg-[#204b69] text-white"
+                  // onClick={() => {
+                  //   setSelectedCourse(course);
+                  //   handleCourseSelect(course);
+                  // }}
+                  onClick={() => enrollStudent(course.id)}
                 >
                   Enroll
                 </Button>
-                <Button
+                {/* <Button
                   size="sm"
                   className="w-1/2 bg-white border border-[#132F43] text-[#132F43] hover:bg-[#132F43] hover:text-white transition-all duration-300"
                 >
                   Enquiry
-                </Button>
+                </Button> */}
               </div>
             </div>
           </div>
@@ -425,93 +387,6 @@ const NewProfileSetupPopup: React.FC<{
 
     switch (step) {
       case 1:
-        return (
-          <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-gray-800">
-              Select the course To continue
-            </h2>
-            <p className="text-sm text-gray-600">
-              NB: This will determine the whole learning process within this
-              platform
-            </p>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <Input
-                className="pl-10 bg-white text-gray-800"
-                placeholder="Search"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-            <div className="grid grid-cols-4 gap-4 p-1 h-[60vh]">
-              <div className="col-span-4 md:col-span-2 lg:col-span-2 space-y-4 overflow-y-scroll no-scrollbar">
-                {filteredCourses?.map((course) =>
-                  renderCourseCard(course, loadingState, errorMsg)
-                )}
-              </div>
-              <div className="col-span-2">
-                <div className="col-span-2 px-2">
-                  {showCourseDetails && (
-                    <div className="hidden lg:block md:block px-4 py-3 bg-white rounded-lg">
-                      <div className="flex items-center justify-between space-x-2">
-                        <div className="w-8 h-8 bg-[#132F43] rounded-full flex items-center justify-center">
-                          <File color="white" />
-                        </div>
-                        <button title="Hide details" className="rounded-full w-8 h-8 p-0 flex items-center justify-center bg-gray-100" onClick={() => setShowCourseDetails(null)}>
-                          <X size={16} />
-                        </button>
-                      </div>
-                      <div className="my-5">
-                        <h3 className="font-semibold text-xl text-gray-800">
-                          {
-                            courses?.find(
-                              (course) => course.id === showCourseDetails
-                            )?.title
-                          }
-                        </h3>
-                      </div>
-                      <div className="">
-                        <div className="w-full border border-blue-200 shadow-sm shadow-blue-200 rounded-lg py-4 px-2 flex">
-                          <div className="w-2/5">
-                            <img
-                              src="/images/course-description.png"
-                              alt="GOYoungAfrica Logo"
-                              width={400}
-                              height={200}
-                            />
-                          </div>
-                          <div className="w-3/5">
-                            <p className="font-semibold mb-2">Course description</p>
-                            <p className="text-sm text-gray-600">
-                              {
-                                courses?.find(
-                                  (course) => course.id === showCourseDetails
-                                )?.description
-                              }
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex justify-between mt-2 gap-x-3">
-                          <Button
-                            className="w-1/2 bg-[#132F43] hover:bg-[#204b69] text-white"
-                          >
-                            Enroll
-                          </Button>
-                          <Button
-                            className="w-1/2 bg-white border border-[#132F43] text-[#132F43] hover:bg-[#132F43] hover:text-white transition-all duration-300"
-                          >
-                            Enquiry
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      case 2:
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
             <div className="space-y-4">
@@ -549,12 +424,18 @@ const NewProfileSetupPopup: React.FC<{
                   }
                 />
               </div>
-              <div className="flex justify-center mt-6">
+              <div className="flex gap-3 justify-center mt-6">
                 <Button
-                  onClick={handleFinish}
+                  onClick={handleUpdateProfile}
                   className="bg-[#132F43] hover:bg-[#204b69] text-white"
                 >
-                  Finish Setup
+                  Update profile
+                </Button>
+                <Button
+                  onClick={handleNext}
+                  className="bg-[#132F43] hover:bg-[#204b69] text-white"
+                >
+                  Skip
                 </Button>
               </div>
             </div>
@@ -579,6 +460,103 @@ const NewProfileSetupPopup: React.FC<{
                     in the morning and enjoy working"
                   </p>
                   <p className="text-sm text-blue-500">- Elon Musk</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      case 2:
+        return (
+          <div className="space-y-4">
+            <h2 className="text-lg font-semibold text-gray-800">
+              Select the course To continue
+            </h2>
+            <p className="text-sm text-gray-600">
+              NB: This will determine the whole learning process within this
+              platform
+            </p>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <Input
+                className="pl-10 bg-white text-gray-800"
+                placeholder="Search"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <div className="grid grid-cols-4 gap-4 p-1 h-[60vh]">
+              <div className="col-span-4 md:col-span-2 lg:col-span-2 space-y-4 overflow-y-scroll no-scrollbar">
+                {filteredCourses?.map((course) =>
+                  renderCourseCard(course, loadingState, errorMsg)
+                )}
+              </div>
+              <div className="col-span-2">
+                <div className="col-span-2 px-2">
+                  {showCourseDetails && (
+                    <div className="hidden lg:block md:block px-4 py-3 bg-white rounded-lg">
+                      <div className="flex items-center justify-between space-x-2">
+                        <div className="w-8 h-8 bg-[#132F43] rounded-full flex items-center justify-center p-2">
+                          <File color="white" />
+                        </div>
+                        <button title="Hide details" className="rounded-full w-8 h-8 p-0 flex items-center justify-center bg-gray-100 hover:bg-gray-200" onClick={() => setShowCourseDetails(null)}>
+                          <X size={16} />
+                        </button>
+                      </div>
+                      <div className="my-5">
+                        <h3 className="font-semibold text-xl text-gray-800">
+                          {
+                            courses?.find(
+                              (course) => course.id === showCourseDetails
+                            )?.title
+                          }
+                        </h3>
+                      </div>
+                      <div className="">
+                        <div className="w-full border border-blue-200 shadow-sm shadow-blue-200 rounded-lg py-4 px-2 flex">
+                          <div className="w-2/5">
+                            <img
+                              src="/images/course-description.png"
+                              alt="GOYoungAfrica Logo"
+                              width={400}
+                              height={200}
+                            />
+                          </div>
+                          <div className="w-3/5">
+                            <p className="font-semibold mb-2">Course description</p>
+                            <p className="text-sm text-gray-600">
+                              {
+                                courses?.find(
+                                  (course) => course.id === showCourseDetails
+                                )?.description
+                              }
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex justify-end mt-3 gap-x-3">
+                          <Button
+                            className="w-1/2 bg-[#132F43] hover:bg-[#204b69] text-white"
+                            onClick={() => {
+                              const selected = courses?.find(
+                                (course) => course.id === showCourseDetails
+                              );
+                              if (selected) {
+                                // setSelectedCourse(selected);
+                                // handleCourseSelect(selected);
+                                enrollStudent(selected.id)
+                              }
+                            }}
+                          >
+                            Enroll
+                          </Button>
+                          {/* <Button
+                            className="w-1/2 bg-white border border-[#132F43] text-[#132F43] hover:bg-[#132F43] hover:text-white transition-all duration-300"
+                          >
+                            Enquiry
+                          </Button> */}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

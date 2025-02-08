@@ -222,7 +222,7 @@ const Register: React.FC = () => {
           <div className="lg:w-3/5 lg:h-3/5 md:w-3/5 md:h-3/5  w-4/5  bg-white p-6 rounded-lg shadow-lg flex flex-col items-center justify-center">
             <h2 className="text-3xl font-bold mb-4">Continue as:</h2>
             <div className="flex flex-col space-y-4 p-4">
-              {["student", "mentor", "admin", "employer", "family"].map((option) => (
+              {["student", "mentor", "employer"].map((option) => (
                 <label key={option} className="inline-flex items-center cursor-pointer">
                   <input
                     type="radio"

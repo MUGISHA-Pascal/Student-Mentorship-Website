@@ -18,7 +18,21 @@ const Login = () => {
     try {
       const response = await login(email, password);
 
-      const { user }: { user: { role: string; filledForm?: boolean; approved?: boolean } } = response;
+      // const { user }: { user: { role: string; filledForm?: boolean; approved?: boolean } } = response;
+
+      const {
+        user
+      }: {
+        user: {
+          role: string;
+          filledForm?: boolean;
+          approved?: boolean;
+          student?: {
+            currentEnrollmentId?: string | null;
+          };
+        }
+      } = response;
+
 
       // console.log("The user role is", user.role);
 
@@ -34,7 +48,11 @@ const Login = () => {
         navigate('/admin/dashboard');
       } else if (user.role === 'STUDENT') {
         toast.success("Login successful!", { position: "top-right", autoClose: 5000 });
-        navigate('/student/dashboard');
+        if (user.student?.currentEnrollmentId) {
+          navigate("/student/welcome");
+        } else {
+          navigate("/student/dashboard");
+        }
       }
       else if (user.role === 'EMPLOYER') {
         toast.success("Login successful!", { position: "top-right", autoClose: 5000 });

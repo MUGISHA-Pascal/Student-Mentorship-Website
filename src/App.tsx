@@ -163,7 +163,7 @@ const App = () => {
           <Route path="settings" element={<StudentSettingsPage />} />
         </Route>
 
-        <Route path="student/welcome"  element={<StudentWaitingPage />} />
+        <Route path="student/welcome" element={<ProtectedRoute element={<StudentWaitingPage />} />} />
 
         <Route path="/mentor/dashboard" element={<ProtectedRoute element={<LayoutCoach />} />}>
           <Route index element={<HomePage />} />
@@ -175,7 +175,7 @@ const App = () => {
         </Route>
 
 
-        <Route path="/admin/dashboard" element={<LayoutAdmin />}>
+        <Route path="/admin/dashboard" element={<ProtectedRoute element={<LayoutAdmin />} />}>
           <Route index element={<AdminHomePage />} />
           <Route path="students" element={<AdminStudentsPage />} />
           <Route path="mentors" element={<AdminMentorsPage />} />
