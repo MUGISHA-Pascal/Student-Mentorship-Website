@@ -1,19 +1,14 @@
-import { Card, CardContent } from '@/components/ui/card';
 import React from 'react';
 import AdminStatistics from './adminStatistics';
 
 interface DashboardAdminOverviewProps {
     name: string;
-    ongoingCourse: string;
-    startDate: string;
     currentDate: string;
     currentTask: string;
 }
 
 const DashboardAdminOverview: React.FC<DashboardAdminOverviewProps> = ({
     name,
-    ongoingCourse,
-    startDate,
     currentDate,
     currentTask
 }) => {
@@ -26,12 +21,6 @@ const DashboardAdminOverview: React.FC<DashboardAdminOverviewProps> = ({
                         <h1 className="text-3xl font-bold">Good Morning, {name}</h1>
                         <p className="text-muted-foreground">We are happy that you came back</p>
                     </div>
-                    <Card className='mt-8 w-full lg:w-4/5'>
-                        <CardContent className="py-9 px-3">
-                            <h3 className="font-semibold mb-2">On-going: <span className="text-blue-600 font-semibold">{ongoingCourse}</span></h3>
-                            <p className="text-sm text-muted-foreground">Start: <span className="font-semibold">{startDate}</span></p>
-                        </CardContent>
-                    </Card>
                 </div>
                 <div className="bg-blue-50 dark:bg-transparent dark:border px-3 py-6 rounded-lg flex">
                     <div>
