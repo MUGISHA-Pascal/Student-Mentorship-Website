@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import useAdminStatistics from "@/hooks/admin/home/useHomeData";
+import { useAdminStatistics } from "@/hooks/admin/home/useHomeData";
 
 
 const AdminStatistics: React.FC = () => {

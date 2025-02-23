@@ -4,7 +4,7 @@ import { GraduationCap, } from 'lucide-react'
 import { useUserStore } from '@/store/userStore'
 import { useBlogs, useCoachActivities } from '@/hooks/coach/home/useHomeData'
 import DashboardAdminOverview from '@/components/dashboard/admin/dashboardAdminOverview'
-import useAdminStatistics from '@/hooks/admin/home/useHomeData'
+import { useAdminStatistics } from '@/hooks/admin/home/useHomeData'
 import AdminGraph from '@/components/dashboard/admin/adminGraph'
 
 
@@ -31,7 +31,7 @@ export const UpcomingEvent: React.FC<UpcomingEventProps> = ({ title, subtitle })
 
 export default function HomePage() {
   const { user, role, fetchUser } = useUserStore();
-  
+
   const [currentDate] = useState(() => {
     const date = new Date();
     const day = String(date.getDate()).padStart(2, '0');

@@ -10,7 +10,7 @@ import {
   Legend,
   ArcElement,
 } from "chart.js";
-import useAdminStatistics from "@/hooks/admin/home/useHomeData";
+import { useAdminStatistics } from "@/hooks/admin/home/useHomeData";
 
 ChartJS.register(
   CategoryScale,

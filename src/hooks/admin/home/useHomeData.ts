@@ -12,7 +12,7 @@ interface AdminStatistics {
     waitlistedMentors: number;
   }
 
-const useAdminStatistics = () => {
+export const useAdminStatistics = () => {
     const [statistics, setStatistics] = useState<AdminStatistics | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -36,4 +36,4 @@ const useAdminStatistics = () => {
     return { statistics, loading, error };
 };
 
-export default useAdminStatistics;
+

@@ -14,3 +14,16 @@ export const getAdminStatistics = async () => {
         throw error;
     }
 };
+
+
+export const getMentors = async () => {
+    try {
+        const response = await apiClient.get("/admin/mentors", {
+            headers: getAuthHeaders(),
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Failed to fetch mentors:", error);
+        throw error;
+    }
+};

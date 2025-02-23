@@ -188,6 +188,7 @@ const App = () => {
         <Route path="/mentor/form" element={<ProtectedRoute element={<JotFormEmbed />} />} />
         <Route path="/meeting/:id" element={<ProtectedRoute element={<MeetingLayout />} />} />
         <Route path="/meetingg" element={<MeetingLayout />} />
+        <Route path="/student/waiting" element={<ProtectedRoute element={<WaitingApproval />} />} />
         <Route path="/mentor/waiting-approval" element={<ProtectedRoute element={<WaitingApproval />} />} />
       </Routes>
     </Router>

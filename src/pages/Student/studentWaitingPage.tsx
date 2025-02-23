@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 function StudentWaitingPage() {
   const navigate = useNavigate();
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(2);
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       {/* Header */}
