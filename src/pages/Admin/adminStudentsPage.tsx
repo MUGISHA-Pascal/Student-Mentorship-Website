@@ -59,8 +59,6 @@ const StudentProfile: React.FC<{
         <div className="space-y-2">
           <div><span className="font-medium">Name:</span> {student.name}</div>
           <div><span className="font-medium">Email:</span> {student.email}</div>
-          <div><span className="font-medium">Address:</span> {student.address}</div>
-          <div><span className="font-medium">Field:</span> {student.field}</div>
         </div>
       </TabsContent>
       <TabsContent value="courses">Courses content</TabsContent>

@@ -48,7 +48,9 @@ const Login = () => {
         navigate('/admin/dashboard');
       } else if (user.role === 'STUDENT') {
         toast.success("Login successful!", { position: "top-right", autoClose: 5000 });
-        if (user.student?.currentEnrollmentId) {
+        if (!user.filledForm) {
+          navigate("/student/form")
+        } else if (user.student?.currentEnrollmentId) {
           navigate("/student/welcome");
         } else {
           navigate("/student/dashboard");

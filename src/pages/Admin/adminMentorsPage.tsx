@@ -46,7 +46,7 @@ const AdminItem: React.FC<{ mentor: Mentor; isWaitlist?: boolean; onSelect: () =
   </div>
 );
 
-const AdminProfile: React.FC<{ mentor: Mentor }> = ({ mentor }) => (
+const MentorProfile: React.FC<{ mentor: Mentor }> = ({ mentor }) => (
   <div className="bg-card text-card-foreground p-6 rounded-lg">
     <img src="/images/avatar.png" alt={mentor.user.firstName} className="w-24 h-24 rounded-full mx-auto mb-4" />
     <h3 className="text-xl font-bold text-center mb-2">{mentor.user.firstName} {mentor.user.lastName}</h3>
@@ -54,8 +54,7 @@ const AdminProfile: React.FC<{ mentor: Mentor }> = ({ mentor }) => (
     <Tabs defaultValue="personal">
       <TabsList className="grid w-full grid-cols-3">
         <TabsTrigger value="personal">Personal</TabsTrigger>
-        <TabsTrigger value="courses">Courses</TabsTrigger>
-        <TabsTrigger value="achievements">Achievements</TabsTrigger>
+        <TabsTrigger value="bio">Bio</TabsTrigger>
       </TabsList>
       <TabsContent value="personal" className="mt-4">
         <div className="space-y-2">
@@ -64,7 +63,7 @@ const AdminProfile: React.FC<{ mentor: Mentor }> = ({ mentor }) => (
           <div><span className="font-medium">Field:</span> {mentor.career.map(c => c.title).join(', ')}</div>
         </div>
       </TabsContent>
-      <TabsContent value="courses">Courses content</TabsContent>
+      <TabsContent value="bio">{mentor.bio}</TabsContent>
       <TabsContent value="achievements">Achievements content</TabsContent>
     </Tabs>
   </div>
@@ -141,7 +140,7 @@ export default function AdminMentorsPage() {
           </div>
           <div className="space-y-2">{mentors.map(m => <AdminItem key={m.id} mentor={m} onSelect={() => setSelectedMentor(m)} />)}</div>
         </div>
-        <div className="w-full lg:w-1/3">{selectedMentor && <AdminProfile mentor={selectedMentor} />}</div>
+        <div className="w-full lg:w-1/3">{selectedMentor && <MentorProfile mentor={selectedMentor} />}</div>
       </div>
 
 

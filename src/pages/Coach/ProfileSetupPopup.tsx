@@ -25,31 +25,40 @@ interface ExperienceEntry {
   endDate: string;
 }
 
+interface ProgressBarProps {
+  currentStep: number;
+  totalSteps: number;
+  onStepClick: (step: number) => void; // Callback function for step clicks
+}
+
 const ProgressBar = ({
   currentStep,
   totalSteps,
-}: {
-  currentStep: number;
-  totalSteps: number;
-}) => {
+  onStepClick,
+}: ProgressBarProps) => {
   return (
     <div className="w-full flex items-center justify-between">
       {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step) => (
         <React.Fragment key={step}>
           <div
-            className={`w-10 h-10 rounded-full flex items-center justify-center ${
-              step === currentStep
+            className={`w-10 h-10 rounded-full flex items-center justify-center ${step === currentStep
                 ? "bg-blue-500 text-white"
-                : "bg-white text-blue-500"
-            }`}
+                : step < currentStep
+                  ? "bg-blue-500 text-white cursor-pointer"
+                  : "bg-gray-300 text-white cursor-not-allowed"
+              }`}
+            onClick={() => {
+              if (step < currentStep) {
+                onStepClick(step); // Only allow clicking steps before the current step
+              }
+            }}
           >
             {step}
           </div>
           {step < totalSteps && (
             <div
-              className={`flex-1 h-1 ${
-                step < currentStep ? "bg-blue-500" : "bg-white"
-              }`}
+              className={`flex-1 h-1 ${step < currentStep ? "bg-blue-500" : "bg-gray-300"
+                }`}
             />
           )}
         </React.Fragment>
@@ -57,6 +66,7 @@ const ProgressBar = ({
     </div>
   );
 };
+
 
 const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
   isOpen,
@@ -195,7 +205,8 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
         }
       );
       toast.success("Profile updated successfully!");
-      setShowSubmitted(true);
+      // setShowSubmitted(true);
+      navigate("/mentor/waiting-approval")
     } catch (error) {
       toast.error("Failed to update profile.");
       console.log("Error while updating profile: ", error);
@@ -464,10 +475,14 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
   return (
     <>
       <Dialog open={isOpen && !showSubmitted} onOpenChange={onClose}>
-        <DialogContent className="max-w-[95vw] w-[1200px] h-[95vh] p-0 overflow-hidden backdrop-blur-sm bg-blue-100 bg-opacity-60">
+        <DialogContent className="max-w-[95vw] w-[1200px] h-[95vh] p-0 overflow-hidden backdrop-blur-sm bg-blue-100 bg-opacity-60" onInteractOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
           <div className="relative h-full flex flex-col">
             <div className="absolute top-0 left-0 right-0 p-4 z-10">
-              <ProgressBar currentStep={step} totalSteps={3} />
+              <ProgressBar
+                currentStep={step}
+                totalSteps={3}
+                onStepClick={(clickedStep) => setStep(clickedStep)}
+              />
             </div>
             <div className="flex-grow overflow-y-auto p-6 pt-20">
               <h1 className="text-2xl font-bold mb-6 text-gray-800">

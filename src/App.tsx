@@ -34,7 +34,6 @@ import SettingsPage from "./pages/Coach/settimgsPage";
 // import MeetingPage from "./pages/Meeting/MeetingView";
 import MeetingLayout from "./pages/Meeting/meetingLayout";
 import WaitingApproval from "./pages/waiting-approval";
-import JotFormEmbed from './components/home/formPage'
 import AdminHomePage from "./pages/Admin/adminHomePage";
 import AdminStudentsPage from "./pages/Admin/adminStudentsPage";
 import AdminMentorsPage from "./pages/Admin/adminMentorsPage";
@@ -43,6 +42,8 @@ import AdminCalendarPage from "./pages/Admin/adminCalendarPage";
 import AdminChatsPage from "./pages/Admin/adminChatsPage";
 import LayoutAdmin from "./pages/LayoutAdmin";
 import StudentWaitingPage from "./pages/Student/studentWaitingPage";
+import MentorFormPage from "./components/dashboard/mentor/mentorFormPage";
+import StudentFormPage from "./components/dashboard/student/StudentFormPage";
 
 interface LayoutProps {
   children: ReactNode;
@@ -164,6 +165,7 @@ const App = () => {
         </Route>
 
         <Route path="student/welcome" element={<ProtectedRoute element={<StudentWaitingPage />} />} />
+        <Route path="/student/form" element={<ProtectedRoute element={<StudentFormPage />} />} />
 
         <Route path="/mentor/dashboard" element={<ProtectedRoute element={<LayoutCoach />} />}>
           <Route index element={<HomePage />} />
@@ -185,7 +187,7 @@ const App = () => {
         </Route>
 
 
-        <Route path="/mentor/form" element={<ProtectedRoute element={<JotFormEmbed />} />} />
+        <Route path="/mentor/form" element={<ProtectedRoute element={<MentorFormPage />} />} />
         <Route path="/meeting/:id" element={<ProtectedRoute element={<MeetingLayout />} />} />
         <Route path="/meetingg" element={<MeetingLayout />} />
         <Route path="/student/waiting" element={<ProtectedRoute element={<WaitingApproval />} />} />

@@ -1,10 +1,10 @@
 import React from 'react';
 
-const FormPage: React.FC = () => {
+const StudentFormPage: React.FC = () => {
     return (
         <div className="flex flex-col items-center justify-center w-screen h-screen">
             <iframe
-                src="https://form.jotform.com/elissafirstborn/goya-mentor-evaluation-form"
+                src="https://form.jotform.com/elissafirstborn/goya-student-evaluation-form"
                 title="JotForm"
                 className="w-screen h-full border-none"
             ></iframe>
@@ -12,4 +12,4 @@ const FormPage: React.FC = () => {
     );
 };
 
-export default FormPage;
+export default StudentFormPage;
