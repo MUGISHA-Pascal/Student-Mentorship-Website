@@ -205,8 +205,7 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
         }
       );
       toast.success("Profile updated successfully!");
-      // setShowSubmitted(true);
-      navigate("/mentor/waiting-approval")
+      navigate("/mentor/waiting")
     } catch (error) {
       toast.error("Failed to update profile.");
       console.log("Error while updating profile: ", error);

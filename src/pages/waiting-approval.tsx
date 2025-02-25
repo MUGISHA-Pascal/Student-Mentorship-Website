@@ -7,24 +7,24 @@ const WaitingApproval: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
-      {/* Header */}
-      <header className="max-w-7xl mx-auto flex justify-between items-center py-4">
+            <header className="max-w-7xl mx-auto bg-white border border-blue-200 rounded-xl flex justify-between items-center p-3">
         <div className="flex items-center gap-2">
-          <img 
-            src="/icons/logo.svg?height=40&width=40" 
-            alt="GOYoungAfrica Logo" 
-            width={40} 
+          <img
+            src="/icons/logo.svg?height=40&width=40"
+            alt="GOYoungAfrica Logo"
+            width={40}
             height={40}
           />
-          <span className="text-2xl font-bold">
-            <span className="text-orange-500">GO</span>
-            <span className="text-black">Young</span>
-            <span className="text-blue-500">Africa</span>
+          <span className="text-2xl font-bold font-sans">
+            <span className="text-orange-500">GOY</span>
+            <span className="text-black">oung</span>
+            <span className="text-orange-500">A</span>
+            <span className="text-blue-500">frica</span>
           </span>
         </div>
         <Button className="bg-blue-500 hover:bg-blue-600 text-white"
-         onClick={() => navigate('/donate')}
-          >
+          onClick={() => navigate('/donate')}
+        >
           Donate
         </Button>
       </header>

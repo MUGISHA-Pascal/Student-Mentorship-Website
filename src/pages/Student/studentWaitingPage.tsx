@@ -1,15 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Info } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom'
 
 
 function StudentWaitingPage() {
   const navigate = useNavigate();
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(1);
   return (
     <div className="min-h-screen bg-gray-50 p-4">
-      {/* Header */}
       <header className="max-w-7xl mx-auto bg-white border border-blue-200 rounded-xl flex justify-between items-center p-3">
         <div className="flex items-center gap-2">
           <img
@@ -32,7 +32,6 @@ function StudentWaitingPage() {
         </Button>
       </header>
 
-      {/* Main Content */}
       <main className="max-w-7xl mx-auto mt-8 text-center relative">
         <div className="max-w-3xl mx-auto mb-12">
           <img
