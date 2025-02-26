@@ -75,18 +75,17 @@ const MentorProfile: React.FC<{ mentor: any; isRemoving: boolean; removeMentor: 
 export default function AdminMentorsPage() {
   const [selectedMentor, setSelectedMentor] = useState<any | null>(null);
   const [selectedWaitlistMentors, setSelectedWaitlistMentors] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState('name');
-  const [filterField, setFilterField] = useState('All');
   const [approvedPage, setApprovedPage] = useState(1);
   const [waitlistPage, setWaitlistPage] = useState(1);
-  const { approvedMentors, setApprovedMentors, pendingMentors, setPendingMentors, mentorsLoading, setPage } = useMentors();
+  const { approvedMentors, setApprovedMentors, pendingMentors, setPendingMentors, mentorsLoading, setPage, totalPages } = useMentors();
   const [approvedSearchQuery, setApprovedSearchQuery] = useState('');
   const [waitlistSearchQuery, setWaitlistSearchQuery] = useState('');
   const [approvedFilter, setApprovedFilter] = useState('All');
   const [waitlistFilter, setWaitlistFilter] = useState('All');
   const [approvedSortBy, setApprovedSortBy] = useState('name');
   const [waitlistSortBy, setWaitlistSortBy] = useState('name');
+  const [isLoadingNextPage, setIsLoadingNextPage] = useState(false);
+  // const [totalPages, setTotalPages] = useState(null);
 
 
 
@@ -157,23 +156,36 @@ export default function AdminMentorsPage() {
       waitlistPage * itemsPerPage
     );
 
-  const handleApprovedPageChange = (newPage: number) => {
-    if (newPage > 0 && newPage <= Math.ceil(approvedMentors.length / itemsPerPage)) {
+  // const handleApprovedPageChange = (newPage: number) => {
+  //   if (newPage > 0 && newPage <= Math.ceil(approvedMentors.length / itemsPerPage)) {
+  //     setApprovedPage(newPage);
+  //     setPage(newPage);
+  //   }
+  // };
+  const handleApprovedPageChange = async (newPage: number) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setIsLoadingNextPage(true); // Start loading
       setApprovedPage(newPage);
+      setPage(newPage);
+      setIsLoadingNextPage(false); // End loading
     }
   };
 
-  const handleWaitlistPageChange = (newPage: number) => {
+  // const handleWaitlistPageChange = (newPage: number) => {
+  //   if (newPage > 0 && newPage <= Math.ceil(pendingMentors.length / itemsPerPage)) {
+  //     setWaitlistPage(newPage);
+  //     setPage(newPage);
+  //   }
+  //   console.log("Newpage", newPage);    
+  // };
+  const handleWaitlistPageChange = async (newPage: number) => {
+    // if (newPage > 0 && newPage <= totalPages) {
     if (newPage > 0 && newPage <= Math.ceil(pendingMentors.length / itemsPerPage)) {
+      setIsLoadingNextPage(true); // Start loading
       setWaitlistPage(newPage);
+      setPage(newPage);
+      setIsLoadingNextPage(false); // End loading
     }
-    console.log("Newpage", newPage);    
-  };
-
-
-  const handlePageChange = (newPage: number) => {
-    setApprovedPage(newPage);
-    setPage(newPage);
   };
 
   if (mentorsLoading) {
@@ -236,15 +248,17 @@ export default function AdminMentorsPage() {
           <Button
             variant="outline"
             onClick={() => handleApprovedPageChange(approvedPage - 1)}
-            disabled={approvedPage === 1}
+            disabled={approvedPage === 1 || isLoadingNextPage}
           >
             Previous
           </Button>
-          <span>Page {approvedPage} of {Math.ceil(approvedMentors.length / itemsPerPage)}</span>
+          {/* <span>Page {approvedPage} of {Math.ceil(approvedMentors.length / itemsPerPage)}</span> */}
+          <span>Page {approvedPage} of {totalPages}</span>
           <Button
             variant="outline"
             onClick={() => handleApprovedPageChange(approvedPage + 1)}
-            disabled={approvedPage * itemsPerPage >= approvedMentors.length}
+            // disabled={approvedPage * itemsPerPage >= approvedMentors.length}
+            disabled={approvedPage >= totalPages || isLoadingNextPage}
           >
             Next
           </Button>
@@ -281,43 +295,43 @@ export default function AdminMentorsPage() {
         ) : (
           <div className="space-y-2">
             {paginatedWaitlistMentors.length > 0 ? (
-              
-                paginatedWaitlistMentors.map(m => (
-                  <div key={m.id} className="flex items-center justify-between bg-muted p-4 rounded-lg">
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        className="mr-4"
-                        checked={selectedWaitlistMentors.includes(m.id)}
-                        onChange={() => setSelectedWaitlistMentors(prev =>
-                          prev.includes(m.id) ? prev.filter(id => id !== m.id) : [...prev, m.id]
-                        )}
-                      />
-                      <img src="/images/avatar.png" alt={m.user.firstName} className="w-10 h-10 rounded-full mr-4" />
-                      <div>
-                        <div className="font-medium">{m.user.firstName} {m.user.lastName}</div>
-                        <div className="text-sm text-muted-foreground">{m.user.email}</div>
-                      </div>
-                    </div>
-                    <div className="flex space-x-2">
-                      <Button
-                        variant="outline"
-                        onClick={() => approve(m.user.id, updateMentorLists)}
-                        disabled={approvingMentorId === m.user.id}
-                      >
-                        {approvingMentorId === m.user.id ? "Approving..." : "Approve"}
-                      </Button>
 
-                      <Button
-                        variant="destructive"
-                        onClick={() => reject(m.user.id, updateMentorLists)}
-                        disabled={rejectingMentorId === m.user.id}
-                      >
-                        {rejectingMentorId === m.user.id ? "Rejecting..." : "Reject"}
-                      </Button>
+              paginatedWaitlistMentors.map(m => (
+                <div key={m.id} className="flex items-center justify-between bg-muted p-4 rounded-lg">
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      className="mr-4"
+                      checked={selectedWaitlistMentors.includes(m.id)}
+                      onChange={() => setSelectedWaitlistMentors(prev =>
+                        prev.includes(m.id) ? prev.filter(id => id !== m.id) : [...prev, m.id]
+                      )}
+                    />
+                    <img src="/images/avatar.png" alt={m.user.firstName} className="w-10 h-10 rounded-full mr-4" />
+                    <div>
+                      <div className="font-medium">{m.user.firstName} {m.user.lastName}</div>
+                      <div className="text-sm text-muted-foreground">{m.user.email}</div>
                     </div>
                   </div>
-                ))) : (
+                  <div className="flex space-x-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => approve(m.user.id, updateMentorLists)}
+                      disabled={approvingMentorId === m.user.id}
+                    >
+                      {approvingMentorId === m.user.id ? "Approving..." : "Approve"}
+                    </Button>
+
+                    <Button
+                      variant="destructive"
+                      onClick={() => reject(m.user.id, updateMentorLists)}
+                      disabled={rejectingMentorId === m.user.id}
+                    >
+                      {rejectingMentorId === m.user.id ? "Rejecting..." : "Reject"}
+                    </Button>
+                  </div>
+                </div>
+              ))) : (
               <p className="text-muted-foreground text-center">No such waitlisted mentors found.</p>
             )}
 
@@ -325,15 +339,18 @@ export default function AdminMentorsPage() {
               <Button
                 variant="outline"
                 onClick={() => handleWaitlistPageChange(waitlistPage - 1)}
-                disabled={waitlistPage === 1}
+                // disabled={waitlistPage === 1}
+                disabled={waitlistPage === 1 || isLoadingNextPage}
               >
                 Previous
               </Button>
-              <span>Page {waitlistPage} of {Math.ceil(pendingMentors.length / itemsPerPage)}</span>
+              {/* <span>Page {waitlistPage} of {Math.ceil(pendingMentors.length / itemsPerPage)}</span> */}
+              <span>Page {waitlistPage} of {totalPages}</span>
               <Button
                 variant="outline"
                 onClick={() => handleWaitlistPageChange(waitlistPage + 1)}
-                disabled={waitlistPage * itemsPerPage >= pendingMentors.length}
+                // disabled={waitlistPage * itemsPerPage >= pendingMentors.length}
+                disabled={waitlistPage * itemsPerPage >= pendingMentors.length || isLoadingNextPage}
               >
                 Next
               </Button>

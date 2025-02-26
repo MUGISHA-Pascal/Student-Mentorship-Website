@@ -46,7 +46,8 @@ export const useMentors = () => {
     const [mentorsLoading, setMentorsLoading] = useState<boolean>(true);
     const [mentorsError, setMentorsError] = useState<string | null>(null);
     const [page, setPage] = useState(1);
-    const itemsPerPage = 50;
+    const [totalPages, setTotalPages] = useState(1);
+    const itemsPerPage = 10;
 
     useEffect(() => {
         const fetchMentors = async () => {
@@ -85,6 +86,7 @@ export const useMentors = () => {
                     })) || [],
                 }));
 
+                setTotalPages(data.totalPages)
                 setMentors(formattedMentors);
                 setApprovedMentors(formattedMentors.filter((mentor) => mentor.user.approved));
                 setPendingMentors(formattedMentors.filter((mentor) => !mentor.user.approved));
@@ -99,77 +101,9 @@ export const useMentors = () => {
         fetchMentors();
     }, [page]);
 
-    return { mentors, approvedMentors, setApprovedMentors, pendingMentors, setPendingMentors, mentorsLoading, mentorsError, setPage };
+    return { mentors, approvedMentors, setApprovedMentors, pendingMentors, setPendingMentors, mentorsLoading, mentorsError, setPage, totalPages };
 };
 
-
-// export const useApproveMentor = () => {
-//     const [isApproving, setIsApproving] = useState(false);
-//     const [error, setError] = useState<string | null>(null);
-//     const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
-//     const approve = async (mentorId: string) => {
-//         setIsApproving(true);
-//         try {
-//             const response = await approveMentor(mentorId);
-//             setSuccessMessage(response.message);
-//             toast.success("Mentor approved successfully!");
-//         } catch (err) {
-//             setError("Failed to approve mentor");
-//             toast.error("Failed to approve mentor");
-//         } finally {
-//             setIsApproving(false);
-//         }
-//     };
-
-//     return { approve, isApproving, error, successMessage };
-// };
-
-
-// export const useRejectMentor = () => {
-//     const [isRejecting, setIsRejecting] = useState(false);
-//     const [error, setError] = useState<string | null>(null);
-//     const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
-//     const reject = async (mentorId: string) => {
-//         setIsRejecting(true);
-//         try {
-//             const response = await rejectMentor(mentorId);
-//             setSuccessMessage(response.message);
-//             toast.success("Mentor rejected successfully!");
-//         } catch (err) {
-//             setError("Failed to reject mentor");
-//             toast.error("Failed to reject mentor");
-//         } finally {
-//             setIsRejecting(false);
-//         }
-//     };
-
-//     return { reject, isRejecting, error, successMessage };
-// };
-
-
-// export const useRemoveMentor = () => {
-//     const [isRemoving, setIsRemoving] = useState(false);
-//     const [error, setError] = useState<string | null>(null);
-//     const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
-//     const remove = async (mentorId: string) => {
-//         setIsRemoving(true);
-//         try {
-//             const response = await removeMentor(mentorId);
-//             setSuccessMessage(response.message);
-//             toast.success("Mentor removed successfully!");
-//         } catch (err) {
-//             setError("Failed to remove mentor");
-//             toast.error("Failed to remove mentor");
-//         } finally {
-//             setIsRemoving(false);
-//         }
-//     };
-
-//     return { remove, isRemoving, error, successMessage };
-// };
 
 export const useApproveMentor = () => {
     const [approvingMentorId, setApprovingMentorId] = useState<string | null>(null);
