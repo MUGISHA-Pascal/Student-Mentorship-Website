@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { approveMentor, getMentors, rejectMentor, removeMentor } from "@/services/admin/mentorsService";
+import { approveMentor, getApprovedMentors, getMentors, getPendingMentors, rejectMentor, removeMentor } from "@/services/admin/mentorsService";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
@@ -104,6 +104,64 @@ export const useMentors = () => {
     return { mentors, approvedMentors, setApprovedMentors, pendingMentors, setPendingMentors, mentorsLoading, mentorsError, setPage, totalPages };
 };
 
+export const useApprovedMentors = () => {
+    const [approvedMentors, setApprovedMentors] = useState<Mentor[]>([]);
+    const [approvedMentorsLoading, setApprovedMentorsLoading] = useState<boolean>(true);
+    const [approvedMentorsError, setApprovedMentorsError] = useState<string | null>(null);
+    const [approvedPage, setApprovedPage] = useState(1);
+    const [totalApprovedPages, setTotalApprovedPages] = useState(1);
+    const itemsPerPage = 10;
+
+    useEffect(() => {
+        const fetchApprovedMentors = async () => {
+            try {
+                setApprovedMentorsLoading(true);
+                const data = await getApprovedMentors(approvedPage, itemsPerPage);
+                setApprovedMentors(data.data);
+                setTotalApprovedPages(data.totalPages);
+            } catch (err) {
+                console.error("Failed to fetch approved mentors:", err);
+                setApprovedMentorsError("Failed to fetch approved mentors");
+            } finally {
+                setApprovedMentorsLoading(false);
+            }
+        };
+
+        fetchApprovedMentors();
+    }, [approvedPage]);
+
+    return { approvedMentors, setApprovedMentors, approvedMentorsLoading, approvedMentorsError, approvedPage, setApprovedPage, totalApprovedPages };
+};
+
+// Hook to fetch Pending Mentors
+export const usePendingMentors = () => {
+    const [pendingMentors, setPendingMentors] = useState<Mentor[]>([]);
+    const [pendingMentorsLoading, setPendingMentorsLoading] = useState<boolean>(true);
+    const [pendingMentorsError, setPendingMentorsError] = useState<string | null>(null);
+    const [pendingPage, setPendingPage] = useState(1);
+    const [totalPendingPages, setTotalPendingPages] = useState(1);
+    const itemsPerPage = 10;
+
+    useEffect(() => {
+        const fetchPendingMentors = async () => {
+            try {
+                setPendingMentorsLoading(true);
+                const data = await getPendingMentors(pendingPage, itemsPerPage);
+                setPendingMentors(data.data);
+                setTotalPendingPages(data.totalPages);
+            } catch (err) {
+                console.error("Failed to fetch pending mentors:", err);
+                setPendingMentorsError("Failed to fetch pending mentors");
+            } finally {
+                setPendingMentorsLoading(false);
+            }
+        };
+
+        fetchPendingMentors();
+    }, [pendingPage]);
+
+    return { pendingMentors, setPendingMentors, pendingMentorsLoading, pendingMentorsError, pendingPage, setPendingPage, totalPendingPages };
+};
 
 export const useApproveMentor = () => {
     const [approvingMentorId, setApprovingMentorId] = useState<string | null>(null);

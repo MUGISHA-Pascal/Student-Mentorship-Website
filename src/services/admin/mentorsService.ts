@@ -9,9 +9,38 @@ export const getMentors = async (page = 1, limit = 20) => {
         });
         console.log("Data", response.data);
         return response.data;
-        
+
     } catch (error) {
         console.error("Failed to fetch mentors:", error);
+        throw error;
+    }
+};
+
+export const getApprovedMentors = async (page = 1, limit = 10) => {
+    try {
+        const response = await apiClient.get("/admin/mentors/approved", {
+            headers: getAuthHeaders(),
+            params: { page, limit },
+        });
+        console.log("Approved Mentors Data:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Failed to fetch approved mentors:", error);
+        throw error;
+    }
+};
+
+// Fetch Pending Mentors
+export const getPendingMentors = async (page = 1, limit = 10) => {
+    try {
+        const response = await apiClient.get("/admin/mentors/pending", {
+            headers: getAuthHeaders(),
+            params: { page, limit },
+        });
+        console.log("Pending Mentors Data:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Failed to fetch pending mentors:", error);
         throw error;
     }
 };
