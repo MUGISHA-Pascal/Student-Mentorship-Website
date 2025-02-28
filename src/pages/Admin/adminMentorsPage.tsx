@@ -202,7 +202,6 @@ export default function AdminMentorsPage() {
               ) : (
                 <div className="h-20 text-muted-foreground flex items-center justify-center">No such approved mentors found.</div>
               )}
-
             </div>
           </div>
           <div className="w-full lg:w-1/3">{selectedMentor && <MentorProfile mentor={selectedMentor} isRemoving={removingMentorId === selectedMentor?.user.id} removeMentor={handleRemoveMentor} />}</div>
