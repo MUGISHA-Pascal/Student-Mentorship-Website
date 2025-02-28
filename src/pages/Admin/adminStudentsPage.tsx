@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import AdminStatistics from '@/components/dashboard/admin/adminStatistics'
 import axios from 'axios'
-import { useApprovedStudents, usePendingStudents } from '@/hooks/admin/useStudents'
+import { useApprovedStudents, useApproveStudent, usePendingStudents, useRejectStudent, useRemoveStudent } from '@/hooks/admin/useStudents'
 
 interface StudentItemProps {
   student: {
@@ -55,8 +55,7 @@ const StudentItem: React.FC<{ student: any; onSelect: () => void; isSelected: bo
     </div>
     <div className="flex flex-col sm:flex-row sm:items-center mt-2 sm:mt-0">
       <div className={`mb-2 sm:mb-0 sm:mr-4 px-3 py-1 text-secondary-foreground rounded-full ${isSelected ? 'bg-gray-300' : ''}`}>
-        {/* {student.career.map((c: any) => c.title).join(', ')} */}
-        Career
+        {student.educationLevel}
       </div>
       <MoreVertical className="text-muted-foreground hidden sm:block" />
     </div>
@@ -100,7 +99,8 @@ const StudentProfile: React.FC<{ student: any; isRemoving: boolean; removeStuden
     <img src="/images/avatar.png" alt={student.user.firstName} className="w-24 h-24 rounded-full mx-auto mb-4" />
     <h3 className="text-xl font-bold text-center mb-2">{student.user.firstName} {student.user.lastName}</h3>
     <p className="text-muted-foreground text-center mb-6">
-      {student.career?.map((c: any) => c.title).join(', ') ?? 'No career specified'}
+      {/* {student.career?.map((c: any) => c.title).join(', ') ?? 'No career specified'} */}
+      {student.educationLevel}
     </p>
     <Tabs defaultValue="personal">
       <TabsList className="grid w-full grid-cols-3">
@@ -163,25 +163,28 @@ export default function AdminStudentsPage() {
 
   const { approvedStudents, setApprovedStudents, approvedLoading, approvedError, approvedPage, setApprovedPage, totalApprovedPages } = useApprovedStudents()
   const { pendingStudents, setPendingStudents, pendingLoading, pendingError, pendingPage, setPendingPage, totalPendingPages } = usePendingStudents()
+  const { approvingStudentId, approve } = useApproveStudent();
+  const { rejectingStudentId, reject } = useRejectStudent();
+  const { removingStudentId, remove } = useRemoveStudent();
 
-  // const updateStudentLists = (studentId: string) => {
-  //   setPendingStudents((prev) => prev.filter(s => s.user.id !== studentId));
-  //   const studentToMove = pendingStudents.find(s => s.user.id === studentId);
-  //   if (studentToMove) {
-  //     setApprovedStudents((prev) => [...prev, studentToMove]);
-  //   }
-  // };
+  const updateStudentLists = (studentId: string) => {
+    setPendingStudents((prev) => prev.filter(s => s.user.id !== studentId));
+    const studentToMove = pendingStudents.find(s => s.user.id === studentId);
+    if (studentToMove) {
+      setApprovedStudents((prev) => [...prev, studentToMove]);
+    }
+  };
 
-  // const handleRemoveStudent = async (studentId: string) => {
-  //   await remove(studentId, (updatedId) => {
-  //     setApprovedStudents(prev => prev.filter(s => s.user.id !== updatedId));
-  //     const studentToReAdd = ApprovedStudents.find(s => s.user.id === updatedId);
-  //     if (studentToReAdd) {
-  //       setPendingStudents(prev => [...prev, studentToReAdd]);
-  //     }
-  //   });
-  //   setSelectedStudent(null);
-  // };
+  const handleRemoveStudent = async (studentId: string) => {
+    await remove(studentId, (updatedId) => {
+      setApprovedStudents(prev => prev.filter(s => s.user.id !== updatedId));
+      const studentToReAdd = approvedStudents.find(s => s.user.id === updatedId);
+      if (studentToReAdd) {
+        setPendingStudents(prev => [...prev, studentToReAdd]);
+      }
+    });
+    setSelectedStudent(null);
+  };
 
   const filteredAndSortedApprovedStudents = approvedStudents
     .filter(s => {
@@ -318,13 +321,19 @@ export default function AdminStudentsPage() {
               <Select onValueChange={setApprovedFilter} defaultValue="All">
                 <SelectTrigger className="w-[180px]"><SelectValue placeholder="Filter by career" /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="All">All Careers</SelectItem>
+                  <SelectItem value="All">All Levels</SelectItem>
                   {/* {approvedStudents
                       .filter(s => s && s.educationLevel)
                       .flatMap(s => s.educationLevel?.map(c => c.title) ?? [])
                       .filter((title, i, arr) => arr.indexOf(title) === i)
                       .map(title => <SelectItem key={title} value={title}>{title}</SelectItem>)
                     } */}
+                  {[...new Set([...approvedStudents, ...pendingStudents]
+                    .map(s => s.educationLevel)
+                    .filter(Boolean)
+                  )].map(level => (
+                    <SelectItem key={level} value={level}>{level}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <Select onValueChange={setApprovedSortBy} defaultValue="name">
@@ -415,9 +424,13 @@ export default function AdminStudentsPage() {
             <Select onValueChange={setWaitlistFilter} defaultValue="All">
               <SelectTrigger className="w-[180px]"><SelectValue placeholder="Filter by career" /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="All">All Careers</SelectItem>
-                {[...new Set([...approvedMentors, ...pendingMentors].flatMap(m => m.career?.map(c => c.title) ?? []))]
-                  .map(title => <SelectItem key={title} value={title}>{title}</SelectItem>)}
+                <SelectItem value="All">All levels</SelectItem>
+                {[...new Set([...approvedStudents, ...pendingStudents]
+                  .map(s => s.educationLevel)
+                  .filter(Boolean)
+                )].map(level => (
+                  <SelectItem key={level} value={level}>{level}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
             <Select onValueChange={setWaitlistSortBy} defaultValue="name">
@@ -462,7 +475,7 @@ export default function AdminStudentsPage() {
 
                     <Button
                       variant="destructive"
-                      onClick={() => reject(s.user.id, updateMentorLists)}
+                      onClick={() => reject(s.user.id, updateStudentLists)}
                       disabled={rejectingStudentId === s.user.id}
                     >
                       {rejectingStudentId === s.user.id ? "Rejecting..." : "Reject"}

@@ -29,7 +29,7 @@ export const getPendingStudents = async (page = 1, limit = 20) => {
 
 export const approveStudent = async (studentId: string) => {
     try {
-        const response = await apiClient.patch(`/admin/student/approve/${studentId}`, {}, {
+        const response = await apiClient.put(`/admin/student/approve/${studentId}`, {}, {
             headers: getAuthHeaders(),
         });
         return response.data;
@@ -41,7 +41,7 @@ export const approveStudent = async (studentId: string) => {
 
 export const rejectStudent = async (studentId: string) => {
     try {
-        const response = await apiClient.patch(`/admin/student/reject/${studentId}`, {}, {
+        const response = await apiClient.put(`/admin/student/reject/${studentId}`, {}, {
             headers: getAuthHeaders(),
         });
         return response.data;
