@@ -41,7 +41,7 @@ export const approveStudent = async (studentId: string) => {
 
 export const rejectStudent = async (studentId: string) => {
     try {
-        const response = await apiClient.put(`/admin/student/reject/${studentId}`, {}, {
+        const response = await apiClient.delete(`/admin/student/reject/${studentId}`, {
             headers: getAuthHeaders(),
         });
         return response.data;
@@ -53,7 +53,7 @@ export const rejectStudent = async (studentId: string) => {
 
 export const removeStudent = async (studentId: string) => {
     try {
-        const response = await apiClient.delete(`/admin/student/remove/${studentId}`, {
+        const response = await apiClient.put(`/admin/student/remove/${studentId}`, {}, {
             headers: getAuthHeaders(),
         });
         return response.data;

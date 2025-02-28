@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import AdminStatistics from '@/components/dashboard/admin/adminStatistics'
-import axios from 'axios'
 import { useApprovedStudents, useApproveStudent, usePendingStudents, useRejectStudent, useRemoveStudent } from '@/hooks/admin/useStudents'
 
 interface StudentItemProps {
@@ -21,23 +20,6 @@ interface StudentItemProps {
   isWaitlist?: boolean;
 }
 
-// const StudentItem: React.FC<StudentItemProps> = ({ student, isWaitlist = false }) => (
-//   <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 text-card-foreground rounded-lg mb-2 cursor-pointer bg-muted">
-//     <div className="flex items-center mb-2 sm:mb-0 ">
-//       <input type="checkbox" className="mr-4" />
-//       <img src={student.avatar} alt={student.name} className="w-10 h-10 rounded-full mr-4" />
-//       <div>
-//         <div className="font-medium">{student.name}</div>
-//         <div className="text-sm text-muted-foreground">{student.contact}</div>
-//       </div>
-//     </div>
-//     <div className="flex flex-col sm:flex-row sm:items-center mt-2 sm:mt-0">
-//       <div className="mb-2 sm:mb-0 sm:mr-4 text-primary">{student.email}</div>
-//       <div className="mb-2 sm:mb-0 sm:mr-4 px-3 py-1 bg-secondary text-secondary-foreground rounded-full">{student.field}</div>
-//       {!isWaitlist && <MoreVertical className="text-muted-foreground hidden sm:block" />}
-//     </div>
-//   </div>
-// )
 const StudentItem: React.FC<{ student: any; onSelect: () => void; isSelected: boolean }> = ({ student, onSelect, isSelected }) => (
   <div
     className={
@@ -61,38 +43,6 @@ const StudentItem: React.FC<{ student: any; onSelect: () => void; isSelected: bo
     </div>
   </div>
 );
-
-// const StudentProfile: React.FC<{
-//   student: {
-//     email: React.ReactNode
-//     address: React.ReactNode; avatar: string; name: string; field: string
-//   }
-// }> = ({ student }) => (
-//   <div className="bg-card text-card-foreground p-6 rounded-lg">
-//     <img src={student.avatar} alt={student.name} className="w-24 h-24 rounded-full mx-auto mb-4" />
-//     <h3 className="text-xl font-bold text-center mb-2">{student.name}</h3>
-//     <p className="text-muted-foreground text-center mb-6">{student.field}</p>
-//     <Tabs defaultValue="personal">
-//       <TabsList className="grid w-full grid-cols-3">
-//         <TabsTrigger value="personal">Personal</TabsTrigger>
-//         <TabsTrigger value="courses">Courses</TabsTrigger>
-//         <TabsTrigger value="achievements">Achievements</TabsTrigger>
-//       </TabsList>
-//       <TabsContent value="personal" className="mt-4">
-//         <div className="space-y-2">
-//           <div><span className="font-medium">Name:</span> {student.name}</div>
-//           <div><span className="font-medium">Email:</span> {student.email}</div>
-//         </div>
-//       </TabsContent>
-//       <TabsContent value="courses">Courses content</TabsContent>
-//       <TabsContent value="achievements">Achievements content</TabsContent>
-//     </Tabs>
-//     <div className="mt-6 space-x-2 flex flex-col sm:flex-row">
-//       <Button className="mb-2 sm:mb-0">Message</Button>
-//       <Button variant="destructive">Remove</Button>
-//     </div>
-//   </div>
-// )
 
 const StudentProfile: React.FC<{ student: any; isRemoving: boolean; removeStudent: (id: string) => void }> = ({ student, isRemoving, removeStudent }) => (
   <div className="bg-card text-card-foreground p-6 rounded-lg">
@@ -133,25 +83,9 @@ const StudentProfile: React.FC<{ student: any; isRemoving: boolean; removeStuden
     </div>
   </div>
 );
-interface Student {
-  id: number;
-  name: string;
-  contact: string;
-  email: string;
-  field: string;
-  avatar: string;
-  address: string;
-}
 
 export default function AdminStudentsPage() {
-  const [students, setStudents] = useState<Student[]>([])
-  const [waitlist, setWaitlist] = useState<Student[]>([])
   const [selectedStudent, setSelectedStudent] = useState<any | null>(null)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [sortBy, setSortBy] = useState('name')
-  const [filterField, setFilterField] = useState('All')
-  const [selectedWaitlistStudents, setSelectedWaitlistStudents] = useState<number[]>([])
-
   const [approvedSearchQuery, setApprovedSearchQuery] = useState('');
   const [waitlistSearchQuery, setWaitlistSearchQuery] = useState('');
   const [approvedFilter, setApprovedFilter] = useState('All');
@@ -161,8 +95,8 @@ export default function AdminStudentsPage() {
   const [isLoadingNextPage, setIsLoadingNextPage] = useState(false);
 
 
-  const { approvedStudents, setApprovedStudents, approvedLoading, approvedError, approvedPage, setApprovedPage, totalApprovedPages } = useApprovedStudents()
-  const { pendingStudents, setPendingStudents, pendingLoading, pendingError, pendingPage, setPendingPage, totalPendingPages } = usePendingStudents()
+  const { approvedStudents, setApprovedStudents, approvedPage, setApprovedPage, totalApprovedPages } = useApprovedStudents()
+  const { pendingStudents, setPendingStudents, pendingPage, setPendingPage, totalPendingPages } = usePendingStudents()
   const { approvingStudentId, approve } = useApproveStudent();
   const { rejectingStudentId, reject } = useRejectStudent();
   const { removingStudentId, remove } = useRemoveStudent();
@@ -190,7 +124,8 @@ export default function AdminStudentsPage() {
     .filter(s => {
       const nameMatch = `${s.user.firstName} ${s.user.lastName}`.toLowerCase().includes(approvedSearchQuery.toLowerCase());
       const emailMatch = s.user.email.toLowerCase().includes(approvedSearchQuery.toLowerCase());
-      return (nameMatch || emailMatch);
+      const levelMatch = waitlistFilter === 'All' || s.educationLevel === waitlistFilter;
+      return (nameMatch || emailMatch) && levelMatch;
     })
     .sort((a, b) => {
       if (approvedSortBy === 'name') return a.user.firstName.localeCompare(b.user.firstName);
@@ -199,10 +134,11 @@ export default function AdminStudentsPage() {
     });
 
   const filteredAndSortedWaitlistStudents = pendingStudents
-    .filter(m => {
-      const nameMatch = `${m.user.firstName} ${m.user.lastName}`.toLowerCase().includes(waitlistSearchQuery.toLowerCase());
-      const emailMatch = m.user.email.toLowerCase().includes(waitlistSearchQuery.toLowerCase());
-      return (nameMatch || emailMatch);
+    .filter(s => {
+      const nameMatch = `${s.user.firstName} ${s.user.lastName}`.toLowerCase().includes(waitlistSearchQuery.toLowerCase());
+      const emailMatch = s.user.email.toLowerCase().includes(waitlistSearchQuery.toLowerCase());
+      const levelMatch = waitlistFilter === 'All' || s.educationLevel === waitlistFilter;
+      return (nameMatch || emailMatch) && levelMatch;
     })
     .sort((a, b) => {
       if (waitlistSortBy === 'name') return a.user.firstName.localeCompare(b.user.firstName);
@@ -221,7 +157,6 @@ export default function AdminStudentsPage() {
 
   const handleWaitlistPageChange = async (newPage: number) => {
     if (newPage > 0 && newPage <= totalPendingPages) {
-      // console.log(`Changing to page ${newPage}`);
       setIsLoadingNextPage(true);
       setPendingPage(newPage);
       setPendingStudents(pendingStudents)
@@ -229,78 +164,6 @@ export default function AdminStudentsPage() {
       console.log(`Approved page after changing to page ${newPage}`, pendingStudents);
     }
   };
-
-  // useEffect(() => {
-  //   if (students.length > 0 && !selectedStudent) {
-  //     setSelectedStudent(students[0])
-  //   }
-  // }, [students, selectedStudent])
-
-  // useEffect(() => {
-  //   axios.get('http://localhost:3000/api/v1/admin/students')
-  //     .then(response => {
-  //       const fetchedStudents = response.data.map((student: any) => ({
-  //         id: student.id,
-  //         name: `${student.firstName} ${student.lastName}`,
-  //         email: student.email,
-  //         field: 'N/A', // Modify as needed if there's a field
-  //         avatar: `https://i.pravatar.cc/150?u=${student.email}`,
-  //         approved: student.approved,
-  //       }));
-
-  //       setStudents(fetchedStudents.filter(student => student.approved));
-  //       setWaitlist(fetchedStudents.filter(student => !student.approved));
-  //     })
-  //     .catch(error => console.error('Error fetching students:', error));
-  // }, []);
-
-  // const handleSearch = (query: string) => {
-  //   setSearchQuery(query)
-  // }
-
-  // const handleSort = (criteria: string) => {
-  //   setSortBy(criteria)
-  // }
-
-  // const handleFilter = (field: string) => {
-  //   setFilterField(field)
-  // }
-
-  // const handleStudentSelect = (student: Student) => {
-  //   setSelectedStudent(student)
-  // }
-
-  // const handleWaitlistStudentSelect = (studentId: number) => {
-  //   setSelectedWaitlistStudents(prev =>
-  //     prev.includes(studentId)
-  //       ? prev.filter(id => id !== studentId)
-  //       : [...prev, studentId]
-  //   )
-  // }
-
-  const handleApproveWaitlist = () => {
-    const approvedStudents = waitlist.filter(student => selectedWaitlistStudents.includes(student.id))
-    setStudents(prev => [...prev, ...approvedStudents])
-    setWaitlist(prev => prev.filter(student => !selectedWaitlistStudents.includes(student.id)))
-    setSelectedWaitlistStudents([])
-  }
-
-  const handleRemoveWaitlist = () => {
-    setWaitlist(prev => prev.filter(student => !selectedWaitlistStudents.includes(student.id)))
-    setSelectedWaitlistStudents([])
-  }
-
-  // const filteredStudents = students
-  //   .filter(student =>
-  //     student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //     student.email.toLowerCase().includes(searchQuery.toLowerCase())
-  //   )
-  //   .filter(student => filterField === 'All' || student.field === filterField)
-  //   .sort((a, b) => {
-  //     if (sortBy === 'name') return a.name.localeCompare(b.name)
-  //     if (sortBy === 'email') return a.email.localeCompare(b.email)
-  //     return 0
-  //   })
 
   return (
     <div className="p-4 sm:p-6 bg-background text-foreground min-h-screen">
@@ -403,17 +266,6 @@ export default function AdminStudentsPage() {
         </Button>
       </div>
       <div className='mt-8'>
-        {/* <h2 className="text-xl font-semibold mt-8 mb-4">Waitlist (Pending Approvals)</h2>
-        <div className="space-y-2">
-          {waitlist.map(student => (
-            <div key={student.id} onClick={() => handleWaitlistStudentSelect(student.id)}>
-              <StudentItem
-                student={student}
-                isWaitlist
-              />
-            </div>
-          ))}
-        </div> */}
         <h2 className="text-xl font-semibold mb-4">Waitlist</h2>
         <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
           <div className="relative w-full sm:w-auto">
