@@ -12,6 +12,7 @@ import axios from "axios";
 import { useUserStore } from "@/store/userStore";
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-toastify";
+import { Levels } from "react-activity";
 
 interface ProfileSetupPopupProps {
   isOpen: boolean;
@@ -42,10 +43,10 @@ const ProgressBar = ({
         <React.Fragment key={step}>
           <div
             className={`w-10 h-10 rounded-full flex items-center justify-center ${step === currentStep
-                ? "bg-blue-500 text-white"
-                : step < currentStep
-                  ? "bg-blue-500 text-white cursor-pointer"
-                  : "bg-gray-300 text-white cursor-not-allowed"
+              ? "bg-blue-500 text-white"
+              : step < currentStep
+                ? "bg-blue-500 text-white cursor-pointer"
+                : "bg-gray-300 text-white cursor-not-allowed"
               }`}
             onClick={() => {
               if (step < currentStep) {
@@ -87,6 +88,7 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
   >([]);
   const [bio, setBio] = useState<string>("");
   const [showSubmitted, setShowSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const { user, fetchUser } = useUserStore();
@@ -174,6 +176,7 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     const formData = new FormData();
     formData.append("bio", bio);
     console.log(bio);
@@ -209,6 +212,8 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
     } catch (error) {
       toast.error("Failed to update profile.");
       console.log("Error while updating profile: ", error);
+    } finally {
+      setLoading(false);
     }
   };
   const renderStep = () => {
@@ -459,10 +464,11 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
               </div>
             </div>
             <Button
+              disabled={loading}
               onClick={handleSubmit}
               className="bg-blue-500 text-white rounded-full w-full mt-20"
             >
-              Finish Setup
+              {loading ? <Levels speed={0.5} /> : "Finish Setup"}
             </Button>
           </div>
         );

@@ -44,7 +44,7 @@ const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange }: { ex
         <SidebarLink icon={<Users />} label="Mentors" isActive={activeSection === '/admin/dashboard/mentors'} onClick={() => onSectionChange('/admin/dashboard/mentors')} to="/admin/dashboard/mentors" expanded={expanded} />
         <SidebarLink icon={<Calendar />} label="Calendar" isActive={activeSection === '/admin/dashboard/calendar'} onClick={() => onSectionChange('/admin/dashboard/calendar')} to="/admin/dashboard/calendar" expanded={expanded} />
         <SidebarLink icon={<Users />} label="Assessments" isActive={activeSection === '/admin/dashboard/assessments'} onClick={() => onSectionChange('/admin/dashboard/assessments')} to="/admin/dashboard/assessments" expanded={expanded} />
-        <SidebarLink icon={<MessageSquare />} label="Chats" isActive={activeSection === '/admin/dashboard/chats'} onClick={() => onSectionChange('/admin/dashboard/chats')} to="/admin/dashboard/chats" badge="2" expanded={expanded} />
+        <SidebarLink icon={<MessageSquare />} label="Chats" isActive={activeSection === '/admin/dashboard/chats'} onClick={() => onSectionChange('/admin/dashboard/chats')} to="/admin/dashboard/chats" expanded={expanded} />
       </nav>
     </div>
   )

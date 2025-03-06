@@ -1,13 +1,15 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAdminStatistics } from "@/hooks/admin/home/useHomeData";
+import { Levels } from "react-activity";
 
 
 const AdminStatistics: React.FC = () => {
   const { statistics, loading, error } = useAdminStatistics();
-  
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <div className='w-full h-60 flex items-center justify-center'>
+    <Levels speed={0.5} />
+  </div>;
   if (error) return <p className="text-red-500">{error}</p>;
 
   const stats = [

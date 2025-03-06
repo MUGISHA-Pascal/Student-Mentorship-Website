@@ -229,20 +229,6 @@ export default function AdminStudentsPage() {
               <div className="h-20 text-muted-foreground flex items-center justify-center">No such approved mentors found.</div>
             )}
           </div>
-          <div className="space-y-2">
-            {filteredAndSortedApprovedStudents.length > 0 ? (
-              filteredAndSortedApprovedStudents.map(s => (
-                <StudentItem
-                  key={s.id}
-                  student={s}
-                  onSelect={() => setSelectedStudent(s)}
-                  isSelected={selectedStudent?.id === s.id}
-                />
-              ))
-            ) : (
-              <div className="h-20 text-muted-foreground flex items-center justify-center">No such approved mentors found.</div>
-            )}
-          </div>
         </div>
         <div className="w-full lg:w-1/3">
           {selectedStudent && <StudentProfile student={selectedStudent} isRemoving={removingStudentId === selectedStudent?.user.id} removeStudent={handleRemoveStudent} />}

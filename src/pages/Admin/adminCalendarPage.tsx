@@ -49,49 +49,48 @@ export default function AdminCalendarPage() {
   const { ongoingCourses, groupedActivities } = useCoachActivities(coachId);
 
   return (
-    <div className="p-4 sm:p-6 bg-background text-foreground min-h-screen">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-col-2 gap-x-5 items-center">
-        <div className="bg-blue-50 dark:bg-transparent dark:border px-3 py-6 rounded-lg flex">
-          <div>
-            <img src='/svgs/calendarDashboard.svg' alt="Calendar Illustration" className="" />
-          </div>
-          <div>
-            <p className="text-2xl font-semibold text-muted-foreground">What are you doing Today?</p>
-            <p className="text-blue-600 font-semibold mt-2">{currentDate}</p>
-            <p className="mt-2 text-green-600 flex items-center">
-              <span className="inline-block w-4 h-4 mr-2 bg-green-500 rounded-full"></span>
-              {/* {todayActivities.length > 0 ? todayActivities[0].name : "No task scheduled today"} */}
-              {ongoingCourses.length > 0 ? ongoingCourses[0].name : "No ongoing course"}
-            </p>
-          </div>
-        </div>
+    // <div className="p-4 sm:p-6 bg-background text-foreground min-h-screen">
+    //   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-col-2 gap-x-5 items-center">
+    //     <div className="bg-blue-50 dark:bg-transparent dark:border px-3 py-6 rounded-lg flex">
+    //       <div>
+    //         <img src='/svgs/calendarDashboard.svg' alt="Calendar Illustration" className="" />
+    //       </div>
+    //       <div>
+    //         <p className="text-2xl font-semibold text-muted-foreground">What are you doing Today?</p>
+    //         <p className="text-blue-600 font-semibold mt-2">{currentDate}</p>
+    //         <p className="mt-2 text-green-600 flex items-center">
+    //           <span className="inline-block w-4 h-4 mr-2 bg-green-500 rounded-full"></span>
+    //           {ongoingCourses.length > 0 ? ongoingCourses[0].name : "No ongoing course"}
+    //         </p>
+    //       </div>
+    //     </div>
 
-        <div>
-          <h2 className="text-xl font-semibold mb-4">Upcoming Events</h2>
-          {/* <UpcomingMeeting title="Meeting With The Mentors" date="9/12/2024" time="3:00 pm" />
-          <UpcomingMeeting title="Meeting With The Mentors" date="9/12/2024" time="3:00 pm" /> */}
-          {groupedActivities.upcoming.length > 0 ? (
-            groupedActivities.upcoming.slice(0, 2).map((activity) => (
-              <UpcomingEvent
-                key={activity.id}
-                title={activity.name}
-                subtitle={`Scheduled on ${new Date(activity.date).toLocaleDateString()}`}
-              />
-            ))
-          ) : (
-            <p>No upcoming activities</p>
-          )}
+    //     <div>
+    //       <h2 className="text-xl font-semibold mb-4">Upcoming Events</h2>
+    //       {groupedActivities.upcoming.length > 0 ? (
+    //         groupedActivities.upcoming.slice(0, 2).map((activity) => (
+    //           <UpcomingEvent
+    //             key={activity.id}
+    //             title={activity.name}
+    //             subtitle={`Scheduled on ${new Date(activity.date).toLocaleDateString()}`}
+    //           />
+    //         ))
+    //       ) : (
+    //         <p>No upcoming activities</p>
+    //       )}
 
-        </div>
-      </div>
-      <div className="">
-        {/* <RecentMentorActivities coachId={coachId} /> */}
-        <RecentAdminActivities coachId={coachId} />
-      </div>
-      <div className="">
-        {/* <UpcomingMentorActivities /> */}
-        <UpcomingAdminActivities />
-      </div>
+    //     </div>
+    //   </div>
+    //   <div className="">
+    //     <RecentAdminActivities coachId={coachId} />
+    //   </div>
+    //   <div className="">
+    //     <UpcomingAdminActivities />
+    //   </div>
+    // </div>
+    <div className="flex flex-col items-center justify-center h-full text-gray-600">
+      <h1 className="text-2xl font-semibold">Admin Calendar</h1>
+      <p className="text-lg mt-2">Coming Soon...</p>
     </div>
   )
 }

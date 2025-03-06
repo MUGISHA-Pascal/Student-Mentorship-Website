@@ -6,6 +6,7 @@ import { useBlogs, useCoachActivities } from '@/hooks/coach/home/useHomeData'
 import DashboardAdminOverview from '@/components/dashboard/admin/dashboardAdminOverview'
 import { useAdminStatistics } from '@/hooks/admin/home/useHomeData'
 import AdminGraph from '@/components/dashboard/admin/adminGraph'
+import { Levels } from 'react-activity';
 
 
 interface UpcomingEventProps {
@@ -66,7 +67,10 @@ export default function HomePage() {
   const { statistics } = useAdminStatistics()
 
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return  <div className='w-full h-full flex items-center justify-center'>
+    <Levels speed={0.5} />
+  </div>;
+
   if (error) return <p>{error}</p>;
 
   return (
