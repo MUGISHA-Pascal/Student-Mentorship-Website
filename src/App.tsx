@@ -31,7 +31,19 @@ import CalendarPage from "./pages/Coach/calendarPage ";
 import ChatsPage from "./pages/Coach/chatsPage";
 import DocsPage from "./pages/Coach/docsPage";
 import SettingsPage from "./pages/Coach/settimgsPage";
-// import JotFormEmbed from './components/home/formPage'
+// import MeetingPage from "./pages/Meeting/MeetingView";
+import MeetingLayout from "./pages/Meeting/meetingLayout";
+import WaitingApproval from "./pages/waiting-approval";
+import AdminHomePage from "./pages/Admin/adminHomePage";
+import AdminStudentsPage from "./pages/Admin/adminStudentsPage";
+import AdminMentorsPage from "./pages/Admin/adminMentorsPage";
+import AdminAssessmentsPage from "./pages/Admin/adminAssessmentsPage";
+import AdminCalendarPage from "./pages/Admin/adminCalendarPage";
+import AdminChatsPage from "./pages/Admin/adminChatsPage";
+import LayoutAdmin from "./pages/LayoutAdmin";
+import StudentWaitingPage from "./pages/Student/studentWaitingPage";
+import MentorFormPage from "./components/dashboard/mentor/mentorFormPage";
+import StudentFormPage from "./components/dashboard/student/StudentFormPage";
 
 interface LayoutProps {
   children: ReactNode;
@@ -78,6 +90,23 @@ const ProtectedRoute = ({ element }: { element: ReactNode }) => {
   }, [isAuthenticated]);
   return isAuthenticated ? element : <Navigate to="/login" />;
 };
+
+// const ProtectedRoute = ({ element }: { element: React.ReactNode }) => {
+//   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
+//   // Check token presence in localStorage
+//   useEffect(() => {
+//     const token = localStorage.getItem('authToken');
+//     if (!token) {
+//       toast.error('You must be logged in to access that page!', {
+//         position: 'top-right',
+//         autoClose: 2000,
+//       });
+//     }
+//   }, [isAuthenticated]);
+
+//   return isAuthenticated && localStorage.getItem('authToken') ? element : <Navigate to="/login" />;
+// };
 
 
 const App = () => {
@@ -135,6 +164,8 @@ const App = () => {
           <Route path="settings" element={<StudentSettingsPage />} />
         </Route>
 
+        <Route path="student/welcome" element={<ProtectedRoute element={<StudentWaitingPage />} />} />
+        <Route path="/student/form" element={<ProtectedRoute element={<StudentFormPage />} />} />
 
         <Route path="/mentor/dashboard" element={<ProtectedRoute element={<LayoutCoach />} />}>
           <Route index element={<HomePage />} />
@@ -144,8 +175,23 @@ const App = () => {
           <Route path="docs" element={<DocsPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
-        
-        {/* <Route path="/form" element={<JotFormEmbed />} /> */}
+
+
+        <Route path="/admin/dashboard" element={<ProtectedRoute element={<LayoutAdmin />} />}>
+          <Route index element={<AdminHomePage />} />
+          <Route path="students" element={<AdminStudentsPage />} />
+          <Route path="mentors" element={<AdminMentorsPage />} />
+          <Route path="assessments" element={<AdminAssessmentsPage />} />
+          <Route path="calendar" element={<AdminCalendarPage />} />
+          <Route path="chats" element={<AdminChatsPage />} />
+        </Route>
+
+
+        <Route path="/mentor/form" element={<ProtectedRoute element={<MentorFormPage />} />} />
+        <Route path="/meeting/:id" element={<ProtectedRoute element={<MeetingLayout />} />} />
+        <Route path="/meetingg" element={<MeetingLayout />} />
+        <Route path="/student/waiting" element={<ProtectedRoute element={<WaitingApproval />} />} />
+        <Route path="/mentor/waiting" element={<ProtectedRoute element={<WaitingApproval />} />} />
       </Routes>
     </Router>
   );

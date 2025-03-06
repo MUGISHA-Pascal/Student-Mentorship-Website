@@ -95,7 +95,7 @@ export default function StudentDocsPage() {
           {/* Sort by name or date */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="w-full sm:w-auto">Sort</Button>
+              <Button variant="outline">Sort</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem onClick={() => setSortType('name')}>Name</DropdownMenuItem>

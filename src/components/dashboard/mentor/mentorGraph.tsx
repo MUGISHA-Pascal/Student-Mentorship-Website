@@ -1,90 +1,191 @@
-import React from 'react';
-import { Bar } from 'react-chartjs-2';
+import React, { useState } from 'react';
+import { Bar, Pie } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
     CategoryScale,
     LinearScale,
-    PointElement,
-    LineElement,
+    BarElement,
     Title,
     Tooltip,
     Legend,
-    BarElement,
+    ArcElement,
 } from 'chart.js';
 
 ChartJS.register(
     CategoryScale,
     LinearScale,
-    PointElement,
-    LineElement,
+    BarElement,
     Title,
     Tooltip,
     Legend,
-    BarElement
+    ArcElement
 );
 
-const MentorGraph: React.FC = () => {
-    const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const data = {
+interface MentorGraphProps {
+    statistics: {
+        studentCount: number;
+        courseCount: number;
+        completedActivities: number;
+        ongoingActivities: number;
+        upcomingActivities: number;
+    };
+}
+
+const MentorGraph: React.FC<MentorGraphProps> = ({ statistics }) => {
+    const { studentCount, courseCount, completedActivities, ongoingActivities, upcomingActivities } = statistics;
+
+    const [chartType, setChartType] = useState<'Bar' | 'Pie'>('Bar');
+
+    const labels = [
+        'Student Count',
+        'Course Count',
+        'Completed Activities',
+        'Ongoing Activities',
+        'Upcoming Activities',
+    ];
+
+    const totalActivities = completedActivities + ongoingActivities + upcomingActivities;
+
+    const barData = {
         labels,
         datasets: [
             {
-                label: 'Study Hours',
-                data: [11, 15, 18, 23, 26, 29, 26, 20, 27, 22, 38, 32, 21, 22]
-                ,
-                borderColor: 'rgb(54, 162, 235)',
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                tension: 0.4,
-            },
-            {
-                label: 'Assessment Scores',
-                data: [4, 5, 7, 15, 17, 20, 39, 14, 60, 29, 70, 23, 17, 17, 48, 43, 3, 41, 10, 39],
-                borderColor: 'rgb(153, 102, 255)',
-                backgroundColor: 'rgba(153, 102, 255, 0.5)',
-                tension: 0.4,
+                label: 'Mentor Statistics',
+                data: [
+                    studentCount,
+                    courseCount,
+                    completedActivities,
+                    ongoingActivities,
+                    upcomingActivities,
+                ],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(153, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',
+                ],
+                borderColor: [
+                    'rgb(75, 192, 192)',
+                    'rgb(153, 102, 255)',
+                    'rgb(255, 159, 64)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 99, 132)',
+                ],
+                borderWidth: 1,
             },
         ],
     };
 
-    const options = {
+    const pieData = {
+        labels,
+        datasets: [
+            {
+                data: [
+                    studentCount,
+                    courseCount,
+                    completedActivities,
+                    ongoingActivities,
+                    upcomingActivities,
+                ],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(153, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',
+                ],
+                borderColor: [
+                    'rgb(75, 192, 192)',
+                    'rgb(153, 102, 255)',
+                    'rgb(255, 159, 64)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 99, 132)',
+                ],
+                borderWidth: 1,
+            },
+        ],
+    };
+
+    const barOptions = {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 position: 'top' as const,
             },
             title: {
-                display: false,
+                display: true,
+                text: 'Mentor Activities Overview',
+                font: {
+                    size: 18,
+                },
             },
         },
         scales: {
             y: {
                 beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Count',
+                },
+            },
+            x: {
+                title: {
+                    display: true,
+                    text: 'Metrics',
+                },
+            },
+        },
+    };
+
+    const pieOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'top' as const,
+            },
+            title: {
+                display: true,
+                text: 'Mentor Statistics Distribution',
+                font: {
+                    size: 18,
+                },
             },
         },
     };
 
     return (
-        <div className="p-6 rounded-lg">
-            <div className="flex justify-between mb-4">
-                <h2 className="text-xl font-bold">Performance Statistics</h2>
+        <div className="p-6 rounded-lg bg-white shadow-md">
+            <h2 className="text-xl font-bold mb-4">Performance Overview</h2>
+            <div className="grid grid-cols-3 gap-4 mb-6">
+                <div>
+                    <p className="text-lg font-semibold">Total Activities</p>
+                    <p className="text-3xl font-bold text-blue-500">{totalActivities}</p>
+                </div>
             </div>
 
-            <div className='border shadow-sm px-3 py-6 rounded-xl'>
-                <div className='flex justify-between'>
-                    <div>
-                        <p className="text-3xl font-bold text-blue-500">5,000.00</p>
-                        <p className="text-muted-foreground mb-4">50 Orders</p>
-                    </div>
-                    <div>
-                        <select className="dark:bg-transparent dark:text-muted-foreground border rounded-lg p-2 cursor-pointer">
-                            <option className="cursor-pointer">This Week</option>
-                            <option>Last Week</option>
-                            <option>This Month</option>
-                        </select>
-                    </div>
-                </div>
-                <Bar data={data} options={options} />
+            <div className="flex justify-end mb-4">
+                <select
+                    className="dark:bg-transparent dark:text-muted-foreground border rounded-lg p-2 cursor-pointer"
+                    value={chartType}
+                    onChange={(e) => setChartType(e.target.value as 'Bar' | 'Pie')}
+                >
+                    <option value="Bar">Bar</option>
+                    <option value="Pie">Pie</option>
+                </select>
             </div>
+
+            {chartType === 'Bar' ? (
+                <div className="h-[400px]">
+                    <Bar data={barData} options={barOptions} />
+                </div>
+            ) : (
+                <div className="h-[400px]">
+                    <Pie data={pieData} options={pieOptions} />
+                </div>
+            )}
         </div>
     );
 };
