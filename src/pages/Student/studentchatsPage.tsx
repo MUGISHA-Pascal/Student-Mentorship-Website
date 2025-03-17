@@ -126,7 +126,9 @@ export default function StudentChatsPage() {
     { id: '5', name: 'Jane Smith', avatar: '/placeholder.svg?height=32&width=32', status: 'online', unreadCount: 2 },
   ])
   const [messages, setMessages] = useState<Message[]>([])
-  const [isCollapsed, setIsCollapsed] = useState(false)
+  const [isCollapsed, 
+    // setIsCollapsed
+  ] = useState(false)
   const [newMessage, setNewMessage] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
   const socketRef = useRef<MockWebSocket | null>(null)

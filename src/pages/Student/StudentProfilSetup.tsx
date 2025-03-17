@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
-import { Search, Star, ArrowLeft, Bookmark, File, X } from "lucide-react";
+import { Search, Star, ArrowLeft, File, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -43,7 +43,9 @@ const NewProfileSetupPopup: React.FC<{
   const { user, role, fetchUser, loading, error } = useUserStore();
   const [step, setStep] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [selectedCourse, 
+    // setSelectedCourse
+  ] = useState<Course | null>(null);
   const [selectedCoach, setSelectedCoach] = useState<Coach | null>(null);
   const [personalDetails, setPersonalDetails] = useState({
     firstName: "",
@@ -151,84 +153,84 @@ const NewProfileSetupPopup: React.FC<{
       ));
   };
 
-  const fetchMentors = async (careerId: string) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:3000/api/v1/student/careers/mentors/${careerId}`
-      );
-      const data = await response.data.data;
-      const formatYearPeriod = (startDate: string, endDate: string | null) => {
-        const startYear = new Date(startDate).getFullYear();
-        const currentYear = new Date().getFullYear();
+  // const fetchMentors = async (careerId: string) => {
+  //   try {
+  //     const response = await axios.get(
+  //       `http://localhost:3000/api/v1/student/careers/mentors/${careerId}`
+  //     );
+  //     const data = await response.data.data;
+  //     const formatYearPeriod = (startDate: string, endDate: string | null) => {
+  //       const startYear = new Date(startDate).getFullYear();
+  //       const currentYear = new Date().getFullYear();
 
-        const endYear = endDate ? new Date(endDate).getFullYear() : currentYear;
+  //       const endYear = endDate ? new Date(endDate).getFullYear() : currentYear;
 
-        return endYear === currentYear
-          ? `${startYear} - Present`
-          : `${startYear} - ${endYear}`;
-      };
+  //       return endYear === currentYear
+  //         ? `${startYear} - Present`
+  //         : `${startYear} - ${endYear}`;
+  //     };
 
-      const mentorsData: Coach[] = data.map((mentor: any) => ({
-        id: mentor.id,
-        name: `${mentor.user.firstName} ${mentor.user.lastName}`,
-        image: "https://i.pravatar.cc/150?img=10?height=64&width=64",
-        rating: mentor.ratings?.length ? mentor.ratings[0].rating : 0,
-        reviews: mentor.ratings?.length || 0,
-        oldPrice: mentor.courses?.[0]?.price.oldPrice || "N/A",
-        newPrice: mentor.courses?.[0]?.price.newPrice || "N/A",
-        bio: mentor.bio || "",
-        experience: mentor.workExperience.map((exp: any) => ({
-          role: exp.position,
-          period: formatYearPeriod(exp.startDate, exp.endDate),
-        })),
-      }));
+  //     const mentorsData: Coach[] = data.map((mentor: any) => ({
+  //       id: mentor.id,
+  //       name: `${mentor.user.firstName} ${mentor.user.lastName}`,
+  //       image: "https://i.pravatar.cc/150?img=10?height=64&width=64",
+  //       rating: mentor.ratings?.length ? mentor.ratings[0].rating : 0,
+  //       reviews: mentor.ratings?.length || 0,
+  //       oldPrice: mentor.courses?.[0]?.price.oldPrice || "N/A",
+  //       newPrice: mentor.courses?.[0]?.price.newPrice || "N/A",
+  //       bio: mentor.bio || "",
+  //       experience: mentor.workExperience.map((exp: any) => ({
+  //         role: exp.position,
+  //         period: formatYearPeriod(exp.startDate, exp.endDate),
+  //       })),
+  //     }));
 
-      setMentors(mentorsData);
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        if (error.response) {
-          switch (error.response.status) {
-            case 400:
-              console.error("Bad Request:", error.response.data.message);
-              toast.error("Bad Request: " + error.response.data.message);
-              break;
-            case 404:
-              console.error("Not Found:", error.response.data.message);
-              toast.warning("No mentors found for this career.");
-              break;
-            case 500:
-              console.error("Server Error:", error.response.data.message);
-              toast.error(
-                "An error occurred while fetching mentors. Please try again later."
-              );
-              break;
-            default:
-              console.error("Error:", error.response.data.message);
-              toast.error("An unexpected error occurred. Please try again.");
-              break;
-          }
-        } else if (error.request) {
-          console.error("No response received:", error.request);
-          toast.error(
-            "Network error. Please check your internet connection and try again."
-          );
-        } else {
-          console.error("Error setting up the request:", error.message);
-          toast.error("Error setting up the request. Please try again.");
-        }
-      } else {
-        // For non-Axios errors
-        console.error("Unexpected Error:", error);
-        toast.error("An unexpected error occurred. Please try again.");
-      }
-    }
-  };
+  //     setMentors(mentorsData);
+  //   } catch (error: unknown) {
+  //     if (axios.isAxiosError(error)) {
+  //       if (error.response) {
+  //         switch (error.response.status) {
+  //           case 400:
+  //             console.error("Bad Request:", error.response.data.message);
+  //             toast.error("Bad Request: " + error.response.data.message);
+  //             break;
+  //           case 404:
+  //             console.error("Not Found:", error.response.data.message);
+  //             toast.warning("No mentors found for this career.");
+  //             break;
+  //           case 500:
+  //             console.error("Server Error:", error.response.data.message);
+  //             toast.error(
+  //               "An error occurred while fetching mentors. Please try again later."
+  //             );
+  //             break;
+  //           default:
+  //             console.error("Error:", error.response.data.message);
+  //             toast.error("An unexpected error occurred. Please try again.");
+  //             break;
+  //         }
+  //       } else if (error.request) {
+  //         console.error("No response received:", error.request);
+  //         toast.error(
+  //           "Network error. Please check your internet connection and try again."
+  //         );
+  //       } else {
+  //         console.error("Error setting up the request:", error.message);
+  //         toast.error("Error setting up the request. Please try again.");
+  //       }
+  //     } else {
+  //       // For non-Axios errors
+  //       console.error("Unexpected Error:", error);
+  //       toast.error("An unexpected error occurred. Please try again.");
+  //     }
+  //   }
+  // };
 
-  const handleCourseSelect = (course: Course) => {
-    setSelectedCourse(course);
-    // fetchMentors(course.id);
-    navigate('/student/welcome')
-  };
+  // const handleCourseSelect = (course: Course) => {
+  //   setSelectedCourse(course);
+  //   // fetchMentors(course.id);
+  //   navigate('/student/welcome')
+  // };
 
   const sendRequest = async (studentId: string, coachId: string) => {
     try {

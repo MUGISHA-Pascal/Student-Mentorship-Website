@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useUserStore } from '@/store/userStore'
-import { useCoachActivities } from '@/hooks/coach/home/useHomeData'
-import { UpcomingEvent } from './adminHomePage'
-import RecentAdminActivities from '../dashboard/admin/recentAdminActivities'
-import UpcomingAdminActivities from '../dashboard/admin/upcomingAdminActivities';
+// import { useCoachActivities } from '@/hooks/coach/home/useHomeData'
+// import { UpcomingEvent } from './adminHomePage'
+// import RecentAdminActivities from '../dashboard/admin/recentAdminActivities'
+// import UpcomingAdminActivities from '../dashboard/admin/upcomingAdminActivities';
 
 // const UpcomingMeeting = ({ title, date, time }: { title: string; date: string; time: string }) => (
 //   <Card className="mb-4">
@@ -22,31 +22,31 @@ import UpcomingAdminActivities from '../dashboard/admin/upcomingAdminActivities'
 
 export default function AdminCalendarPage() {
   const { role, fetchUser } = useUserStore();
-  const [coachId, setCoachId] = useState<string>('');
-  const [currentDate] = useState(() => {
-    const date = new Date();
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-  });
+  // const [coachId, setCoachId] = useState<string>('');
+  // const [currentDate] = useState(() => {
+  //   const date = new Date();
+  //   const day = String(date.getDate()).padStart(2, '0');
+  //   const month = String(date.getMonth() + 1).padStart(2, '0');
+  //   const year = date.getFullYear();
+  //   return `${day}/${month}/${year}`;
+  // });
 
   useEffect(() => {
-    const loadUser = async () => {
-      if (!role) {
-        await fetchUser();
-      }
-      if (role) {
-        setCoachId(role.id);
-      }
-    };
+    // const loadUser = async () => {
+    //   if (!role) {
+    //     await fetchUser();
+    //   }
+    //   if (role) {
+    //     setCoachId(role.id);
+    //   }
+    // };
 
-    const timeout = setTimeout(loadUser, 1000);
+    // const timeout = setTimeout(loadUser, 1000);
 
-    return () => clearTimeout(timeout);
+    // return () => clearTimeout(timeout);
   }, [fetchUser, role]);
 
-  const { ongoingCourses, groupedActivities } = useCoachActivities(coachId);
+  // const { ongoingCourses, groupedActivities } = useCoachActivities(coachId);
 
   return (
     // <div className="p-4 sm:p-6 bg-background text-foreground min-h-screen">

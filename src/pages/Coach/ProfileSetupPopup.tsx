@@ -10,7 +10,6 @@ import careersData from "@/utils/json/careers.json";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useUserStore } from "@/store/userStore";
-import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-toastify";
 import { Levels } from "react-activity";
 
@@ -100,16 +99,7 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
     }
   }, [userId, fetchUser]);
 
-  const handleAddCareer = (career: string) => {
-    if (!selectedCareers.includes(career)) {
-      setSelectedCareers([...selectedCareers, career]);
-    }
-    setSearchTerm("");
-  };
 
-  const handleRemoveCareer = (career: string) => {
-    setSelectedCareers(selectedCareers.filter((c) => c !== career));
-  };
 
   const handleNext = () => {
     if (step < 3) {
@@ -125,10 +115,6 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
     setEndDate("");
   };
 
-  const handleComplete = () => {
-    onClose();
-    navigate("/waiting-approval");
-  };
 
   const handleAddExperience = () => {
     if (selectedCareer && startDate && endDate && careerCampany) {
@@ -159,13 +145,7 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
       return;
     }
 
-    const newFile = {
-      id: uuidv4(),
-      name: file.name,
-      inputFile: file,
-      startTime: Date.now(),
-      uploadedBytes: 0,
-    };
+    
 
     if (type === "cv") {
       setSelectedFile(file);

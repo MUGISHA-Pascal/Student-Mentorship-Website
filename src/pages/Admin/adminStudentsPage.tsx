@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Search, MoreVertical } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,16 +9,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import AdminStatistics from '@/components/dashboard/admin/adminStatistics'
 import { useApprovedStudents, useApproveStudent, usePendingStudents, useRejectStudent, useRemoveStudent } from '@/hooks/admin/useStudents'
 
-interface StudentItemProps {
-  student: {
-    field: React.ReactNode
-    email: React.ReactNode
-    contact: React.ReactNode
-    avatar: string;
-    name: string;
-  };
-  isWaitlist?: boolean;
-}
+// interface StudentItemProps {
+//   student: {
+//     field: React.ReactNode
+//     email: React.ReactNode
+//     contact: React.ReactNode
+//     avatar: string;
+//     name: string;
+//   };
+//   isWaitlist?: boolean;
+// }
 
 const StudentItem: React.FC<{ student: any; onSelect: () => void; isSelected: boolean }> = ({ student, onSelect, isSelected }) => (
   <div
@@ -88,7 +88,9 @@ export default function AdminStudentsPage() {
   const [selectedStudent, setSelectedStudent] = useState<any | null>(null)
   const [approvedSearchQuery, setApprovedSearchQuery] = useState('');
   const [waitlistSearchQuery, setWaitlistSearchQuery] = useState('');
-  const [approvedFilter, setApprovedFilter] = useState('All');
+  const [
+    // approvedFilter
+    , setApprovedFilter] = useState('All');
   const [waitlistFilter, setWaitlistFilter] = useState('All');
   const [approvedSortBy, setApprovedSortBy] = useState('name');
   const [waitlistSortBy, setWaitlistSortBy] = useState('name');

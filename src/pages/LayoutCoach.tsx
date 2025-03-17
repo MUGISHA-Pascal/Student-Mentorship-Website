@@ -79,8 +79,12 @@ function SidebarLink({ icon, label, to, isActive, badge, onClick, expanded }: { 
 }
 
 function Header({ title }: { title: string }) {
-  const [client, setClient] = useState<StreamVideoClient | null>(null);
-  const [call, setCall] = useState<unknown>(null);
+  const [
+    // client
+    , setClient] = useState<StreamVideoClient | null>(null);
+  const [
+    // call
+    , setCall] = useState<unknown>(null);
   const navigate = useNavigate();
   const { user } = useUserStore();
   const handleCreateInstantMeeting = async () => {

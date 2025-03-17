@@ -29,7 +29,9 @@ const UploadModal = ({ isOpen, onClose, userId, onCourseUploaded }: { isOpen: bo
         name: '',
         description: '',
     });
-    const [status, setStatus] = useState<'initial' | 'uploading' | 'done' | 'failed'>('initial');
+    const [
+        // status
+        , setStatus] = useState<'initial' | 'uploading' | 'done' | 'failed'>('initial');
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
