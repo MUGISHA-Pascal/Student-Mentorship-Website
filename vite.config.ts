@@ -16,4 +16,9 @@ export default defineConfig({
   build: {
     outDir: 'dist',
   },
+  server: {
+    cors: {
+      origin: ['https://goyoungafrica.org', 'https://www.goyoungafrica.org', 'http://localhost']
+    }
+  }
 })
