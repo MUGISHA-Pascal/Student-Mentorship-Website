@@ -61,7 +61,7 @@
 
 // const fetchToken = async (userId: string | undefined) => {
 //   try {
-//     const response = await axios.post(`http://localhost:3000/api/stream/generate-stream-token`, {
+//     const response = await axios.post(`https://api.goyoungafrica.org/api/stream/generate-stream-token`, {
 //       userId,
 //     });
 //     return response.data.token;
@@ -138,7 +138,7 @@
 
 // const fetchToken = async (userId: string | undefined): Promise<string> => {
 //   try {
-//     const response = await axios.post(`http://localhost:3000/api/stream/generate-stream-token`, {
+//     const response = await axios.post(`https://api.goyoungafrica.org/api/stream/generate-stream-token`, {
 //       userId,
 //     });
 //     return response.data.token;
@@ -244,7 +244,7 @@ const apiKey = import.meta.env.VITE_APP_STREAM_API_KEY;
 
 const fetchToken = async (userId: string | undefined): Promise<string> => {
   try {
-    const response = await axios.post(`http://localhost:3000/api/stream/generate-stream-token`, {
+    const response = await axios.post(`https://api.goyoungafrica.org/api/stream/generate-stream-token`, {
       userId,
     });
     return response.data.token;

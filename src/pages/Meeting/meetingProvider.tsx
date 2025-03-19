@@ -44,13 +44,13 @@
 //   if (!apiKey) {
 //     console.log("No api key");
 //     throw new Error('Missing VITE_APP_STREAM_API_KEY in environment variables.');
-    
+
 //   }
 
 //   // Fetch the token from your backend
 //   const fetchToken = async (userId: string | undefined) => {
 //     try {
-//       const response = await axios.post(`http://localhost:3000/api/stream/generate-stream-token`, {
+//       const response = await axios.post(`https://api.goyoungafrica.org/api/stream/generate-stream-token`, {
 //         userId,
 //       });
 //       return response.data.token;
@@ -82,9 +82,9 @@ import { useUserStore } from '@/store/userStore';
 import axios from 'axios';
 
 export const initializeMeetingClient = async () => {
-  const { user, role, fetchUser  } = useUserStore.getState();
+  const { user, role, fetchUser } = useUserStore.getState();
 
-  if (!user) await fetchUser ();
+  if (!user) await fetchUser();
 
   const apiKey = import.meta.env.VITE_APP_STREAM_API_KEY;
   if (!apiKey) {
@@ -94,7 +94,7 @@ export const initializeMeetingClient = async () => {
 
   const fetchToken = async (userId: string | undefined) => {
     try {
-      const response = await axios.post(`http://localhost:3000/api/stream/generate-stream-token`, {
+      const response = await axios.post(`https://api.goyoungafrica.org/api/stream/generate-stream-token`, {
         userId,
       });
       return response.data.token;

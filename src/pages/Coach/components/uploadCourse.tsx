@@ -46,9 +46,9 @@ const UploadModal = ({ isOpen, onClose, userId, onCourseUploaded }: { isOpen: bo
             toast.error('Please upload only one file at a time.', { position: 'top-right', autoClose: 5000 });
             return;
         }
-    
+
         const file = files[0];
-    
+
         const newFile = {
             id: uuidv4(),
             name: file.name,
@@ -59,72 +59,72 @@ const UploadModal = ({ isOpen, onClose, userId, onCourseUploaded }: { isOpen: bo
             startTime: Date.now(),
             uploadedBytes: 0,
         };
-    
+
         setUploadedFiles([newFile]); // Replace any existing file
     };
 
     const handleSubmit = async () => {
         if (!userId) {
-          toast.error('User ID is required to submit!', { position: 'top-right', autoClose: 5000 });
-          return;
+            toast.error('User ID is required to submit!', { position: 'top-right', autoClose: 5000 });
+            return;
         }
-      
+
         if (uploadedFiles.length === 0) {
-          toast.error('Please upload a file before submitting.', { position: 'top-right', autoClose: 5000 });
-          return;
+            toast.error('Please upload a file before submitting.', { position: 'top-right', autoClose: 5000 });
+            return;
         }
-      
+
         const file = uploadedFiles[0].inputFile; // Get the single file
         const formData = new FormData();
-      
+
         formData.append('file', file); // Ensure the field name matches the backend's expected name
         formData.append('courseName', courseDetails.name);
         formData.append('description', courseDetails.description);
         formData.append('coachId', userId);
-      
+
         try {
-          setIsSubmitting(true);
-          setUploadedFiles((prev) =>
-            prev.map((f) => ({ ...f, status: 'uploading', progress: 0 }))
-          );
-      
-          await axios.post('http://localhost:3000/api/v1/document/upload-course-doc', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-            onUploadProgress: (progressEvent) => {
-              if (progressEvent.total && progressEvent.loaded) {
-                const progress = Math.min((progressEvent.loaded / progressEvent.total) * 100, 100);
-                setUploadedFiles((prev) =>
-                  prev.map((f) =>
-                    f.id === uploadedFiles[0].id ? { ...f, progress } : f
-                  )
-                );
-              }
-            },
-          });
-      
-          toast.success('Submission successful!', { position: 'top-right', autoClose: 5000 });
-          setUploadedFiles((prev) =>
-            prev.map((f) => ({ ...f, status: 'done', progress: 100 }))
-          );
-      
-          // Trigger the refresh of the courses list in the parent component
-          onCourseUploaded(); // <-- Call the parent function to update the courses
-      
-          cancelAllProcesses();
+            setIsSubmitting(true);
+            setUploadedFiles((prev) =>
+                prev.map((f) => ({ ...f, status: 'uploading', progress: 0 }))
+            );
+
+            await axios.post('https://api.goyoungafrica.org/api/v1/document/upload-course-doc', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+                onUploadProgress: (progressEvent) => {
+                    if (progressEvent.total && progressEvent.loaded) {
+                        const progress = Math.min((progressEvent.loaded / progressEvent.total) * 100, 100);
+                        setUploadedFiles((prev) =>
+                            prev.map((f) =>
+                                f.id === uploadedFiles[0].id ? { ...f, progress } : f
+                            )
+                        );
+                    }
+                },
+            });
+
+            toast.success('Submission successful!', { position: 'top-right', autoClose: 5000 });
+            setUploadedFiles((prev) =>
+                prev.map((f) => ({ ...f, status: 'done', progress: 100 }))
+            );
+
+            // Trigger the refresh of the courses list in the parent component
+            onCourseUploaded(); // <-- Call the parent function to update the courses
+
+            cancelAllProcesses();
         } catch (error) {
-          console.error('Submission error:', error);
-          setUploadedFiles((prev) =>
-            prev.map((f) => ({ ...f, status: 'failed' }))
-          );
-      
-          const errorMessage = 'Submission failed. Please try again.';
-          toast.error(errorMessage, { position: 'top-right', autoClose: 5000 });
+            console.error('Submission error:', error);
+            setUploadedFiles((prev) =>
+                prev.map((f) => ({ ...f, status: 'failed' }))
+            );
+
+            const errorMessage = 'Submission failed. Please try again.';
+            toast.error(errorMessage, { position: 'top-right', autoClose: 5000 });
         } finally {
-          setIsSubmitting(false);
+            setIsSubmitting(false);
         }
-      };
-      
-    
+    };
+
+
 
 
 

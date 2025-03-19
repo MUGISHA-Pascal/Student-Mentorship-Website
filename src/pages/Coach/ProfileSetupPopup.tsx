@@ -145,7 +145,7 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
       return;
     }
 
-    
+
 
     if (type === "cv") {
       setSelectedFile(file);
@@ -179,7 +179,7 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
       console.log("Updating data: ", formData);
 
       await axios.put(
-        `http://localhost:3000/api/v1/coach/coaches/${userId}`,
+        `https://api.goyoungafrica.org/api/v1/coach/coaches/${userId}`,
         formData,
         {
           headers: {

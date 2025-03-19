@@ -88,7 +88,7 @@ function Header({ title }: { title: string }) {
   const navigate = useNavigate();
   const { user } = useUserStore();
   const handleCreateInstantMeeting = async () => {
-    
+
     try {
       const clientInstance = await initializeMeetingClient();
       const callInstance = clientInstance.call('default', user?.id || 'default-call-id');
@@ -187,7 +187,7 @@ export default function LayoutCoach() {
         // console.log("The token is ", token);
 
 
-        const response = await axios.get('http://localhost:3000/api/v1/user', {
+        const response = await axios.get('https://api.goyoungafrica.org/api/v1/user', {
           headers: { Authorization: `Bearer ${token}` },
         });
 

@@ -53,13 +53,13 @@ export default function StudentDocsPage() {
   const fetchDocuments = async () => {
     if (!userId) return;
     try {
-      const response = await axios.get(`http://localhost:3000/api/v1/document/get-course-docs/${userId}`);
+      const response = await axios.get(`https://api.goyoungafrica.org/api/v1/document/get-course-docs/${userId}`);
       const docs = response.data.map((doc: { course: { name: string, id: string }; fileType: string; fileName: string; uploadDate: string }): Course => ({
         id: doc.course.id,
         title: doc.course?.name || 'Untitled',
         image: doc.fileType.startsWith('video') ? '/svgs/video_course.svg' : '/svgs/file_course.svg',
         extension: doc.fileType.split('/').pop()?.toUpperCase(),
-        downloadLink: `http://localhost:3000/api/v1/document/download-course-doc/${doc.fileName}`,
+        downloadLink: `https://api.goyoungafrica.org/api/v1/document/download-course-doc/${doc.fileName}`,
         courseType: doc.fileType.startsWith('video') ? 'video' : 'file',
         dateCreated: doc.uploadDate,
       }));
@@ -72,7 +72,7 @@ export default function StudentDocsPage() {
   };
 
   useEffect(() => {
-  fetchDocuments();
+    fetchDocuments();
   }, [userId])
 
 
@@ -96,7 +96,7 @@ export default function StudentDocsPage() {
 
   const handleDeleteDocument = async (documentId: string) => {
     try {
-      await axios.delete(`http://localhost:3000/api/v1/document/delete-course-doc/${documentId}`);
+      await axios.delete(`https://api.goyoungafrica.org/api/v1/document/delete-course-doc/${documentId}`);
 
       // Remove the deleted course from the state
       setCourses((prevCourses) =>
@@ -117,14 +117,14 @@ export default function StudentDocsPage() {
       const response = await axios.get(downloadLink, {
         responseType: 'blob', // Important for binary data
       });
-  
+
       // Use the provided extension, fallback to extracting from fileName, or default to "unknown"
       const finalExtension = extension?.toLowerCase();
-  
+
       // Construct the final file name
       const baseName = fileName.includes('.') ? fileName.split('.').slice(0, -1).join('.') : fileName; // Strip existing extension if present
       const finalFileName = `${baseName}.${finalExtension}`;
-  
+
       // Create a URL and trigger download
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
@@ -132,18 +132,18 @@ export default function StudentDocsPage() {
       link.setAttribute('download', finalFileName);
       document.body.appendChild(link);
       link.click();
-  
+
       // Cleanup
       link.parentNode?.removeChild(link);
       window.URL.revokeObjectURL(url);
-  
+
       toast.success('File downloaded successfully!');
     } catch (error) {
       console.error('Error downloading file:', error);
       toast.error('Failed to download file.');
     }
   };
-  
+
 
 
 
@@ -236,7 +236,7 @@ export default function StudentDocsPage() {
                 </a> */}
                 <button onClick={() => handleDownload(course.downloadLink, course.title, course.extension)}>
                   <img src="/svgs/download.svg" alt="Download" />
-              </button>
+                </button>
               </div>
             </Card>
           ))

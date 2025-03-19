@@ -87,7 +87,7 @@ function Header({ title }: { title: string }) {
   const navigate = useNavigate();
   const { user } = useUserStore();
   const handleCreateInstantMeeting = async () => {
-    
+
     try {
       const clientInstance = await initializeMeetingClient();
       const callInstance = clientInstance.call('default', user?.id || 'default-call-id');
@@ -173,9 +173,9 @@ export default function LayoutAdmin() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = localStorage.getItem('authToken'); 
+        const token = localStorage.getItem('authToken');
         if (!token) throw new Error('Token not found');
-        const response = await axios.get('http://localhost:3000/api/v1/user', {
+        const response = await axios.get('https://api.goyoungafrica.org/api/v1/user', {
           headers: { Authorization: `Bearer ${token}` },
         });
 
