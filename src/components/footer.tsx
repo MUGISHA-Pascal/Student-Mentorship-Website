@@ -151,6 +151,7 @@ const Footer: React.FC = () => {
                     </div>
                 </div>
 
+                <div className="text-gray-600 font-bold text-sm mb-3">Norrsken House Kigali, 1 KN 78 St, Kigali</div>
                 <div className="border-t border-gray-300 py-2 flex justify-between items-center">
                     <div className="text-center text-gray-500 text-sm">
                         &copy; 2024 GOYA | All Rights Reserved

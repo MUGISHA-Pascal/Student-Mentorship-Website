@@ -27,7 +27,7 @@ const MentorFormPage: React.FC = () => {
     useEffect(() => {
         if (success) {
             toast.success("Form submitted successfully!");
-            navigate("/student/welcome");
+            navigate("/mentor/waiting");
         }
     }, [success, navigate]);
     

@@ -53,7 +53,7 @@ function StudentWaitingPage() {
           </h1>
 
           <p className="text-lg font-semibold text-gray-800">
-            🎉 You are now part of the <span className="text-blue-600">first cohort</span> starting this <span className="text-orange-500">summer!</span>
+            🎉 You are now on the <span className="text-blue-600">first cohort waitlist</span> starting this <span className="text-orange-500">summer!</span>
           </p>
           {/* Progress Indicator */}
           <div className="w-full bg-gray-200 rounded-full h-3 relative">
