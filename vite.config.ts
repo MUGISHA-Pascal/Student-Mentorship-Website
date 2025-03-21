@@ -18,7 +18,7 @@ export default defineConfig({
   },
   server: {
     cors: {
-      origin: ['https://goyoungafrica.org', 'https://www.goyoungafrica.org', 'http://localhost']
+      origin: ['https://goyoungafrica.org', 'https://www.goyoungafrica.org', 'www.goyoungafrica.org', 'http://localhost']
     }
   }
 })
