@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useCallback, useEffect, useState } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { Video, BellDot, Home, Users, Calendar, MessageSquare, Plus } from 'lucide-react'
+import { Video, BellDot, Home, Users, Calendar, MessageSquare, Plus, FileText } from 'lucide-react'
 import axios from 'axios'
 import DarkModeToggle from './DarkModeToggle'
 import { Button } from '@/components/ui/button'
@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { initializeMeetingClient } from './Meeting/meetingProvider'
 import { StreamVideoClient } from '@stream-io/video-react-sdk';
 import { useUserStore } from '@/store/userStore'
+import { FaBlog } from 'react-icons/fa'
 
 const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange }: { expanded: boolean; setExpanded: (expanded: boolean) => void; activeSection: string; onSectionChange: (section: string) => void }) => {
 
@@ -43,6 +44,7 @@ const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange }: { ex
         <SidebarLink icon={<Users />} label="Students" isActive={activeSection === '/admin/dashboard/students'} onClick={() => onSectionChange('/admin/dashboard/students')} to="/admin/dashboard/students" expanded={expanded} />
         <SidebarLink icon={<Users />} label="Mentors" isActive={activeSection === '/admin/dashboard/mentors'} onClick={() => onSectionChange('/admin/dashboard/mentors')} to="/admin/dashboard/mentors" expanded={expanded} />
         <SidebarLink icon={<Calendar />} label="Calendar" isActive={activeSection === '/admin/dashboard/calendar'} onClick={() => onSectionChange('/admin/dashboard/calendar')} to="/admin/dashboard/calendar" expanded={expanded} />
+        <SidebarLink icon={<FileText />} label="Blogs" isActive={activeSection === '/admin/dashboard/blogs'} onClick={() => onSectionChange('/admin/dashboard/blogs')} to="/admin/dashboard/blogs" expanded={expanded} />
         <SidebarLink icon={<Users />} label="Assessments" isActive={activeSection === '/admin/dashboard/assessments'} onClick={() => onSectionChange('/admin/dashboard/assessments')} to="/admin/dashboard/assessments" expanded={expanded} />
         <SidebarLink icon={<MessageSquare />} label="Chats" isActive={activeSection === '/admin/dashboard/chats'} onClick={() => onSectionChange('/admin/dashboard/chats')} to="/admin/dashboard/chats" expanded={expanded} />
       </nav>
@@ -195,13 +197,18 @@ export default function LayoutAdmin() {
     '/admin/dashboard': 'Admin',
     '/admin/dashboard/students': 'Students',
     '/admin/dashboard/mentors': 'Mentors',
-    '/admin/dashboard/calendar': 'Your Calendar',
+    '/admin/dashboard/calendar': 'Calendar',
+    '/admin/dashboard/blogs': 'Blogs',
+    '/admin/dashboard/blogs/new': 'Create New Blog',
     '/admin/dashboard/assessments': 'Assessments',
     '/admin/dashboard/chats': 'Chats',
-    '/admin/dashboard/docs': 'Your Documents',
+    '/admin/dashboard/docs': 'Documents',
     '/admin/dashboard/settings': 'Your Profile',
   }
   const getTitle = (path: string) => {
+    if (location.pathname.startsWith('/admin/dashboard/blogs/edit')) {
+      return 'Edit A Blog';
+    }
     return titles[path as keyof typeof titles] || 'Dashboard'
   }
 

@@ -46,6 +46,8 @@ import MentorFormPage from "./components/dashboard/mentor/mentorFormPage";
 import StudentFormPage from "./components/dashboard/student/StudentFormPage";
 import Blogs from "./pages/blogs/blogs";
 import Blog from "./pages/blogs/blog";
+import AdminBlogsPage from "./pages/Admin/adminBlogsPage";
+import BlogEditor from "./pages/Admin/blogs/blogEditor";
 
 interface LayoutProps {
   children: ReactNode;
@@ -199,6 +201,9 @@ const App = () => {
           <Route path="mentors" element={<AdminMentorsPage />} />
           <Route path="assessments" element={<AdminAssessmentsPage />} />
           <Route path="calendar" element={<AdminCalendarPage />} />
+          <Route path="blogs" element={<AdminBlogsPage />} />
+          <Route path="blogs/new" element={<BlogEditor />} />
+          <Route path="blogs/edit/:id" element={<BlogEditor />} />
           <Route path="chats" element={<AdminChatsPage />} />
         </Route>
 

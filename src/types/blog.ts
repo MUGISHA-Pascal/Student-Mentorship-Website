@@ -10,3 +10,14 @@ export interface Blog {
     isNew?: boolean;
   }
   
+  export type ImageOption = {
+    value: string;
+    label: string;
+    preview: string;
+  };
+  
+  export type UploadedImage = {
+    file: File;
+    preview: string;
+    name: string;
+  };
