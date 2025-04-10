@@ -44,6 +44,8 @@ import LayoutAdmin from "./pages/LayoutAdmin";
 import StudentWaitingPage from "./pages/Student/studentWaitingPage";
 import MentorFormPage from "./components/dashboard/mentor/mentorFormPage";
 import StudentFormPage from "./components/dashboard/student/StudentFormPage";
+import Blogs from "./pages/blogs/blogs";
+import Blog from "./pages/blogs/blog";
 
 interface LayoutProps {
   children: ReactNode;
@@ -146,6 +148,20 @@ const App = () => {
           element={
             <Layout showNavbar={false} showFooter={false}>
               <Donate />
+            </Layout>
+          }
+        />
+        <Route path="/blogs"
+          element={
+            <Layout>
+              <Blogs />
+            </Layout>
+          }
+        />
+        <Route  path="/blogs/:year/:slug"
+          element={
+            <Layout>
+              <Blog />
             </Layout>
           }
         />
