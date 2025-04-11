@@ -23,7 +23,7 @@ export const getBlog = async (blogId: string) => {
             headers: getAuthHeaders(),
         });
         console.log("Single blog fetched:", response.data);
-        return response.data;
+        return response.data.data;
     } catch (error) {
         console.error(`Failed to fetch blog with ID ${blogId}:`, error);
         throw error;
@@ -47,7 +47,7 @@ export const createBlog = async (blogData: unknown) => {
 // Edit an existing blog
 export const editBlog = async (blogId: string, updatedData: unknown) => {
     try {
-        const response = await apiClient.patch(`/blog/edit-blog/${blogId}`, updatedData, {
+        const response = await apiClient.put(`/blog/edit-blog/${blogId}`, updatedData, {
             headers: getAuthHeaders(),
         });
         console.log(`Blog ${blogId} updated:`, response.data);

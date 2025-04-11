@@ -106,6 +106,7 @@ const Blog = () => {
                         ul: ({ ...props }) => <ul className="list-disc ml-6 my-4" {...props} />,
                         ol: ({ ...props }) => <ol className="list-decimal ml-6 my-4" {...props} />,
                         li: ({ ...props }) => <li className="my-2" {...props} />,
+                        a: ({ ...props }) => <a className="text-primary underline" {...props}/>,
                         strong: ({ ...props }) => <strong className="font-bold" {...props} />,
                         blockquote: ({ ...props }) => (
                             <blockquote className="border-l-4 border-blue-500 pl-4 italic my-6 text-gray-700" {...props} />

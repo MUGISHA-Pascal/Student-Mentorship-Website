@@ -98,17 +98,31 @@ export const useGetBlogs = (page: number = 1, limit: number = 20) => {
 };
 
 // Hook for getting a single blog
-export const useGetBlog = (blogId: string) => {
+export const useGetBlog = (blogId?: string) => {
     const [blog, setBlog] = useState<any | null>(null);
     const [isFetchingSingleBlog, setIsFetchingSingleBlog] = useState<boolean>(true);
     const [getBlogError, setGetBlogError] = useState<string | null>(null);
 
+    // Function to check if the blog is less than a week old
+    const isBlogNew = (dateCreated: string) => {
+        const createdDate = new Date(dateCreated);
+        const currentDate = new Date();
+        const timeDifference = currentDate.getTime() - createdDate.getTime();
+        const oneWeekInMilliseconds = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
+        return timeDifference < oneWeekInMilliseconds;
+    };
 
     useEffect(() => {
         const fetchBlog = async () => {
+            if (!blogId) {
+                setIsFetchingSingleBlog(false);
+                return;
+            }
+
             try {
                 const data = await getBlog(blogId);
-                setBlog(data);
+                const isNew = isBlogNew(data.dateCreated);
+                setBlog({ ...data, isNew });
             } catch (err: any) {
                 console.error("Failed to fetch blog:", err);
                 setGetBlogError("Failed to fetch blog.");

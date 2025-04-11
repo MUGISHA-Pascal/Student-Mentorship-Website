@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/form";
 import ImageSelector from "./imageSelector";
 import MarkdownToolbar from "./markdownToolbar";
+import { useEffect } from "react";
 
 // Create a schema for the blog form - updated to remove slug and writer
 const blogSchema = z.object({
@@ -36,6 +37,9 @@ const BlogForm = ({ defaultValues, onSubmit }: BlogFormProps) => {
         resolver: zodResolver(blogSchema),
         defaultValues,
     });
+
+    console.log("default values: ", defaultValues);
+
 
     // For markdown editor toolbar functions
     const insertMarkdown = (start: string, end: string = '') => {
@@ -62,6 +66,11 @@ const BlogForm = ({ defaultValues, onSubmit }: BlogFormProps) => {
             );
         }, 0);
     };
+
+    // Reset form when defaultValues change
+    useEffect(() => {
+        form.reset(defaultValues); // Properly reset the form with new values
+    }, [defaultValues, form]);
 
     return (
         <Form {...form}>
@@ -140,7 +149,7 @@ const BlogForm = ({ defaultValues, onSubmit }: BlogFormProps) => {
                                         id="description"
                                         {...field}
                                         rows={15}
-                                        className="w-full p-3 focus:outline-none resize-y"
+                                        className="w-full p-3 focus:outline-none resize-y bg-popover"
                                     />
                                 </FormControl>
                             </div>

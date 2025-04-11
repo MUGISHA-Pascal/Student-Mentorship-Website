@@ -17,7 +17,7 @@ const MarkdownToolbar = ({ onInsertMarkdown }: MarkdownToolbarProps) => {
   ];
 
   return (
-    <div className="flex items-center space-x-1 bg-gray-50 border-b p-2 overflow-x-auto">
+    <div className="flex items-center space-x-1 bg-primary-foreground border-b p-2 overflow-x-auto">
       {markdownActions.map((action, index) => (
         <Button
           key={index}

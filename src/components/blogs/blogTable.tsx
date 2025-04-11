@@ -72,7 +72,9 @@ const BlogTable: React.FC<BlogTableProps> = ({
                                         <TableCell className="text-right">
                                             <div className="flex justify-end items-center gap-2">
                                                 <Button variant="outline" size="icon" className="h-8 w-8" asChild>
-                                                    <Link to={`/admin/dashboard/blogs/edit/${blog.id}`}>
+                                                    <Link to={`/admin/dashboard/blogs/edit/${blog.slug}`} onClick={() => {
+                                                        localStorage.setItem("blogId", blog.id);
+                                                    }}>
                                                         <Edit className="h-4 w-4" />
                                                     </Link>
                                                 </Button>

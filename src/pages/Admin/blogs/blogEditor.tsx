@@ -1,81 +1,95 @@
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Blog } from "@/types/blog";
-import { blogs as initialBlogs } from "@/data/blogData";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import BlogForm, { BlogFormValues } from "@/components/blogs/blogForm";
 import BlogPreview from "@/components/blogs/blogPreview";
+import { useGetBlog, useCreateBlog } from "@/hooks/admin/useBlog"; // Import your hook properly
+import { editBlog } from "@/services/admin/blogService";
 
 const BlogEditor = () => {
-    const { id } = useParams();
+    const id = localStorage.getItem("blogId");
     const navigate = useNavigate();
-    const [blogs, setBlogs] = useState<Blog[]>(initialBlogs);
-    const [previewMode, setPreviewMode] = useState(false);
     const isNewBlog = !id || id === "new";
+    // const { blog, isFetchingSingleBlog } = useGetBlog(id || ""); // Fetch blog from backend
+    const { blog, isFetchingSingleBlog } = useGetBlog(!isNewBlog ? id : undefined);
 
-    // Find blog if editing
-    const currentBlog = isNewBlog ? null : blogs.find(blog => blog.id === id);
+    const { createNewBlog } = useCreateBlog();
 
-    // Form default values - only include fields that the UI manages
-    const defaultValues: BlogFormValues = {
-        title: currentBlog?.title || "",
-        description: currentBlog?.description || "",
-        dateCreated: currentBlog?.dateCreated || new Date().toISOString().split('T')[0],
-        image: currentBlog?.image || "",
-        category: currentBlog?.category || "",
-        isNew: currentBlog?.isNew || true,
-    };
+    const [previewMode, setPreviewMode] = useState(false);
+    const [formValues, setFormValues] = useState<BlogFormValues>({
+        title: "",
+        description: "",
+        dateCreated: new Date().toISOString().split('T')[0],
+        image: "",
+        category: "",
+        isNew: true,
+    });
 
-    // Keep track of form values for preview
-    const [formValues, setFormValues] = useState<BlogFormValues>(defaultValues);
+    // When the blog is fetched, populate form values
+    useEffect(() => {
+        if (blog && !isNewBlog) {
+            const newFormValues: BlogFormValues = {
+                title: blog.title || "",
+                description: blog.description || "",
+                dateCreated: blog.dateCreated ? blog.dateCreated.split('T')[0] : new Date().toISOString().split('T')[0],
+                image: blog.image || "",
+                category: blog.category || "",
+                isNew: blog.isNew ?? true, // Add isNew attribute
+            };
 
-    // Handle form submission
-    const onSubmit = (data: BlogFormValues) => {
-        // Save current form values for preview
+            setFormValues(newFormValues);
+        }
+    }, [blog, isNewBlog]);
+
+
+    const onSubmit = async (data: BlogFormValues) => {
         setFormValues(data);
 
-        if (isNewBlog) {
-            // Create new blog - slug and writer will be handled by backend
-            const newBlog: Blog = {
-                id: (blogs.length + 1).toString(),
-                title: data.title,
-                description: data.description,
-                dateCreated: data.dateCreated,
-                image: data.image,
-                category: data.category,
-                isNew: data.isNew
-            };
-            setBlogs([...blogs, newBlog]);
-            toast({
-                title: "Success",
-                description: "New blog created successfully!",
-            });
-        } else {
-            // Update existing blog
-            const updatedBlogs = blogs.map(blog =>
-                blog.id === id ? { ...blog, ...data } : blog
-            );
-            setBlogs(updatedBlogs);
-            toast({
-                title: "Success",
-                description: "Blog updated successfully!",
-            });
+        if (previewMode) {
+            // If in preview mode, don't submit to backend
+            return;
         }
 
-        // Navigate back to blog list
-        navigate("/admin/dashboard/blogs");
+        try {
+            if (isNewBlog) {
+                await createNewBlog(data);
+                toast.success("New blog created successfully!");
+            } else {
+                // You probably have an `editBlog` function in your service
+                await editBlog(id as string, data);
+                toast.success("Blog updated successfully!");
+            }
+
+            navigate("/admin/dashboard/blogs");
+        } catch (error) {
+            console.error("Error saving blog:", error);
+            toast.error("Failed to save blog.");
+        }
     };
 
+    if (isFetchingSingleBlog && !isNewBlog) {
+        return <div>Loading blog...</div>; // Optionally improve UX
+    }
+
     return (
-        <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
+        <div className="rounded-lg shadow-sm p-4 md:p-6">
             <div className="flex flex-row justify-end md:items-center gap-4 mb-6">
-                {/* <h2 className="text-xl font-bold">{isNewBlog ? "Create New Blog" : "Edit Blog"}</h2> */}
                 <div className="flex flex-wrap gap-3">
                     <Button
                         variant="outline"
                         className="text-base font-semibold"
-                        onClick={() => setPreviewMode(!previewMode)}
+                        // onClick={() => setPreviewMode(!previewMode)}
+                        onClick={() => {
+                            if (!previewMode) {
+                                // If moving from Edit ➔ Preview, update formValues first
+                                const formElement = document.querySelector('form') as HTMLFormElement;
+                                if (formElement) {
+                                    formElement.requestSubmit(); // This will trigger react-hook-form's validation and call onSubmit
+                                }
+                            }
+                            setPreviewMode(!previewMode);
+                        }}
                     >
                         {previewMode ? "Edit" : "Preview"}
                     </Button>
@@ -93,7 +107,7 @@ const BlogEditor = () => {
                 <BlogPreview formValues={formValues} />
             ) : (
                 <BlogForm
-                    defaultValues={defaultValues}
+                    defaultValues={formValues}
                     onSubmit={onSubmit}
                 />
             )}

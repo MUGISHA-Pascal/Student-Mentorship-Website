@@ -65,7 +65,12 @@ const AdminBlogsPage = () => {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold tracking-tight">All Blogs</h2>
         <Link to="/admin/dashboard/blogs/new">
-          <Button className="flex items-center gap-2">
+          <Button
+            className="flex items-center gap-2"
+            onClick={() => {
+              localStorage.removeItem("blogId");
+            }}
+          >
             <Plus className="w-4 h-4" />
             <span className="hidden sm:inline">New Blog</span>
           </Button>
