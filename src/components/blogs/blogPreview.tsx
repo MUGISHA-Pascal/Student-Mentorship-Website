@@ -30,7 +30,7 @@ const BlogPreview = ({ formValues }: BlogPreviewProps) => {
                     className="w-full h-[500px] object-cover rounded-lg mb-6"
                 />
             )}
-            <article className="prose prose-lg max-w-none text-gray-800 pb-16 text-lg">
+            <article className="prose prose-lg max-w-none text-gray-800 pb-16 text-base">
                 <ReactMarkdown
                     components={{
                         h1: ({ ...props }) => <h1 className="text-3xl font-bold my-6" {...props} />,

@@ -9,7 +9,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { initializeMeetingClient } from './Meeting/meetingProvider'
 import { StreamVideoClient } from '@stream-io/video-react-sdk';
 import { useUserStore } from '@/store/userStore'
-import { FaBlog } from 'react-icons/fa'
 
 const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange }: { expanded: boolean; setExpanded: (expanded: boolean) => void; activeSection: string; onSectionChange: (section: string) => void }) => {
 
@@ -43,8 +42,8 @@ const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange }: { ex
         <SidebarLink icon={<Home />} label="Home" isActive={activeSection === '/admin/dashboard'} onClick={() => onSectionChange('/admin/dashboard')} to="/admin/dashboard" expanded={expanded} />
         <SidebarLink icon={<Users />} label="Students" isActive={activeSection === '/admin/dashboard/students'} onClick={() => onSectionChange('/admin/dashboard/students')} to="/admin/dashboard/students" expanded={expanded} />
         <SidebarLink icon={<Users />} label="Mentors" isActive={activeSection === '/admin/dashboard/mentors'} onClick={() => onSectionChange('/admin/dashboard/mentors')} to="/admin/dashboard/mentors" expanded={expanded} />
+        <SidebarLink icon={<FileText />} label="Blogs" isActive={activeSection.startsWith('/admin/dashboard/blogs')} onClick={() => onSectionChange('/admin/dashboard/blogs')} to="/admin/dashboard/blogs" expanded={expanded} />
         <SidebarLink icon={<Calendar />} label="Calendar" isActive={activeSection === '/admin/dashboard/calendar'} onClick={() => onSectionChange('/admin/dashboard/calendar')} to="/admin/dashboard/calendar" expanded={expanded} />
-        <SidebarLink icon={<FileText />} label="Blogs" isActive={activeSection === '/admin/dashboard/blogs'} onClick={() => onSectionChange('/admin/dashboard/blogs')} to="/admin/dashboard/blogs" expanded={expanded} />
         <SidebarLink icon={<Users />} label="Assessments" isActive={activeSection === '/admin/dashboard/assessments'} onClick={() => onSectionChange('/admin/dashboard/assessments')} to="/admin/dashboard/assessments" expanded={expanded} />
         <SidebarLink icon={<MessageSquare />} label="Chats" isActive={activeSection === '/admin/dashboard/chats'} onClick={() => onSectionChange('/admin/dashboard/chats')} to="/admin/dashboard/chats" expanded={expanded} />
       </nav>
@@ -222,7 +221,7 @@ export default function LayoutAdmin() {
       />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header title={getTitle(location.pathname)} />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-4">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background md:p-4">
           <Outlet />
         </main>
       </div>

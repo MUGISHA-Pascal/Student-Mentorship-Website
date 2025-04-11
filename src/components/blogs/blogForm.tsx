@@ -3,179 +3,160 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage
 } from "@/components/ui/form";
 import ImageSelector from "./imageSelector";
 import MarkdownToolbar from "./markdownToolbar";
 
 // Create a schema for the blog form - updated to remove slug and writer
 const blogSchema = z.object({
-  title: z.string().min(5, { message: "Title must be at least 5 characters" }),
-  description: z.string().min(10, { message: "Description must be at least 10 characters" }),
-  dateCreated: z.string(),
-  image: z.string().optional(),
-  category: z.string().optional(),
-  isNew: z.boolean().optional(),
+    title: z.string().min(5, { message: "Title must be at least 5 characters" }),
+    description: z.string().min(10, { message: "Description must be at least 10 characters" }),
+    dateCreated: z.string(),
+    image: z.string().optional(),
+    category: z.string().optional(),
+    isNew: z.boolean().optional(),
 });
 
 export type BlogFormValues = z.infer<typeof blogSchema>;
 
 interface BlogFormProps {
-  defaultValues: BlogFormValues;
-  onSubmit: (data: BlogFormValues) => void;
+    defaultValues: BlogFormValues;
+    onSubmit: (data: BlogFormValues) => void;
 }
 
 const BlogForm = ({ defaultValues, onSubmit }: BlogFormProps) => {
-  const form = useForm<BlogFormValues>({
-    resolver: zodResolver(blogSchema),
-    defaultValues,
-  });
+    const form = useForm<BlogFormValues>({
+        resolver: zodResolver(blogSchema),
+        defaultValues,
+    });
 
-  // For markdown editor toolbar functions
-  const insertMarkdown = (start: string, end: string = '') => {
-    const textarea = document.getElementById('description') as HTMLTextAreaElement;
-    if (!textarea) return;
-    
-    const selectionStart = textarea.selectionStart;
-    const selectionEnd = textarea.selectionEnd;
-    const currentValue = form.getValues('description');
-    
-    const beforeSelection = currentValue.substring(0, selectionStart);
-    const selection = currentValue.substring(selectionStart, selectionEnd);
-    const afterSelection = currentValue.substring(selectionEnd);
-    
-    const newValue = beforeSelection + start + selection + end + afterSelection;
-    form.setValue('description', newValue, { shouldValidate: true });
-    
-    // Set focus back to textarea
-    setTimeout(() => {
-      textarea.focus();
-      textarea.setSelectionRange(
-        selectionStart + start.length,
-        selectionEnd + start.length
-      );
-    }, 0);
-  };
+    // For markdown editor toolbar functions
+    const insertMarkdown = (start: string, end: string = '') => {
+        const textarea = document.getElementById('description') as HTMLTextAreaElement;
+        if (!textarea) return;
 
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        const selectionStart = textarea.selectionStart;
+        const selectionEnd = textarea.selectionEnd;
+        const currentValue = form.getValues('description');
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormField
-            control={form.control}
-            name="dateCreated"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Date</FormLabel>
-                <FormControl>
-                  <Input type="date" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          <FormField
-            control={form.control}
-            name="category"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Category</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        const beforeSelection = currentValue.substring(0, selectionStart);
+        const selection = currentValue.substring(selectionStart, selectionEnd);
+        const afterSelection = currentValue.substring(selectionEnd);
 
-        <FormField
-          control={form.control}
-          name="image"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Featured Image</FormLabel>
-              <FormControl>
-                <ImageSelector
-                  value={field.value}
-                  onChange={field.onChange}
+        const newValue = beforeSelection + start + selection + end + afterSelection;
+        form.setValue('description', newValue, { shouldValidate: true });
+
+        // Set focus back to textarea
+        setTimeout(() => {
+            textarea.focus();
+            textarea.setSelectionRange(
+                selectionStart + start.length,
+                selectionEnd + start.length
+            );
+        }, 0);
+    };
+
+    return (
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel className="text-base font-bold">Title</FormLabel>
+                            <FormControl>
+                                <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
                 />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
 
-        <FormField
-          control={form.control}
-          name="isNew"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center space-x-3 space-y-0">
-              <FormControl>
-                <input
-                  type="checkbox"
-                  checked={field.value}
-                  onChange={field.onChange}
-                  className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                        control={form.control}
+                        name="dateCreated"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-base font-bold">Date</FormLabel>
+                                <FormControl>
+                                    <Input type="date" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="category"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-base font-bold">Category</FormLabel>
+                                <FormControl>
+                                    <Input {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+
+                <FormField
+                    control={form.control}
+                    name="image"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel className="text-base font-bold">Featured Image</FormLabel>
+                            <FormControl>
+                                <ImageSelector
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
                 />
-              </FormControl>
-              <FormLabel className="mt-0">Mark as New</FormLabel>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
 
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description (Markdown)</FormLabel>
-              <div className="border rounded-lg overflow-hidden">
-                <MarkdownToolbar onInsertMarkdown={insertMarkdown} />
-                <FormControl>
-                  <textarea
-                    id="description"
-                    {...field}
-                    rows={15}
-                    className="w-full p-3 focus:outline-none resize-y"
-                  />
-                </FormControl>
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <div className="flex justify-end space-x-3">
-          <Button type="submit" className="px-8">
-            Save Blog
-          </Button>
-        </div>
-      </form>
-    </Form>
-  );
+                <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel className="text-base font-bold">Description (Markdown)</FormLabel>
+                            <div className="border rounded-lg overflow-hidden">
+                                <MarkdownToolbar onInsertMarkdown={insertMarkdown} />
+                                <FormControl>
+                                    <textarea
+                                        id="description"
+                                        {...field}
+                                        rows={15}
+                                        className="w-full p-3 focus:outline-none resize-y"
+                                    />
+                                </FormControl>
+                            </div>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <div className="flex justify-end space-x-3">
+                    <Button type="submit" className="px-8 font-semibold hover:bg-blue-600 duration-300">
+                        Save Blog
+                    </Button>
+                </div>
+            </form>
+        </Form>
+    );
 };
 
 export default BlogForm;

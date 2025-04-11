@@ -94,7 +94,7 @@ const ImageSelector = ({ value, onChange }: ImageSelectorProps) => {
         <img 
           src={value} 
           alt="Selected preview" 
-          className="w-full h-96 object-cover"
+          className="w-full h-[450px] object-cover"
         />
         <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
           <Button 

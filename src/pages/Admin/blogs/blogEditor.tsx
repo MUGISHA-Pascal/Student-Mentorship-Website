@@ -74,12 +74,14 @@ const BlogEditor = () => {
                 <div className="flex flex-wrap gap-3">
                     <Button
                         variant="outline"
+                        className="text-base font-semibold"
                         onClick={() => setPreviewMode(!previewMode)}
                     >
                         {previewMode ? "Edit" : "Preview"}
                     </Button>
                     <Button
                         variant="outline"
+                        className="text-base font-semibold"
                         onClick={() => navigate("/admin/dashboard/blogs")}
                     >
                         Cancel

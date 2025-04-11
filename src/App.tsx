@@ -203,7 +203,7 @@ const App = () => {
           <Route path="calendar" element={<AdminCalendarPage />} />
           <Route path="blogs" element={<AdminBlogsPage />} />
           <Route path="blogs/new" element={<BlogEditor />} />
-          <Route path="blogs/edit/:id" element={<BlogEditor />} />
+          <Route path="blogs/edit/:slug" element={<BlogEditor />} />
           <Route path="chats" element={<AdminChatsPage />} />
         </Route>
 
