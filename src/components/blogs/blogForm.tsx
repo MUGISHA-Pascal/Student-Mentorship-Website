@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/form";
 import ImageSelector from "./imageSelector";
 import MarkdownToolbar from "./markdownToolbar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 // Create a schema for the blog form - updated to remove slug and writer
 const blogSchema = z.object({
@@ -72,9 +72,18 @@ const BlogForm = ({ defaultValues, onSubmit }: BlogFormProps) => {
         form.reset(defaultValues); // Properly reset the form with new values
     }, [defaultValues, form]);
 
+ // Track the original image file
+ const [imageFile, setImageFile] = useState<File | null>(null);
+
+ const handleSubmit = form.handleSubmit(async (data) => {
+     // Pass both form data and the original file to onSubmit
+     await onSubmit({ ...data, imageFile });
+ });
+
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {/* <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6"> */}
+            <form onSubmit={handleSubmit} className="space-y-6">
                 <FormField
                     control={form.control}
                     name="title"
@@ -119,7 +128,7 @@ const BlogForm = ({ defaultValues, onSubmit }: BlogFormProps) => {
                     />
                 </div>
 
-                <FormField
+                {/* <FormField
                     control={form.control}
                     name="image"
                     render={({ field }) => (
@@ -129,6 +138,26 @@ const BlogForm = ({ defaultValues, onSubmit }: BlogFormProps) => {
                                 <ImageSelector
                                     value={field.value}
                                     onChange={field.onChange}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                /> */}
+
+<FormField
+                    control={form.control}
+                    name="image"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel className="text-base font-bold">Featured Image</FormLabel>
+                            <FormControl>
+                                <ImageSelector
+                                    value={field.value}
+                                    onChange={(preview, file) => {
+                                        field.onChange(preview);
+                                        setImageFile(file || null);
+                                    }}
                                 />
                             </FormControl>
                             <FormMessage />

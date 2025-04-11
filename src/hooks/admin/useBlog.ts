@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { createBlog, deleteBlog, editBlog, getBlog, getBlogs, searchBlogs } from "@/services/admin/blogService";
 import { toast } from "react-toastify";
+import { BlogFormValues } from "@/components/blogs/blogForm";
 
 
 export interface Blog {
@@ -173,8 +174,7 @@ export const useEditBlog = () => {
     const [isEditingBlog, setIsEditingBlog] = useState(false);
     const [editBlogError, setEditBlogError] = useState<string | null>(null);
 
-
-    const editExistingBlog = async (blogId: string, updatedData: any) => {
+    const editExistingBlog = async (blogId: string, updatedData: BlogFormValues) => {
         setIsEditingBlog(true);
         try {
             const response = await editBlog(blogId, updatedData);

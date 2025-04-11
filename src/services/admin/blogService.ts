@@ -1,3 +1,4 @@
+import { BlogFormValues } from "@/components/blogs/blogForm";
 import apiClient from "@/lib/apiClient";
 import { getAuthHeaders } from "@/lib/getAuthHeaders";
 
@@ -34,7 +35,10 @@ export const getBlog = async (blogId: string) => {
 export const createBlog = async (blogData: unknown) => {
     try {
         const response = await apiClient.post("/blog/create-blog", blogData, {
-            headers: getAuthHeaders(),
+            headers: {
+                ...getAuthHeaders(),
+                'Content-Type': 'multipart/form-data',
+            },
         });
         console.log("Blog created:", response.data);
         return response.data;
@@ -44,19 +48,39 @@ export const createBlog = async (blogData: unknown) => {
     }
 };
 
-// Edit an existing blog
-export const editBlog = async (blogId: string, updatedData: unknown) => {
-    try {
-        const response = await apiClient.put(`/blog/edit-blog/${blogId}`, updatedData, {
-            headers: getAuthHeaders(),
-        });
-        console.log(`Blog ${blogId} updated:`, response.data);
-        return response.data;
-    } catch (error) {
-        console.error(`Failed to edit blog with ID ${blogId}:`, error);
-        throw error;
+export const editBlog = async (blogId: string, updatedData: BlogFormValues) => {
+    const formData = new FormData();
+    
+    // Append all fields
+    formData.append('title', updatedData.title);
+    formData.append('description', updatedData.description);
+    formData.append('category', updatedData.category || '');
+    formData.append('dateCreated', updatedData.dateCreated);
+    
+    // Handle image conversion
+    if (updatedData.image) {
+      // If it's a base64 string (new upload)
+      if (updatedData.image.startsWith('data:image')) {
+        const blob = await fetch(updatedData.image).then(r => r.blob());
+        formData.append('image', blob, 'blog-image.png');
+      } 
+      // If it's a URL (existing image), don't append to formData
+      // The backend will keep the existing image if no new file is provided
     }
-};
+  
+    try {
+      const response = await apiClient.put(`/blog/edit-blog/${blogId}`, formData, {
+        headers: {
+          ...getAuthHeaders(),
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error(`Failed to edit blog with ID ${blogId}:`, error);
+      throw error;
+    }
+  };
 
 // Delete a blog by ID
 export const deleteBlog = async (blogId: string) => {

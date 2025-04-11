@@ -4,8 +4,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import BlogForm, { BlogFormValues } from "@/components/blogs/blogForm";
 import BlogPreview from "@/components/blogs/blogPreview";
-import { useGetBlog, useCreateBlog } from "@/hooks/admin/useBlog"; // Import your hook properly
-import { editBlog } from "@/services/admin/blogService";
+import { useGetBlog, useCreateBlog, useEditBlog } from "@/hooks/admin/useBlog";
 
 const BlogEditor = () => {
     const id = localStorage.getItem("blogId");
@@ -13,6 +12,8 @@ const BlogEditor = () => {
     const isNewBlog = !id || id === "new";
     // const { blog, isFetchingSingleBlog } = useGetBlog(id || ""); // Fetch blog from backend
     const { blog, isFetchingSingleBlog } = useGetBlog(!isNewBlog ? id : undefined);
+
+    const { editExistingBlog } = useEditBlog();
 
     const { createNewBlog } = useCreateBlog();
 
@@ -43,7 +44,7 @@ const BlogEditor = () => {
     }, [blog, isNewBlog]);
 
 
-    const onSubmit = async (data: BlogFormValues) => {
+    const onSubmit = async (data: BlogFormValues & { imageFile?: File }) => {
         setFormValues(data);
 
         if (previewMode) {
@@ -51,14 +52,20 @@ const BlogEditor = () => {
             return;
         }
 
+        
+        
+
         try {
             if (isNewBlog) {
                 await createNewBlog(data);
                 toast.success("New blog created successfully!");
             } else {
                 // You probably have an `editBlog` function in your service
-                await editBlog(id as string, data);
-                toast.success("Blog updated successfully!");
+                // await editExistingBlog(id, data);
+                await editExistingBlog(id as string, {
+                    ...data,
+                    image: data.imageFile ? data.image : data.image
+                });
             }
 
             navigate("/admin/dashboard/blogs");
@@ -79,17 +86,25 @@ const BlogEditor = () => {
                     <Button
                         variant="outline"
                         className="text-base font-semibold"
-                        // onClick={() => setPreviewMode(!previewMode)}
                         onClick={() => {
                             if (!previewMode) {
-                                // If moving from Edit ➔ Preview, update formValues first
-                                const formElement = document.querySelector('form') as HTMLFormElement;
-                                if (formElement) {
-                                    formElement.requestSubmit(); // This will trigger react-hook-form's validation and call onSubmit
-                                }
+                              // Get current form values without submitting
+                              const formElement = document.querySelector('form');
+                              if (formElement) {
+                                const formData = new FormData(formElement);
+                                const values = Object.fromEntries(formData.entries());
+                                setFormValues({
+                                  ...formValues,
+                                  ...values,
+                                  // Ensure proper typing for non-string fields
+                                  dateCreated: values.dateCreated as string,
+                                  isNew: formValues.isNew
+                                });
+                              }
                             }
                             setPreviewMode(!previewMode);
-                        }}
+                          }}
+                        
                     >
                         {previewMode ? "Edit" : "Preview"}
                     </Button>

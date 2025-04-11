@@ -9,7 +9,8 @@ import { toast } from 'react-toastify';
 
 interface ImageSelectorProps {
   value?: string;
-  onChange: (value: string) => void;
+  // onChange: (value: string) => void;
+  onChange: (value: string, file?: File) => void;
 }
 
 const ImageSelector = ({ value, onChange }: ImageSelectorProps) => {
@@ -42,7 +43,7 @@ const ImageSelector = ({ value, onChange }: ImageSelectorProps) => {
       reader.onload = () => {
         const preview = reader.result as string;
         setUploadedImage({ file, preview, name: file.name });
-        onChange(preview);
+        onChange(preview, file);
       };
       reader.readAsDataURL(file);
     }
@@ -74,7 +75,7 @@ const ImageSelector = ({ value, onChange }: ImageSelectorProps) => {
       reader.onload = () => {
         const preview = reader.result as string;
         setUploadedImage({ file, preview, name: file.name });
-        onChange(preview);
+        onChange(preview, file);
       };
       reader.readAsDataURL(file);
     }
