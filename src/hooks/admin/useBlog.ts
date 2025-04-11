@@ -57,46 +57,87 @@ export const useCreateBlog = () => {
 };
 
 
+// export const useGetBlogs = (page: number = 1, limit: number = 20) => {
+//     const [blogs, setBlogs] = useState<Blog[]>([]);
+//     const [isFetchingBlogs, setIsFetchingBlogs] = useState<boolean>(true);
+//     const [getBlogsError, setGetBlogsError] = useState<string | null>(null);
+//     const [pagination, setPagination] = useState<Pagination | null>(null);
+
+//     // Function to check if the blog is less than a week old
+//     const isBlogNew = (dateCreated: string) => {
+//         const createdDate = new Date(dateCreated);
+//         const currentDate = new Date();
+//         const timeDifference = currentDate.getTime() - createdDate.getTime();
+//         const oneWeekInMilliseconds = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
+//         return timeDifference < oneWeekInMilliseconds;
+//     };
+
+
+//     useEffect(() => {
+//         const fetchBlogs = async () => {
+//             try {
+//                 const response = await getBlogs(page, limit);  // Assuming this is the API call to fetch the data
+//                 const updatedBlogs = response.data.map((blog: Blog) => ({
+//                     ...blog,
+//                     isNew: isBlogNew(blog.dateCreated), // Add the `isNew` attribute
+//                 }));
+//                 setBlogs(updatedBlogs);  // Set blogs data with the `isNew` attribute
+//                 setPagination(response.pagination);  // Set pagination data
+//             } catch (err: any) {
+//                 console.error("Failed to fetch blogs:", err);
+//                 setGetBlogsError("Failed to fetch blogs.");
+//                 toast.error("Failed to fetch blogs.");
+//             } finally {
+//                 setIsFetchingBlogs(false);
+//             }
+//         };
+
+//         fetchBlogs();
+//     }, [page, limit]);
+
+//     return { blogs, isFetchingBlogs, getBlogsError, pagination };
+// };
+
 export const useGetBlogs = (page: number = 1, limit: number = 20) => {
     const [blogs, setBlogs] = useState<Blog[]>([]);
     const [isFetchingBlogs, setIsFetchingBlogs] = useState<boolean>(true);
     const [getBlogsError, setGetBlogsError] = useState<string | null>(null);
     const [pagination, setPagination] = useState<Pagination | null>(null);
 
-    // Function to check if the blog is less than a week old
     const isBlogNew = (dateCreated: string) => {
         const createdDate = new Date(dateCreated);
         const currentDate = new Date();
         const timeDifference = currentDate.getTime() - createdDate.getTime();
-        const oneWeekInMilliseconds = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
+        const oneWeekInMilliseconds = 7 * 24 * 60 * 60 * 1000;
         return timeDifference < oneWeekInMilliseconds;
     };
 
+    const fetchBlogs = async () => {
+        setIsFetchingBlogs(true); // <- important to reset loading
+        try {
+            const response = await getBlogs(page, limit);
+            const updatedBlogs = response.data.map((blog: Blog) => ({
+                ...blog,
+                isNew: isBlogNew(blog.dateCreated),
+            }));
+            setBlogs(updatedBlogs);
+            setPagination(response.pagination);
+        } catch (err: any) {
+            console.error("Failed to fetch blogs:", err);
+            setGetBlogsError("Failed to fetch blogs.");
+            toast.error("Failed to fetch blogs.");
+        } finally {
+            setIsFetchingBlogs(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchBlogs = async () => {
-            try {
-                const response = await getBlogs(page, limit);  // Assuming this is the API call to fetch the data
-                const updatedBlogs = response.data.map((blog: Blog) => ({
-                    ...blog,
-                    isNew: isBlogNew(blog.dateCreated), // Add the `isNew` attribute
-                }));
-                setBlogs(updatedBlogs);  // Set blogs data with the `isNew` attribute
-                setPagination(response.pagination);  // Set pagination data
-            } catch (err: any) {
-                console.error("Failed to fetch blogs:", err);
-                setGetBlogsError("Failed to fetch blogs.");
-                toast.error("Failed to fetch blogs.");
-            } finally {
-                setIsFetchingBlogs(false);
-            }
-        };
-
         fetchBlogs();
     }, [page, limit]);
 
-    return { blogs, isFetchingBlogs, getBlogsError, pagination };
+    return { blogs, isFetchingBlogs, getBlogsError, pagination, refetch: fetchBlogs };
 };
+
 
 // Hook for getting a single blog
 export const useGetBlog = (blogId?: string) => {
