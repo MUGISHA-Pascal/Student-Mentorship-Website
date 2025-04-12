@@ -88,11 +88,13 @@ const ImageSelector = ({ value, onChange }: ImageSelectorProps) => {
 
   const renderSelectedImage = () => {
     if (!value) return null;
+    const imageToShow = uploadedImage?.preview || value;
+    if (!imageToShow) return null;
 
     return (
       <div className="relative mt-4 rounded-md overflow-hidden border border-gray-200 group">
         <img
-          src={value}
+          src={imageToShow}
           alt="Selected preview"
           className="w-full h-[450px] object-cover"
         />

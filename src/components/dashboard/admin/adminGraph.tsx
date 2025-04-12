@@ -182,17 +182,17 @@ const AdminGraph: React.FC = () => {
   };
 
   return (
-    <div className="p-6 rounded-lg bg-white shadow-md">
+    <div className="p-6">
       <h2 className="text-xl font-bold mb-4">Performance Overview</h2>
 
       <div className="flex justify-end mb-4">
         <select
-          className="dark:bg-transparent dark:text-muted-foreground border rounded-lg p-2 cursor-pointer"
+          className="bg-muted border rounded-lg p-2 cursor-pointer"
           value={chartType}
           onChange={(e) => setChartType(e.target.value as "Bar" | "Pie")}
         >
-          <option value="Bar">Bar</option>
-          <option value="Pie">Pie</option>
+          <option value="Bar" className="bg-muted-foreground text-muted">Bar</option>
+          <option value="Pie" className="bg-muted-foreground text-muted">Pie</option>
         </select>
       </div>
 

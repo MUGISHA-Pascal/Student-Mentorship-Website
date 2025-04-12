@@ -74,7 +74,7 @@ export default function HomePage() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="p-0 lg:p-6 md:p-5 space-y-6 bg-background text-foreground">
+    <div className="p-2 lg:p-6 md:p-5 space-y-6 bg-background text-foreground">
       <DashboardAdminOverview
         name={fullName}
         currentDate={currentDate}

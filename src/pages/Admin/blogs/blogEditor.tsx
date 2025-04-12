@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { toast } from "react-toastify";
 import BlogForm, { BlogFormValues } from "@/components/blogs/blogForm";
 import BlogPreview from "@/components/blogs/blogPreview";
 import { useGetBlog, useCreateBlog, useEditBlog } from "@/hooks/admin/useBlog";
+import { Levels } from "react-activity";
 
 const BlogEditor = () => {
     const id = localStorage.getItem("blogId");
@@ -52,13 +52,12 @@ const BlogEditor = () => {
             return;
         }
 
-        
-        
+
+
 
         try {
             if (isNewBlog) {
                 await createNewBlog(data);
-                toast.success("New blog created successfully!");
             } else {
                 // You probably have an `editBlog` function in your service
                 // await editExistingBlog(id, data);
@@ -71,12 +70,13 @@ const BlogEditor = () => {
             navigate("/admin/dashboard/blogs");
         } catch (error) {
             console.error("Error saving blog:", error);
-            toast.error("Failed to save blog.");
         }
     };
 
     if (isFetchingSingleBlog && !isNewBlog) {
-        return <div>Loading blog...</div>; // Optionally improve UX
+        return <div className="flex items-center justify-center h-full">
+            <Levels speed={0.5} />
+        </div>;
     }
 
     return (
@@ -88,23 +88,23 @@ const BlogEditor = () => {
                         className="text-base font-semibold"
                         onClick={() => {
                             if (!previewMode) {
-                              // Get current form values without submitting
-                              const formElement = document.querySelector('form');
-                              if (formElement) {
-                                const formData = new FormData(formElement);
-                                const values = Object.fromEntries(formData.entries());
-                                setFormValues({
-                                  ...formValues,
-                                  ...values,
-                                  // Ensure proper typing for non-string fields
-                                  dateCreated: values.dateCreated as string,
-                                  isNew: formValues.isNew
-                                });
-                              }
+                                // Get current form values without submitting
+                                const formElement = document.querySelector('form');
+                                if (formElement) {
+                                    const formData = new FormData(formElement);
+                                    const values = Object.fromEntries(formData.entries());
+                                    setFormValues({
+                                        ...formValues,
+                                        ...values,
+                                        // Ensure proper typing for non-string fields
+                                        dateCreated: values.dateCreated as string,
+                                        isNew: formValues.isNew
+                                    });
+                                }
                             }
                             setPreviewMode(!previewMode);
-                          }}
-                        
+                        }}
+
                     >
                         {previewMode ? "Edit" : "Preview"}
                     </Button>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BlogFormValues } from "@/components/blogs/blogForm";
 import apiClient from "@/lib/apiClient";
 import { getAuthHeaders } from "@/lib/getAuthHeaders";
@@ -32,9 +33,25 @@ export const getBlog = async (blogId: string) => {
 };
 
 // Create a new blog
-export const createBlog = async (blogData: unknown) => {
+export const createBlog = async (blogData: any) => {
+    console.log("Blog data: ", blogData);
+    
     try {
-        const response = await apiClient.post("/blog/create-blog", blogData, {
+        const formData = new FormData();
+        
+        // Add text fields
+        formData.append('title', blogData.title);
+        formData.append('description', blogData.description);
+        formData.append('category', blogData.category);
+        
+        // Add image file if it exists
+        if (blogData.imageFile) {
+            formData.append('image', blogData.imageFile);
+        }
+
+        
+
+        const response = await apiClient.post("/blog/create-blog", formData, {
             headers: {
                 ...getAuthHeaders(),
                 'Content-Type': 'multipart/form-data',

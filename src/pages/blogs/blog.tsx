@@ -6,11 +6,17 @@ export interface Blog {
     title: string;
     slug: string;
     description: string;
-    writer: string;
+    category: string;
     dateCreated: string;
     image?: string;
-    category?: string;
     isNew?: boolean;
+    userId: string;
+    user: {
+        id: string;
+        firstName: string;
+        lastName: string;
+        role: string;
+    };
 }
 
 // Sample blog data
@@ -33,11 +39,17 @@ We are committed to **continuous improvement** and your feedback is always welco
 
 Thank you for being part of our journey. 🚀
     `,
-        writer: "GOYA Team",
         dateCreated: "2025-01-10",
         image: "/images/image.png",
         category: "Platform Updates",
         isNew: true,
+        userId: "6d02ccc1-fb17-4164-999a-672d4e9a547c",
+        user: {
+            "id": "6d02ccc1-fb17-4164-999a-672d4e9a547c",
+            "firstName": "Elissa",
+            "lastName": "DUSABE",
+            "role": "ADMIN"
+        }
     },
 ];
 
@@ -68,7 +80,6 @@ const Blog = () => {
 
     return (
         <div className="container mx-auto mt-20 px-4 py-12 max-w-4xl">
-
             <div className="">
                 <div className="flex justify-between">
                     <p className="text-blue-600 uppercase font-medium tracking-wide">{blog.category}</p>
@@ -82,7 +93,7 @@ const Blog = () => {
                 <div className="flex items-center text-gray-600 mb-8 text-base">
                     <span>{formatDate(blog.dateCreated)}</span>
                     <span className="mx-3">•</span>
-                    <span>By {blog.writer}</span>
+                    <span>By {blog.user.firstName} {blog.user.lastName}</span>
                 </div>
             </div>
 
@@ -106,7 +117,7 @@ const Blog = () => {
                         ul: ({ ...props }) => <ul className="list-disc ml-6 my-4" {...props} />,
                         ol: ({ ...props }) => <ol className="list-decimal ml-6 my-4" {...props} />,
                         li: ({ ...props }) => <li className="my-2" {...props} />,
-                        a: ({ ...props }) => <a className="text-primary underline" {...props}/>,
+                        a: ({ ...props }) => <a className="text-primary underline" {...props} />,
                         strong: ({ ...props }) => <strong className="font-bold" {...props} />,
                         blockquote: ({ ...props }) => (
                             <blockquote className="border-l-4 border-blue-500 pl-4 italic my-6 text-gray-700" {...props} />

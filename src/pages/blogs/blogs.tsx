@@ -1,99 +1,12 @@
 import BlogCard from "@/components/blogs/blogCard";
-import { Blog } from "@/types/blog";
+import { useGetBlogs } from "@/hooks/admin/useBlog";
+import { useEffect, useState } from "react";
+import { Levels } from "react-activity";
 import { useSearchParams } from "react-router-dom";
 
-const blogs: Blog[] = [
-    {
-        id: "1",
-        title: "How Captivating Narratives Can Transform Your Writing and Engage Readers Deeply",
-        slug: "upgrading-our-platform-for-a-better-experience",
-        description: "React Hooks allow functional components to have state and side effects React Hooks allow functional components to have state and side effects React Hooks allow functional components to have state and side effects",
-        writer: "John Doe",
-        dateCreated: "2024-03-15T10:00:00Z",
-        image: "/images/image.png",
-        category: "Communication",
-        isNew: true
-    },
-    {
-        id: "2",
-        title: "Tailwind CSS Tips & Tricks",
-        slug: "tailwind-css-tips-tricks",
-        description: "Tailwind CSS is a utility-first framework that allows for rapid UI development React Hooks allow functional components to have state and side effects React Hooks allow functional components to have state and side effects",
-        writer: "Jane Smith",
-        dateCreated: "2023-11-20T15:30:00Z",
-        image: "/images/image.png",
-        category: "Communication",
-        isNew: true
-    },
-    {
-        id: "3",
-        title: "Next.js for Beginners",
-        slug: "nextjs-for-beginners",
-        description: "Next.js is a powerful React framework that enables server-side rendering React Hooks allow functional components to have state and side effects React Hooks allow functional components to have state and side effects",
-        writer: "Alex Brown",
-        dateCreated: "2022-06-10T08:15:00Z",
-        image: "/images/image.png",
-        category: "Communication",
-        isNew: true
-    },
-    {
-        id: "4",
-        title: "Understanding React Hooks",
-        slug: "understanding-react-hooks",
-        description: "React Hooks allow functional components to have state and side effects React Hooks allow functional components to have state and side effects React Hooks allow functional components to have state and side effects",
-        writer: "John Doe",
-        dateCreated: "2024-03-15T10:00:00Z",
-        image: "/images/image.png",
-        category: "Communication",
-        isNew: true
-    },
-    {
-        id: "5",
-        title: "Tailwind CSS Tips & Tricks",
-        slug: "tailwind-css-tips-tricks",
-        description: "Tailwind CSS is a utility-first framework that allows for rapid UI development React Hooks allow functional components to have state and side effects React Hooks allow functional components to have state and side effects",
-        writer: "Jane Smith",
-        dateCreated: "2023-11-20T15:30:00Z",
-        image: "/images/image.png",
-        category: "Communication",
-        isNew: false
-    },
-    {
-        id: "6",
-        title: "Next.js for Beginners",
-        slug: "nextjs-for-beginners",
-        description: "Next.js is a powerful React framework that enables server-side rendering React Hooks allow functional components to have state and side effects React Hooks allow functional components to have state and side effects",
-        writer: "Alex Brown",
-        dateCreated: "2022-06-10T08:15:00Z",
-        image: "/images/image.png",
-        category: "Communication",
-        isNew: false
-    },
-    {
-        id: "7",
-        title: "Tailwind CSS Tips & Tricks",
-        slug: "tailwind-css-tips-tricks",
-        description: "Tailwind CSS is a utility-first framework that allows for rapid UI development React Hooks allow functional components to have state and side effects React Hooks allow functional components to have state and side effects",
-        writer: "Jane Smith",
-        dateCreated: "2023-11-20T15:30:00Z",
-        image: "/images/image.png",
-        category: "Communication",
-        isNew: false
-    },
-    {
-        id: "8",
-        title: "Next.js for Beginners",
-        slug: "nextjs-for-beginners",
-        description: "Next.js is a powerful React framework that enables server-side rendering React Hooks allow functional components to have state and side effects React Hooks allow functional components to have state and side effects",
-        writer: "Alex Brown",
-        dateCreated: "2022-06-10T08:15:00Z",
-        image: "/images/image.png",
-        category: "Communication",
-        isNew: false
-    },
-];
 
 const Blogs = () => {
+    const { blogs, isFetchingBlogs, getBlogsError, pagination } = useGetBlogs();
     const [searchParams, setSearchParams] = useSearchParams();
     const page = parseInt(searchParams.get("page") || "1", 10);
     const blogsPerPage = 6;
@@ -102,9 +15,38 @@ const Blogs = () => {
     const startIndex = (page - 1) * blogsPerPage;
     const selectedBlogs = blogs.slice(startIndex, startIndex + blogsPerPage);
 
-    const goToPage = (pageNumber: number) => {
-        setSearchParams({ page: pageNumber.toString() });
+    // const goToPage = (pageNumber: number) => {
+    //     setSearchParams({ page: pageNumber.toString() });
+    // };
+
+    const [currentPage, setCurrentPage] = useState(pagination?.currentPage || 1);
+
+    const onPageChange = (newPage: number) => {
+        setCurrentPage(newPage);
+        // Re-fetch blogs based on new page
     };
+
+    useEffect(() => {
+        // Only fetch blogs if pagination data is available
+        if (pagination) {
+            setCurrentPage(pagination.currentPage);
+        }
+    }, [pagination]);
+
+    if (isFetchingBlogs) {
+        return <div className="mt-20 flex items-center justify-center h-[450px]">
+            <Levels speed={0.5} />
+        </div>;
+    }
+
+    if (getBlogsError) {
+        return <div className="mt-20 flex flex-col items-center justify-center h-[450px] text-base font-semibold">
+            Oops! Something went wrong. Please try again later.
+            <span className="text-muted-foreground text-center">{getBlogsError}</span>
+        </div>;
+    }
+
+
     return (
         <div className="container mx-auto px-4 py-8 mt-20">
             <h1 className="text-2xl font-bold text-center mb-6">Latest Blogs</h1>
@@ -115,22 +57,31 @@ const Blogs = () => {
                 ))}
             </div>
 
-            <div className="flex justify-center items-center mt-6 space-x-10">
-                <button
-                    onClick={() => goToPage(page - 1)}
-                    disabled={page === 1}
-                    className={`px-4 py-2 border rounded-xl font-bold ${page === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-blue-600 text-white hover:bg-blue-700"}`}
-                >
-                    Prev
-                </button>
-                <span className="px-4 py-2 border rounded font-bold bg-gray-100">{page} of {totalPages}</span>
-                <button
-                    onClick={() => goToPage(page + 1)}
-                    disabled={page === totalPages}
-                    className={`px-4 py-2 border rounded-xl font-bold ${page === totalPages ? "bg-gray-300 cursor-not-allowed" : "bg-blue-600 text-white hover:bg-blue-700"}`}
-                >
-                    Next
-                </button>
+            <div className="flex justify-between items-center mt-6">
+                <div className="text-muted-foreground">
+                    {`Page ${currentPage} of ${totalPages}`}
+                </div>
+                <div className="flex gap-2">
+                    <button
+                        // onClick={() => goToPage(page - 1)}
+                        // disabled={page === 1}
+                        onClick={() => onPageChange(currentPage - 1)}
+                        disabled={currentPage <= 1}
+                        className={`px-4 py-2 border rounded-xl font-bold ${page === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-blue-600 text-white hover:bg-blue-700"}`}
+                    >
+                        Prev
+                    </button>
+                    <span className="px-4 py-2 border rounded font-bold bg-gray-100">{page} of {totalPages}</span>
+                    <button
+                        // onClick={() => goToPage(page + 1)}
+                        // disabled={page === totalPages}
+                        onClick={() => onPageChange(currentPage + 1)}
+                        disabled={currentPage >= totalPages}
+                        className={`px-4 py-2 border rounded-xl font-bold ${page === totalPages ? "bg-gray-300 cursor-not-allowed" : "bg-blue-600 text-white hover:bg-blue-700"}`}
+                    >
+                        Next
+                    </button>
+                </div>
             </div>
         </div>
     );

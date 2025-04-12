@@ -14,7 +14,7 @@ const DashboardAdminOverview: React.FC<DashboardAdminOverviewProps> = ({
 }) => {
 
     return (
-        <div className="p-6 rounded-xl">
+        <div className="rounded-xl">
             <div className="grid lg:grid-cols-2 grid-cols-1 gap-y-3 justify-between items-start">
                 <div>
                     <div>

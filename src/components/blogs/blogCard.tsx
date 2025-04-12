@@ -21,9 +21,9 @@ const BlogCard: React.FC<BlogCardProps> = ({ blog }) => {
                         New
                     </div>
                 )}
-                <h2 className="text-xl font-bold mb-2 group-hover:text-blue-600 transition-colors">{blog.title}</h2>
+                <h2 className="text-xl font-bold mb-2 group-hover:text-blue-600 transition-colors duration-300">{blog.title}</h2>
                 <div className="flex items-center space-x-5 text-sm text-gray-600 mb-2">
-                    {blog.category && <span className="font-bold text-lg text-blue-500 group-hover:text-black transition-colors">{blog.category}</span>}
+                    {blog.category && <span className="font-bold text-lg text-blue-500 group-hover:text-black transition-colors duration-300">{blog.category}</span>}
                     <span>-</span>
                     <span>{new Date(blog.dateCreated).toLocaleDateString()}</span>
                 </div>

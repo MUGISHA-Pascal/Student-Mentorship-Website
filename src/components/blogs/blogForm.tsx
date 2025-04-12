@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -25,11 +26,14 @@ const blogSchema = z.object({
     isNew: z.boolean().optional(),
 });
 
-export type BlogFormValues = z.infer<typeof blogSchema>;
+// export type BlogFormValues = z.infer<typeof blogSchema>;
+export type BlogFormValues = z.infer<typeof blogSchema> & {
+    imageFile?: File | null;
+};
 
 interface BlogFormProps {
     defaultValues: BlogFormValues;
-    onSubmit: (data: BlogFormValues) => void;
+    onSubmit: (data: BlogFormValues) => void | Promise<void>;
 }
 
 const BlogForm = ({ defaultValues, onSubmit }: BlogFormProps) => {
@@ -72,13 +76,17 @@ const BlogForm = ({ defaultValues, onSubmit }: BlogFormProps) => {
         form.reset(defaultValues); // Properly reset the form with new values
     }, [defaultValues, form]);
 
- // Track the original image file
- const [imageFile, setImageFile] = useState<File | null>(null);
+    // Track the original image file
+    const [imageFile, setImageFile] = useState<File | null>(null);
 
- const handleSubmit = form.handleSubmit(async (data) => {
-     // Pass both form data and the original file to onSubmit
-     await onSubmit({ ...data, imageFile });
- });
+    const handleSubmit = form.handleSubmit(async (data) => {
+        const finalData: BlogFormValues = {
+            ...data,
+            imageFile,
+        };
+
+        onSubmit(finalData);
+    });
 
     return (
         <Form {...form}>
@@ -106,7 +114,12 @@ const BlogForm = ({ defaultValues, onSubmit }: BlogFormProps) => {
                             <FormItem>
                                 <FormLabel className="text-base font-bold">Date</FormLabel>
                                 <FormControl>
-                                    <Input type="date" {...field} />
+                                    <Input
+                                        type="date"
+                                        {...field}
+                                    // disabled
+                                    // className="cursor-not-allowed"
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -128,24 +141,7 @@ const BlogForm = ({ defaultValues, onSubmit }: BlogFormProps) => {
                     />
                 </div>
 
-                {/* <FormField
-                    control={form.control}
-                    name="image"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel className="text-base font-bold">Featured Image</FormLabel>
-                            <FormControl>
-                                <ImageSelector
-                                    value={field.value}
-                                    onChange={field.onChange}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                /> */}
-
-<FormField
+                <FormField
                     control={form.control}
                     name="image"
                     render={({ field }) => (

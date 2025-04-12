@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { toast } from "react-toastify";
 import { useDeleteBlog, useGetBlogs } from "@/hooks/admin/useBlog";
 import { Levels } from "react-activity";
 import BlogTable from "@/components/blogs/blogTable";
@@ -19,7 +18,7 @@ const AdminBlogsPage = () => {
   const { deleteExistingBlog, isDeletingBlog } = useDeleteBlog();
 
   const [currentPage, setCurrentPage] = useState(pagination?.currentPage || 1);
-  const itemsPerPage = 10;
+  // const itemsPerPage = 10;
 
 
   const formatDate = (dateString: string) => {
