@@ -1,5 +1,7 @@
 import { useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
+import { useGetBlog } from "@/hooks/admin/useBlog";
+import { Levels } from "react-activity";
 
 export interface Blog {
     id: string;
@@ -19,42 +21,10 @@ export interface Blog {
     };
 }
 
-// Sample blog data
-const blogs: Blog[] = [
-    {
-        id: "1",
-        title: "How Captivating Narratives Can Transform Your Writing and Engage Readers Deeply",
-        slug: "upgrading-our-platform-for-a-better-experience",
-        description: `
-**Welcome to the future!**
-
-We are thrilled to announce major upgrades to our platform. These changes are designed to **enhance your experience**, making it faster, more reliable, and easier to navigate.
-
-Here’s what’s new:
-- **Modern Interface**: Enjoy a cleaner, more intuitive design.
-- **Faster Access**: Improved speed across all devices.
-- **Seamless Navigation**: Find what you need, effortlessly.
-
-We are committed to **continuous improvement** and your feedback is always welcome!
-
-Thank you for being part of our journey. 🚀
-    `,
-        dateCreated: "2025-01-10",
-        image: "/images/image.png",
-        category: "Platform Updates",
-        isNew: true,
-        userId: "6d02ccc1-fb17-4164-999a-672d4e9a547c",
-        user: {
-            "id": "6d02ccc1-fb17-4164-999a-672d4e9a547c",
-            "firstName": "Elissa",
-            "lastName": "DUSABE",
-            "role": "ADMIN"
-        }
-    },
-];
-
 const Blog = () => {
     const { slug } = useParams();
+    const { blog, isFetchingSingleBlog, getBlogError } = useGetBlog(slug);
+
 
     const formatDate = (dateString: string) => {
         const options: Intl.DateTimeFormatOptions = {
@@ -65,17 +35,17 @@ const Blog = () => {
         return new Date(dateString).toLocaleDateString('en-US', options);
     };
 
-    // Find the blog based on slug and year (for now just slug)
-    const blog = blogs.find((b) => b.slug === slug);
+    if (isFetchingSingleBlog) {
+        return <div className="mt-20 flex items-center justify-center h-[450px]">
+            <Levels speed={0.5} />
+        </div>;
+    }
 
-
-    if (!blog) {
-        return (
-            <div className="container mx-auto mt-20 px-4 py-12 text-center h-64">
-                <h1 className="text-3xl font-bold text-red-600">Blog not found</h1>
-                <p className="text-gray-600 text-lg mt-2">We couldn’t find the blog you're looking for.</p>
-            </div>
-        );
+    if (getBlogError) {
+        return <div className="mt-20 flex flex-col items-center justify-center h-[450px] text-base font-semibold">
+            Oops! Something went wrong. Please try again later.
+            <span className="text-muted-foreground text-center">{getBlogError}</span>
+        </div>;
     }
 
     return (
@@ -117,7 +87,7 @@ const Blog = () => {
                         ul: ({ ...props }) => <ul className="list-disc ml-6 my-4" {...props} />,
                         ol: ({ ...props }) => <ol className="list-decimal ml-6 my-4" {...props} />,
                         li: ({ ...props }) => <li className="my-2" {...props} />,
-                        a: ({ ...props }) => <a className="text-primary underline" {...props} />,
+                        a: ({ ...props }) => <a className="text-primary underline" target="_blank" rel="noopener noreferrer" {...props} />,
                         strong: ({ ...props }) => <strong className="font-bold" {...props} />,
                         blockquote: ({ ...props }) => (
                             <blockquote className="border-l-4 border-blue-500 pl-4 italic my-6 text-gray-700" {...props} />

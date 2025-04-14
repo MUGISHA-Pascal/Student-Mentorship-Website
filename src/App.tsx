@@ -160,7 +160,7 @@ const App = () => {
             </Layout>
           }
         />
-        <Route  path="/blogs/:year/:slug"
+        <Route  path="/blogs/:slug"
           element={
             <Layout>
               <Blog />

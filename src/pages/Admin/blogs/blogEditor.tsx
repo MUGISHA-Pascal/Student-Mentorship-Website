@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import BlogForm, { BlogFormValues } from "@/components/blogs/blogForm";
 import BlogPreview from "@/components/blogs/blogPreview";
@@ -8,10 +9,11 @@ import { Levels } from "react-activity";
 
 const BlogEditor = () => {
     const id = localStorage.getItem("blogId");
+    const { slug } = useParams();
     const navigate = useNavigate();
     const isNewBlog = !id || id === "new";
     // const { blog, isFetchingSingleBlog } = useGetBlog(id || ""); // Fetch blog from backend
-    const { blog, isFetchingSingleBlog } = useGetBlog(!isNewBlog ? id : undefined);
+    const { blog, isFetchingSingleBlog } = useGetBlog(!isNewBlog ? slug : undefined);
 
     const { editExistingBlog } = useEditBlog();
 
@@ -30,48 +32,35 @@ const BlogEditor = () => {
     // When the blog is fetched, populate form values
     useEffect(() => {
         if (blog && !isNewBlog) {
-            const newFormValues: BlogFormValues = {
+            // const newFormValues: BlogFormValues = {
+            //     title: blog.title || "",
+            //     description: blog.description || "",
+            //     dateCreated: blog.dateCreated ? blog.dateCreated.split('T')[0] : new Date().toISOString().split('T')[0],
+            //     image: blog.image || "",
+            //     category: blog.category || "",
+            //     isNew: blog.isNew ?? true, // Add isNew attribute
+            // };
+            // setFormValues(newFormValues);
+            setFormValues({
                 title: blog.title || "",
                 description: blog.description || "",
                 dateCreated: blog.dateCreated ? blog.dateCreated.split('T')[0] : new Date().toISOString().split('T')[0],
                 image: blog.image || "",
                 category: blog.category || "",
-                isNew: blog.isNew ?? true, // Add isNew attribute
-            };
-
-            setFormValues(newFormValues);
+                isNew: blog.isNew ?? true,
+              });
         }
     }, [blog, isNewBlog]);
 
 
-    const onSubmit = async (data: BlogFormValues & { imageFile?: File }) => {
-        setFormValues(data);
-
-        if (previewMode) {
-            // If in preview mode, don't submit to backend
-            return;
-        }
-
-
-
-
-        try {
-            if (isNewBlog) {
-                await createNewBlog(data);
-            } else {
-                // You probably have an `editBlog` function in your service
-                // await editExistingBlog(id, data);
-                await editExistingBlog(id as string, {
-                    ...data,
-                    image: data.imageFile ? data.image : data.image
-                });
-            }
-
-            navigate("/admin/dashboard/blogs");
-        } catch (error) {
-            console.error("Error saving blog:", error);
-        }
-    };
+    const handleSubmit = async (values : any) => {
+        if (isNewBlog) {
+            await createNewBlog(values);
+          } else {
+            await editExistingBlog(id || "", values);
+          }
+          navigate("/admin/dashboard/blogs");
+    }
 
     if (isFetchingSingleBlog && !isNewBlog) {
         return <div className="flex items-center justify-center h-full">
@@ -123,7 +112,8 @@ const BlogEditor = () => {
             ) : (
                 <BlogForm
                     defaultValues={formValues}
-                    onSubmit={onSubmit}
+                    // onSubmit={onSubmit}
+                    onSubmit={handleSubmit}
                 />
             )}
         </div>

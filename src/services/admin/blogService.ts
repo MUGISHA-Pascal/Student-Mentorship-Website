@@ -19,15 +19,15 @@ export const getBlogs = async (page = 1, limit = 20) => {
 };
 
 // Get a single blog by ID
-export const getBlog = async (blogId: string) => {
+export const getBlog = async (blogSlug: string) => {
     try {
-        const response = await apiClient.get(`/blog/get-blog/${blogId}`, {
+        const response = await apiClient.get(`/blog/get-blog/${blogSlug}`, {
             headers: getAuthHeaders(),
         });
         console.log("Single blog fetched:", response.data);
         return response.data.data;
     } catch (error) {
-        console.error(`Failed to fetch blog with ID ${blogId}:`, error);
+        console.error(`Failed to fetch blog with ID ${blogSlug}:`, error);
         throw error;
     }
 };

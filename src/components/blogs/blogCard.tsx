@@ -28,7 +28,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ blog }) => {
                     <span>{new Date(blog.dateCreated).toLocaleDateString()}</span>
                 </div>
                 <button
-                    onClick={() => navigate(`/blogs/${year}/${blog.slug}`)}
+                    onClick={() => navigate(`/blogs/${blog.slug}`)}
                     className="absolute bottom-5 bg-blue-500 font-bold text-white px-5 py-2 rounded-full hover:bg-blue-700 duration-500"
                 >
                     Read More

@@ -6,6 +6,8 @@ interface BlogPreviewProps {
 }
 
 const BlogPreview = ({ formValues }: BlogPreviewProps) => {
+    console.log("Formvalues in preview: ", formValues);
+    
     return (
         <div className="prose prose-lg max-w-none dark:prose-invert">
             <div className="text-popover-foreground">

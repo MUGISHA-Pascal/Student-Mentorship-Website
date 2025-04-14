@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import BlogCard from "@/components/blogs/blogCard";
 import { useGetBlogs } from "@/hooks/admin/useBlog";
 import { useEffect, useState } from "react";
@@ -6,32 +7,25 @@ import { useSearchParams } from "react-router-dom";
 
 
 const Blogs = () => {
-    const { blogs, isFetchingBlogs, getBlogsError, pagination } = useGetBlogs();
     const [searchParams, setSearchParams] = useSearchParams();
     const page = parseInt(searchParams.get("page") || "1", 10);
-    const blogsPerPage = 6;
+    const { blogs, isFetchingBlogs, getBlogsError, pagination } = useGetBlogs(page, 6);
 
-    const totalPages = Math.ceil(blogs.length / blogsPerPage);
-    const startIndex = (page - 1) * blogsPerPage;
-    const selectedBlogs = blogs.slice(startIndex, startIndex + blogsPerPage);
-
-    // const goToPage = (pageNumber: number) => {
-    //     setSearchParams({ page: pageNumber.toString() });
-    // };
-
+    const totalPages = pagination?.totalPages || 1;
     const [currentPage, setCurrentPage] = useState(pagination?.currentPage || 1);
 
-    const onPageChange = (newPage: number) => {
-        setCurrentPage(newPage);
-        // Re-fetch blogs based on new page
+
+    const handlePageChange = (newPage: number) => {
+        if (newPage >= 1 && newPage <= totalPages) {
+            setSearchParams({ page: newPage.toString() });
+        }
     };
 
     useEffect(() => {
-        // Only fetch blogs if pagination data is available
-        if (pagination) {
-            setCurrentPage(pagination.currentPage);
+        if (!searchParams.get("page")) {
+            setSearchParams({ page: "1" });
         }
-    }, [pagination]);
+    }, [searchParams, setSearchParams]);
 
     if (isFetchingBlogs) {
         return <div className="mt-20 flex items-center justify-center h-[450px]">
@@ -52,9 +46,15 @@ const Blogs = () => {
             <h1 className="text-2xl font-bold text-center mb-6">Latest Blogs</h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {selectedBlogs.map((blog) => (
-                    <BlogCard key={blog.id} blog={blog} />
-                ))}
+                {blogs.length > 0 ? (
+                    blogs.map((blog) => (
+                        <BlogCard key={blog.id} blog={blog} />
+                    ))
+                ) : (
+                    <div className="h-[70px] col-span-3 text-center text-muted-foreground font-semibold">
+                        No blogs found.
+                    </div>
+                )}
             </div>
 
             <div className="flex justify-between items-center mt-6">
@@ -63,21 +63,17 @@ const Blogs = () => {
                 </div>
                 <div className="flex gap-2">
                     <button
-                        // onClick={() => goToPage(page - 1)}
-                        // disabled={page === 1}
-                        onClick={() => onPageChange(currentPage - 1)}
-                        disabled={currentPage <= 1}
-                        className={`px-4 py-2 border rounded-xl font-bold ${page === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-blue-600 text-white hover:bg-blue-700"}`}
+                        onClick={() => handlePageChange(page - 1)}
+                        disabled={page <= 1}
+                        className={`px-4 py-2 border rounded-xl font-bold ${page <= 1 ? "bg-gray-300 cursor-not-allowed" : "bg-blue-600 text-white hover:bg-blue-700"}`}
                     >
                         Prev
                     </button>
                     <span className="px-4 py-2 border rounded font-bold bg-gray-100">{page} of {totalPages}</span>
                     <button
-                        // onClick={() => goToPage(page + 1)}
-                        // disabled={page === totalPages}
-                        onClick={() => onPageChange(currentPage + 1)}
-                        disabled={currentPage >= totalPages}
-                        className={`px-4 py-2 border rounded-xl font-bold ${page === totalPages ? "bg-gray-300 cursor-not-allowed" : "bg-blue-600 text-white hover:bg-blue-700"}`}
+                        onClick={() => handlePageChange(page + 1)}
+                        disabled={page >= totalPages}
+                        className={`px-4 py-2 border rounded-xl font-bold ${page >= totalPages ? "bg-gray-300 cursor-not-allowed" : "bg-blue-600 text-white hover:bg-blue-700"}`}
                     >
                         Next
                     </button>

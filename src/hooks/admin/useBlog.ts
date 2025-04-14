@@ -140,7 +140,7 @@ export const useGetBlogs = (page: number = 1, limit: number = 20) => {
 
 
 // Hook for getting a single blog
-export const useGetBlog = (blogId?: string) => {
+export const useGetBlog = (blogSlug?: string) => {
     const [blog, setBlog] = useState<any | null>(null);
     const [isFetchingSingleBlog, setIsFetchingSingleBlog] = useState<boolean>(true);
     const [getBlogError, setGetBlogError] = useState<string | null>(null);
@@ -156,13 +156,13 @@ export const useGetBlog = (blogId?: string) => {
 
     useEffect(() => {
         const fetchBlog = async () => {
-            if (!blogId) {
+            if (!blogSlug) {
                 setIsFetchingSingleBlog(false);
                 return;
             }
 
             try {
-                const data = await getBlog(blogId);
+                const data = await getBlog(blogSlug);
                 const isNew = isBlogNew(data.dateCreated);
                 setBlog({ ...data, isNew });
             } catch (err: any) {
@@ -175,7 +175,7 @@ export const useGetBlog = (blogId?: string) => {
         };
 
         fetchBlog();
-    }, [blogId]);
+    }, [blogSlug]);
 
     return { blog, isFetchingSingleBlog, getBlogError };
 };
