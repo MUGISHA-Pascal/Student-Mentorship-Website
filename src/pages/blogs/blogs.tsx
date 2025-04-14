@@ -58,8 +58,8 @@ const Blogs = () => {
             </div>
 
             <div className="flex justify-between items-center mt-6">
-                <div className="text-muted-foreground">
-                    {`Page ${currentPage} of ${totalPages}`}
+                <div className="text-muted-foreground font-bold">
+                    Page {page} of {totalPages}
                 </div>
                 <div className="flex gap-2">
                     <button
@@ -69,7 +69,6 @@ const Blogs = () => {
                     >
                         Prev
                     </button>
-                    <span className="px-4 py-2 border rounded font-bold bg-gray-100">{page} of {totalPages}</span>
                     <button
                         onClick={() => handlePageChange(page + 1)}
                         disabled={page >= totalPages}

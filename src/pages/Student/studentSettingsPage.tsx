@@ -235,7 +235,7 @@ export default function StudentSettingsPage() {
     // Add more reviews as needed
   ]
 
-  const handleSaveBio = (newBio: string) => {
+  const handleSaveBio = () => {
     // In a real application, you would send this to your backend
     // console.log("Saving new bio:", newBio)
   }
