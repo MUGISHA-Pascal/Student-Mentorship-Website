@@ -22,7 +22,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   login: async (email, password) => {
     set({ isSubmitting: true });
     try {
-      const response = await axios.post('http://localhost:3000/api/v1/auth/login', { email, password });
+      const response = await axios.post('https://api.goyoungafrica.org/api/v1/auth/login', { email, password });
       const { token, user } = response.data;
       localStorage.setItem('email', email);
       localStorage.setItem('authToken', token);
