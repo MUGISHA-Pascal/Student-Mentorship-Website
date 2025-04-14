@@ -10,7 +10,6 @@ export const getBlogs = async (page = 1, limit = 20) => {
             headers: getAuthHeaders(),
             params: { page, limit },
         });
-        console.log("Blogs fetched:", response.data);
         return response.data;
     } catch (error) {
         console.error("Failed to fetch blogs:", error);
@@ -24,7 +23,6 @@ export const getBlog = async (blogSlug: string) => {
         const response = await apiClient.get(`/blog/get-blog/${blogSlug}`, {
             headers: getAuthHeaders(),
         });
-        console.log("Single blog fetched:", response.data);
         return response.data.data;
     } catch (error) {
         console.error(`Failed to fetch blog with ID ${blogSlug}:`, error);
@@ -34,8 +32,6 @@ export const getBlog = async (blogSlug: string) => {
 
 // Create a new blog
 export const createBlog = async (blogData: any) => {
-    console.log("Blog data: ", blogData);
-    
     try {
         const formData = new FormData();
         
@@ -57,7 +53,6 @@ export const createBlog = async (blogData: any) => {
                 'Content-Type': 'multipart/form-data',
             },
         });
-        console.log("Blog created:", response.data);
         return response.data;
     } catch (error) {
         console.error("Failed to create blog:", error);
@@ -105,7 +100,6 @@ export const deleteBlog = async (blogId: string) => {
         const response = await apiClient.delete(`/blog/delete-blog/${blogId}`, {
             headers: getAuthHeaders(),
         });
-        console.log(`Blog ${blogId} deleted:`, response.data);
         return response.data;
     } catch (error) {
         console.error(`Failed to delete blog with ID ${blogId}:`, error);
@@ -120,7 +114,6 @@ export const searchBlogs = async (keyword: string) => {
             headers: getAuthHeaders(),
             params: { keyword },
         });
-        console.log(`Blogs searched with keyword "${keyword}":`, response.data);
         return response.data;
     } catch (error) {
         console.error(`Failed to search blogs with keyword "${keyword}":`, error);

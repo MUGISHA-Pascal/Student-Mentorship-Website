@@ -176,7 +176,7 @@ export default function LayoutCoach() {
 
   const onSectionChange = (section: string) => {
     // Handle section change logic here
-    console.log('Section changed:', section);
+    // console.log('Section changed:', section);
   };
 
   useEffect(() => {

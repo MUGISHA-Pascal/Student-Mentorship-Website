@@ -55,7 +55,7 @@ export const useUserStore = create<UserStore>((set) => ({
 
       let user = userResponse.data.user;
 
-      console.log("User response", userResponse.data.user);
+      // console.log("User response", userResponse.data.user);
 
       if (user.role === "MENTOR") {
         user = { ...user, role: "COACH" };
@@ -68,12 +68,12 @@ export const useUserStore = create<UserStore>((set) => ({
         }
       );
       const role = roleResponse.data;
-      console.log("Role", role);
+      // console.log("Role", role);
 
 
       // Update store
       set({ user, role, loading: false });
-      console.log("Updated user:", user);
+      // console.log("Updated user:", user);
     } catch (err) {
       if (err instanceof Error) {
         set({ error: err.message, loading: false });

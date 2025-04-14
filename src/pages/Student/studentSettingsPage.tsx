@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react'
 import { Star, MoreVertical} from 'lucide-react'
 import { Button } from "@/components/ui/button"
@@ -236,7 +237,7 @@ export default function StudentSettingsPage() {
 
   const handleSaveBio = (newBio: string) => {
     // In a real application, you would send this to your backend
-    console.log("Saving new bio:", newBio)
+    // console.log("Saving new bio:", newBio)
   }
 
   return <UserProfile userInfo={userInfo} coachInfo={coachInfo} reviews={reviews} onSaveBio={handleSaveBio} />

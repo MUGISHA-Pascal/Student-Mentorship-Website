@@ -7,7 +7,6 @@ export const getMentors = async (page = 1, limit = 20) => {
             headers: getAuthHeaders(),
             params: { page, limit },
         });
-        console.log("Data", response.data);
         return response.data;
 
     } catch (error) {
@@ -22,7 +21,6 @@ export const getApprovedMentors = async (page = 1, limit = 10) => {
             headers: getAuthHeaders(),
             params: { page, limit },
         });
-        console.log("Approved Mentors Data:", response.data);
         return response.data;
     } catch (error) {
         console.error("Failed to fetch approved mentors:", error);
@@ -37,7 +35,6 @@ export const getPendingMentors = async (page = 1, limit = 10) => {
             headers: getAuthHeaders(),
             params: { page, limit },
         });
-        console.log("Pending Mentors Data:", response.data);
         return response.data;
     } catch (error) {
         console.error("Failed to fetch pending mentors:", error);

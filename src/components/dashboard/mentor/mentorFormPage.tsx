@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 const MentorFormPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const { email } = useAuthStore();
-    console.log("Email in jotform", email);
+    // console.log("Email in jotform", email);
 
     const { submitForm, success, loading: submitting } = useSubmitJotForm();
     const navigate = useNavigate();

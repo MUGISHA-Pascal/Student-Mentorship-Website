@@ -163,7 +163,7 @@ export default function AdminStudentsPage() {
       setPendingPage(newPage);
       setPendingStudents(pendingStudents)
       setIsLoadingNextPage(false);
-      console.log(`Approved page after changing to page ${newPage}`, pendingStudents);
+      // console.log(`Approved page after changing to page ${newPage}`, pendingStudents);
     }
   };
 

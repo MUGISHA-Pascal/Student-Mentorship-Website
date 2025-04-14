@@ -13,7 +13,7 @@ const AdminBlogsPage = () => {
 
   // const [blogs, setBlogs] = useState<Blog[]>(initialBlogs);
   const { blogs, isFetchingBlogs, getBlogsError, pagination, refetch } = useGetBlogs();
-  console.log("Blogs: ", blogs);
+  // console.log("Blogs: ", blogs);
 
   const { deleteExistingBlog, isDeletingBlog } = useDeleteBlog();
 

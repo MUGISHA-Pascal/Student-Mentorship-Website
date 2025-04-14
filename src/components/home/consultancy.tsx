@@ -44,7 +44,7 @@ const Consultancy = () => {
 
             if (response.ok) {
                 setIsSubmitting(false);
-                console.log('Su submitted successfully!');
+                // console.log('Su submitted successfully!');
                 setFormData({
                     name: '',
                     email: '',

@@ -32,7 +32,7 @@ const Forgot = () => {
     const handleOTPVerification = async () => {
         setIsSubmitting(true);
         try {
-            console.log("The otp is ", otp);
+            // console.log("The otp is ", otp);
 
             if (!otp) {
                 toast.error('Please enter OTP');
@@ -47,7 +47,7 @@ const Forgot = () => {
             }
         } catch (error) {
             toast.error('Failed to verify OTP error');
-            console.log("Error while verifying otp", error);
+            // console.log("Error while verifying otp", error);
         } finally {
             setIsSubmitting(false);
         }
@@ -77,7 +77,7 @@ const Forgot = () => {
 
     const handleNewPassword = async (newPassword: string) => {
         setIsSubmitting(true);
-        console.log('Email:', email);
+        // console.log('Email:', email);
         try {
             // const response = 
             await axios.patch('https://api.goyoungafrica.org/api/v1/user/update-password', {

@@ -42,9 +42,6 @@ const BlogForm = ({ defaultValues, onSubmit }: BlogFormProps) => {
         defaultValues,
     });
 
-    console.log("default values: ", defaultValues);
-
-
     // For markdown editor toolbar functions
     const insertMarkdown = (start: string, end: string = '') => {
         const textarea = document.getElementById('description') as HTMLTextAreaElement;

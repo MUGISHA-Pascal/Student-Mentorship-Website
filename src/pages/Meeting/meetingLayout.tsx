@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // import { useCall, CallingState, useCallStateHooks } from '@stream-io/video-react-sdk';
 // // import useMeetingState from '@/hooks/meeting/useMeetingState';
 
@@ -262,7 +263,7 @@ const initializeClient = async (): Promise<{ client: StreamVideoClient; callId: 
   }
 
   const token = await fetchToken(user?.id);
-  console.log('Generated token:', token);
+  // console.log('Generated token:', token);
 
 
   const userObject: User = {
@@ -281,11 +282,11 @@ const initializeClient = async (): Promise<{ client: StreamVideoClient; callId: 
   // const call = client.call('default', callId);
   // await call.join({ create: true });
   const call = client.call('default', callId);
-  console.log('Call state before join:', call.state);
+  // console.log('Call state before join:', call.state);
   try {
     const joinResult = await call.join({ create: true });
-    console.log('Join result:', joinResult);
-    console.log('Call state after join:', call.state);
+    // console.log('Join result:', joinResult);
+    // console.log('Call state after join:', call.state);
   } catch (error) {
     console.error('Error during call.join:', error);
   }
@@ -330,7 +331,7 @@ export const MyUILayout = () => {
   const callingState = useCallCallingState();
 
   if (callingState !== CallingState.JOINED) {
-    console.log('Current calling state:', callingState);
+    // console.log('Current calling state:', callingState);
     return <div>Connecting to the call...</div>;
   }
 

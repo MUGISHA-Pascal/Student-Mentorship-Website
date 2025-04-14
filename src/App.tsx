@@ -83,7 +83,7 @@ const Layout: React.FC<LayoutProps> = ({
 
 const ProtectedRoute = ({ element }: { element: ReactNode }) => {
   const isAuthenticated = useAuthStore((state: { isAuthenticated: any; }) => state.isAuthenticated);
-  console.log('isAuthenticated:', isAuthenticated);
+  // console.log('isAuthenticated:', isAuthenticated);
   useEffect(() => {
     if (!isAuthenticated) {
       toast.error('You must be logged in to access that page!', {

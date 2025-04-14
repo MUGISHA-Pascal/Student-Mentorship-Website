@@ -137,7 +137,7 @@ export default function AdminMentorsPage() {
 
   const handleApprovedPageChange = async (newPage: number) => {
     if (newPage > 0 && newPage <= totalApprovedPages) {
-      console.log(`Changing to page ${newPage}`);
+      // console.log(`Changing to page ${newPage}`);
       setIsLoadingNextPage(true);
       setApprovedPage(newPage);
       setIsLoadingNextPage(false);
@@ -146,12 +146,12 @@ export default function AdminMentorsPage() {
 
   const handleWaitlistPageChange = async (newPage: number) => {
     if (newPage > 0 && newPage <= totalPendingPages) {
-      console.log(`Changing to page ${newPage}`);
+      // console.log(`Changing to page ${newPage}`);
       setIsLoadingNextPage(true);
       setPendingPage(newPage);
       setPendingMentors(pendingMentors)
       setIsLoadingNextPage(false);
-      console.log(`Approved page after changing to page ${newPage}`, pendingMentors);
+      // console.log(`Approved page after changing to page ${newPage}`, pendingMentors);
     }
   };
 

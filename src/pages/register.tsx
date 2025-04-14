@@ -45,13 +45,13 @@ const Register: React.FC = () => {
 
     try {
       const payload = { firstName, lastName, email, dob, gender, password, role };
-      console.log(payload);
+      // console.log(payload);
 
       // const response = await axios.post('https://api.goyoungafrica.org/api/v1/auth/register', payload);
       const response = await axios.post('https://api.goyoungafrica.org/api/v1/auth/register', payload);
       // const { user } = response.data;
 
-      console.log(response.data);
+      // console.log(response.data);
       toast.success("Registered successfully!", { position: "top-right", autoClose: 5000 });
       navigate('/login');
     } catch (error: any) {

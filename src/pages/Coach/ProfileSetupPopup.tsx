@@ -159,24 +159,24 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
     setLoading(true);
     const formData = new FormData();
     formData.append("bio", bio);
-    console.log(bio);
+    // console.log(bio);
 
     if (image) formData.append("image", image);
-    console.log(image);
+    // console.log(image);
 
     if (selectedCareers.length === 1)
       formData.append("career", selectedCareers[0]); // Changed from `careerIds` to `career`
-    console.log("career", selectedCareers[0]);
+    // console.log("career", selectedCareers[0]);
 
     if (experienceTimeline.length)
       formData.append("workExperience", JSON.stringify(experienceTimeline));
-    console.log("Timeline", experienceTimeline);
+    // console.log("Timeline", experienceTimeline);
 
     if (selectedFile) formData.append("cv", selectedFile);
-    console.log(image);
+    // console.log(image);
 
     try {
-      console.log("Updating data: ", formData);
+      // console.log("Updating data: ", formData);
 
       await axios.put(
         `https://api.goyoungafrica.org/api/v1/coach/coaches/${userId}`,
@@ -191,7 +191,7 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
       navigate("/mentor/waiting")
     } catch (error) {
       toast.error("Failed to update profile.");
-      console.log("Error while updating profile: ", error);
+      // console.log("Error while updating profile: ", error);
     } finally {
       setLoading(false);
     }
