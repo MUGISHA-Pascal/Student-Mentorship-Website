@@ -10,7 +10,7 @@ import Intro from "../components/home/intro";
 
 const Home = () => {
     return (
-        <div className="relative overflow-x-hidden overflow-y-hidden">
+        <div className="mt-24 relative overflow-x-hidden overflow-y-hidden">
             <Intro />
             <Partners />
             <Services />
