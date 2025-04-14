@@ -52,7 +52,6 @@ const BlogEditor = () => {
         }
     }, [blog, isNewBlog]);
 
-
     const handleSubmit = async (values : any) => {
         if (isNewBlog) {
             await createNewBlog(values);
@@ -112,7 +111,6 @@ const BlogEditor = () => {
             ) : (
                 <BlogForm
                     defaultValues={formValues}
-                    // onSubmit={onSubmit}
                     onSubmit={handleSubmit}
                 />
             )}

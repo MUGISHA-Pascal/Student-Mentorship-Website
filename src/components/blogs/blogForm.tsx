@@ -84,7 +84,6 @@ const BlogForm = ({ defaultValues, onSubmit }: BlogFormProps) => {
             ...data,
             imageFile,
         };
-
         onSubmit(finalData);
     });
 
@@ -153,6 +152,7 @@ const BlogForm = ({ defaultValues, onSubmit }: BlogFormProps) => {
                                     onChange={(preview, file) => {
                                         field.onChange(preview);
                                         setImageFile(file || null);
+                                        form.setValue('image', preview);
                                     }}
                                 />
                             </FormControl>

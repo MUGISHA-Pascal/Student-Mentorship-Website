@@ -6,8 +6,7 @@ interface BlogPreviewProps {
 }
 
 const BlogPreview = ({ formValues }: BlogPreviewProps) => {
-    console.log("Formvalues in preview: ", formValues);
-    
+
     return (
         <div className="prose prose-lg max-w-none dark:prose-invert">
             <div className="text-popover-foreground">
@@ -32,6 +31,22 @@ const BlogPreview = ({ formValues }: BlogPreviewProps) => {
                     className="w-full h-[500px] object-cover rounded-lg mb-6"
                 />
             )}
+
+
+
+
+            <div className="relative group">
+                {!formValues.image && (
+                    <img
+                        src={"/icons/logo-b.svg"}
+                        alt={formValues.title}
+                        className="w-full h-[500px] object-contain rounded-lg mb-6 bg-muted px-5"
+                    />
+                )}
+                <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 rounded-lg group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <h2 className='text-white text-lg font-semibold'>Your image will appear here!</h2>
+                </div>
+            </div>
             <article className="prose prose-lg max-w-none pb-16 text-base">
                 <ReactMarkdown
                     components={{
@@ -42,7 +57,7 @@ const BlogPreview = ({ formValues }: BlogPreviewProps) => {
                         ul: ({ ...props }) => <ul className="list-disc ml-6 my-4" {...props} />,
                         ol: ({ ...props }) => <ol className="list-decimal ml-6 my-4" {...props} />,
                         li: ({ ...props }) => <li className="my-2" {...props} />,
-                        a: ({ ...props }) => <a className="text-primary underline" {...props}/>,
+                        a: ({ ...props }) => <a className="text-primary underline" {...props} />,
                         strong: ({ ...props }) => <strong className="font-bold" {...props} />,
                         blockquote: ({ ...props }) => (
                             <blockquote className="border-l-4 border-blue-500 pl-4 italic my-6 text-gray-700" {...props} />
