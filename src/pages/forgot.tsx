@@ -19,7 +19,7 @@ const Forgot = () => {
         setIsSubmitting(true);
         try {
             // const response =
-            await axios.post('https://api.goyoungafrica.org/api/v1/user/generate-otp', { email });
+            await axios.post('http://localhost:3000/api/v1/user/generate-otp', { email });
             toast.success('OTP sent successfully');
             setCurrentScreen('otpVerification');
         } catch (error) {
@@ -38,7 +38,7 @@ const Forgot = () => {
                 toast.error('Please enter OTP');
                 return;
             }
-            const response = await axios.get(`https://api.goyoungafrica.org/api/v1/user/verify-otp?otp=${otp}`);
+            const response = await axios.get(`http://localhost:3000/api/v1/user/verify-otp?otp=${otp}`);
             if (response.status === 200) {
                 toast.success('OTP verified successfully');
                 setCurrentScreen('newPassword');
@@ -57,7 +57,7 @@ const Forgot = () => {
         setIsSubmitting(true);
         try {
             // const response = 
-            await axios.post('https://api.goyoungafrica.org/api/v1/user/generate-otp', { email });
+            await axios.post('http://localhost:3000/api/v1/user/generate-otp', { email });
             toast.success('OTP resent successfully');
         } catch (error) {
             toast.error('Failed to resend OTP');
@@ -80,7 +80,7 @@ const Forgot = () => {
         // console.log('Email:', email);
         try {
             // const response = 
-            await axios.patch('https://api.goyoungafrica.org/api/v1/user/update-password', {
+            await axios.patch('http://localhost:3000/api/v1/user/update-password', {
                 email,
                 password: newPassword
             });

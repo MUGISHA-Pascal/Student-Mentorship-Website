@@ -74,7 +74,7 @@ const NewProfileSetupPopup: React.FC<{
       setLoadingState(true);
       try {
         const response = await axios.get(
-          "https://api.goyoungafrica.org/api/v1/student/careers"
+          "http://localhost:3000/api/v1/student/careers"
         );
         setCourses(response.data);
         setLoadingState(false);
@@ -117,7 +117,7 @@ const NewProfileSetupPopup: React.FC<{
     }
     try {
       await axios.put(
-        `https://api.goyoungafrica.org/api/v1/student/update/${user!.id}`,
+        `http://localhost:3000/api/v1/student/update/${user!.id}`,
         formData,
         {
           headers: {
@@ -156,7 +156,7 @@ const NewProfileSetupPopup: React.FC<{
   // const fetchMentors = async (careerId: string) => {
   //   try {
   //     const response = await axios.get(
-  //       `https://api.goyoungafrica.org/api/v1/student/careers/mentors/${careerId}`
+  //       `http://localhost:3000/api/v1/student/careers/mentors/${careerId}`
   //     );
   //     const data = await response.data.data;
   //     const formatYearPeriod = (startDate: string, endDate: string | null) => {
@@ -235,7 +235,7 @@ const NewProfileSetupPopup: React.FC<{
   const sendRequest = async (studentId: string, coachId: string) => {
     try {
       const response = await axios.put(
-        "https://api.goyoungafrica.org/api/v1/student/sendRequest",
+        "http://localhost:3000/api/v1/student/sendRequest",
         {
           studentId: studentId,
           coachId: coachId,
@@ -260,7 +260,7 @@ const NewProfileSetupPopup: React.FC<{
     }
 
     try {
-      const response = await axios.post("https://api.goyoungafrica.org/api/v1/student/enroll", {
+      const response = await axios.post("http://localhost:3000/api/v1/student/enroll", {
         studentId: role.id,
         careerId: careerId,
       });

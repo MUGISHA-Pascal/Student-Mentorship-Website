@@ -33,7 +33,7 @@ const Consultancy = () => {
 
         try {
             // Send form data to the custom backend API
-            const response = await fetch('https://api.goyoungafrica.org/api/v1/subscription/consultancy-request', {
+            const response = await fetch('http://localhost:3000/api/v1/subscription/consultancy-request', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

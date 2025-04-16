@@ -49,7 +49,7 @@ export const useUserStore = create<UserStore>((set) => ({
       if (!token) throw new Error("No auth token found.");
 
       // Fetch user info
-      const userResponse = await axios.get("https://api.goyoungafrica.org/api/v1/user", {
+      const userResponse = await axios.get("http://localhost:3000/api/v1/user", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -62,7 +62,7 @@ export const useUserStore = create<UserStore>((set) => ({
       }
       // Fetch role-specific data
       const roleResponse = await axios.get(
-        `https://api.goyoungafrica.org/api/v1/user/get-entity?table=${user.role.toLowerCase()}`,
+        `http://localhost:3000/api/v1/user/get-entity?table=${user.role.toLowerCase()}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

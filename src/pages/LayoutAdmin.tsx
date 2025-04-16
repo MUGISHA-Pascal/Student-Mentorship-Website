@@ -176,7 +176,7 @@ export default function LayoutAdmin() {
       try {
         const token = localStorage.getItem('authToken');
         if (!token) throw new Error('Token not found');
-        const response = await axios.get('https://api.goyoungafrica.org/api/v1/user', {
+        const response = await axios.get('http://localhost:3000/api/v1/user', {
           headers: { Authorization: `Bearer ${token}` },
         });
 

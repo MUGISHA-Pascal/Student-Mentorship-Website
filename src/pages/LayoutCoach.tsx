@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { initializeMeetingClient } from './Meeting/meetingProvider'
 import { StreamVideoClient } from '@stream-io/video-react-sdk';
 import { useUserStore } from '@/store/userStore'
+import NewMeetingDialog from '@/components/dashboard/meeting/newMeetingDialog'
 
 const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange }: { expanded: boolean; setExpanded: (expanded: boolean) => void; activeSection: string; onSectionChange: (section: string) => void }) => {
 
@@ -79,6 +80,7 @@ function SidebarLink({ icon, label, to, isActive, badge, onClick, expanded }: { 
 }
 
 function Header({ title }: { title: string }) {
+  const [isMeetingDialogOpen, setIsMeetingDialogOpen] = useState(false);
   const [
     // client
     , setClient] = useState<StreamVideoClient | null>(null);
@@ -117,7 +119,7 @@ function Header({ title }: { title: string }) {
         >
           <Video className="w-6 h-6 text-destructive" />
         </button> */}
-        <Dialog>
+        {/* <Dialog>
           <DialogTrigger asChild>
             <button className="p-2 bg-background rounded-full shadow-sm border border-border">
               <Video className="w-6 h-6 text-destructive" />
@@ -153,7 +155,18 @@ function Header({ title }: { title: string }) {
               </Button>
             </div>
           </DialogContent>
-        </Dialog>
+        </Dialog> */}
+        <NewMeetingDialog
+          trigger={
+            <button
+              onClick={() => setIsMeetingDialogOpen(true)}
+              className="p-2 bg-background rounded-full shadow-sm border border-border"
+            >
+              <Video className="w-6 h-6 text-destructive" />
+            </button>
+          }
+        />
+
         <Button variant="default" className="text-primary-foreground bg-primary hover:bg-primary/90">
           <Plus className="mr-2 h-4 w-4" />New Action
         </Button>
@@ -187,7 +200,7 @@ export default function LayoutCoach() {
         // console.log("The token is ", token);
 
 
-        const response = await axios.get('https://api.goyoungafrica.org/api/v1/user', {
+        const response = await axios.get('http://localhost:3000/api/v1/user', {
           headers: { Authorization: `Bearer ${token}` },
         });
 

@@ -88,7 +88,7 @@ const UploadModal = ({ isOpen, onClose, userId, onCourseUploaded }: { isOpen: bo
                 prev.map((f) => ({ ...f, status: 'uploading', progress: 0 }))
             );
 
-            await axios.post('https://api.goyoungafrica.org/api/v1/document/upload-course-doc', formData, {
+            await axios.post('http://localhost:3000/api/v1/document/upload-course-doc', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
                 onUploadProgress: (progressEvent) => {
                     if (progressEvent.total && progressEvent.loaded) {

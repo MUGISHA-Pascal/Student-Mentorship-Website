@@ -125,7 +125,7 @@ export default function LayoutStudent() {
         // console.log("The token is ", token);
 
 
-        const response = await axios.get('https://api.goyoungafrica.org/api/v1/user', {
+        const response = await axios.get('http://localhost:3000/api/v1/user', {
           headers: { Authorization: `Bearer ${token}` },
         });
 

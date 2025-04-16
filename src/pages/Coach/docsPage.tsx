@@ -53,13 +53,13 @@ export default function StudentDocsPage() {
   const fetchDocuments = async () => {
     if (!userId) return;
     try {
-      const response = await axios.get(`https://api.goyoungafrica.org/api/v1/document/get-course-docs/${userId}`);
+      const response = await axios.get(`http://localhost:3000/api/v1/document/get-course-docs/${userId}`);
       const docs = response.data.map((doc: { course: { name: string, id: string }; fileType: string; fileName: string; uploadDate: string }): Course => ({
         id: doc.course.id,
         title: doc.course?.name || 'Untitled',
         image: doc.fileType.startsWith('video') ? '/svgs/video_course.svg' : '/svgs/file_course.svg',
         extension: doc.fileType.split('/').pop()?.toUpperCase(),
-        downloadLink: `https://api.goyoungafrica.org/api/v1/document/download-course-doc/${doc.fileName}`,
+        downloadLink: `http://localhost:3000/api/v1/document/download-course-doc/${doc.fileName}`,
         courseType: doc.fileType.startsWith('video') ? 'video' : 'file',
         dateCreated: doc.uploadDate,
       }));
@@ -96,7 +96,7 @@ export default function StudentDocsPage() {
 
   const handleDeleteDocument = async (documentId: string) => {
     try {
-      await axios.delete(`https://api.goyoungafrica.org/api/v1/document/delete-course-doc/${documentId}`);
+      await axios.delete(`http://localhost:3000/api/v1/document/delete-course-doc/${documentId}`);
 
       // Remove the deleted course from the state
       setCourses((prevCourses) =>
