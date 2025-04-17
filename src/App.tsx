@@ -48,6 +48,9 @@ import Blogs from "./pages/blogs/blogs";
 import Blog from "./pages/blogs/blog";
 import AdminBlogsPage from "./pages/Admin/adminBlogsPage";
 import BlogEditor from "./pages/Admin/blogs/blogEditor";
+import CoachMeetingsPage from "./pages/Coach/coachMeetingsPage";
+import Meeting from "./pages/Meeting/meeting";
+import StreamVideoProvider from "./providers/streamClientProvider";
 
 interface LayoutProps {
   children: ReactNode;
@@ -160,7 +163,7 @@ const App = () => {
             </Layout>
           }
         />
-        <Route  path="/blogs/:slug"
+        <Route path="/blogs/:slug"
           element={
             <Layout>
               <Blog />
@@ -189,6 +192,24 @@ const App = () => {
           <Route index element={<HomePage />} />
           <Route path="students" element={<StudentsPage />} />
           <Route path="calendar" element={<CalendarPage />} />
+          {/* <Route path="meetings" element={<CoachMeetingsPage />} /> */}
+          <Route
+            path="meetings"
+            element={
+              <StreamVideoProvider>
+                <CoachMeetingsPage />
+              </StreamVideoProvider>
+            }
+          />
+          {/* <Route path="meeting/:id" element={<Meeting />} /> */}
+          <Route
+            path="meeting/:id"
+            element={
+              <StreamVideoProvider>
+                <Meeting />
+              </StreamVideoProvider>
+            }
+          />
           <Route path="chats" element={<ChatsPage />} />
           <Route path="docs" element={<DocsPage />} />
           <Route path="settings" element={<SettingsPage />} />
