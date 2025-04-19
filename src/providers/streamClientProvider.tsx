@@ -15,15 +15,15 @@ const StreamVideoProvider = ({ children }: { children: ReactNode }) => {
     const [videoClient, setVideoClient] = useState<StreamVideoClient>();
 
     const { user, fetchUser, loading } = useUserStore();
-        console.log('user:', user);
-        
-        const userId = user?.id || null;
-    
-        useEffect(() => {
-            if (!userId) {
-                fetchUser();
-            }
-        }, [userId, fetchUser]);
+    console.log('user:', user);
+
+    const userId = user?.id || null;
+
+    useEffect(() => {
+        if (!userId) {
+            fetchUser();
+        }
+    }, [userId, fetchUser]);
     const { fetchStreamToken } = useStreamToken();
 
     useEffect(() => {
@@ -42,7 +42,10 @@ const StreamVideoProvider = ({ children }: { children: ReactNode }) => {
         setVideoClient(client);
     }, [user, loading, fetchStreamToken]);
 
-    if(!videoClient) return <Levels />
+    if (!videoClient) return
+    <div className='w-full h-full flex items-center justify-center'>
+        <Levels speed={0.5} />
+    </div>;
     return (
         <StreamVideo client={videoClient}>
             {children}

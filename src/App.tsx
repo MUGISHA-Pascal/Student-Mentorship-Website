@@ -51,6 +51,7 @@ import BlogEditor from "./pages/Admin/blogs/blogEditor";
 import CoachMeetingsPage from "./pages/Coach/coachMeetingsPage";
 import Meeting from "./pages/Meeting/meeting";
 import StreamVideoProvider from "./providers/streamClientProvider";
+import StudentsMeetingsPage from "./pages/Student/studentMeetingsPage";
 
 interface LayoutProps {
   children: ReactNode;
@@ -183,6 +184,24 @@ const App = () => {
           <Route path="docs" element={<StudentDocsPage />} />
           <Route path="calendar" element={<StudentCalendarPage />} />
           <Route path="settings" element={<StudentSettingsPage />} />
+
+          <Route
+            path="meetings"
+            element={
+              <StreamVideoProvider>
+                <StudentsMeetingsPage />
+              </StreamVideoProvider>
+            }
+          />
+          {/* <Route path="meeting/:id" element={<Meeting />} /> */}
+          <Route
+            path="meeting/:id"
+            element={
+              <StreamVideoProvider>
+                <Meeting />
+              </StreamVideoProvider>
+            }
+          />
         </Route>
 
         <Route path="student/welcome" element={<ProtectedRoute element={<StudentWaitingPage />} />} />

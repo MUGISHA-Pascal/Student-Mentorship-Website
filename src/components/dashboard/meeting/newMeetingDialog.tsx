@@ -1,35 +1,41 @@
 import {
     Dialog,
     DialogContent,
-    DialogHeader,
-    DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock } from "lucide-react";
+import { Link} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import MeetingModal from "../mentor/meetings/meetingModal";
+import { Input } from "@/components/ui/input";
+import { useUserStore } from "@/store/userStore";
 
 interface NewMeetingDialogProps {
     trigger?: React.ReactNode;
 }
 
+const initialValues = {
+    dateTime: new Date(),
+    description: '',
+    link: '',
+};
+
 const NewMeetingDialog = ({ trigger }: NewMeetingDialogProps) => {
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
+    const [meetingState, setMeetingState] = useState<'isScheduleMeeting' | 'isJoiningMeeting' | 'isInstantMeeting' | undefined
+    >(undefined);
+    const [values, setValues] = useState(initialValues);
+    const { user } = useUserStore();
 
-    const createInstantMeeting = () => {
+    const handleIsJoiningMeeting = () => {
         setOpen(false);
-        navigate("/admin/meeting/new?instant=true");
-    };
-
-    const scheduleMeeting = () => {
-        setOpen(false);
-        navigate("/admin/meeting/new");
+        setMeetingState('isJoiningMeeting');
     };
 
     return (
-        <Dialog open={open} onOpenChange={setOpen} >
+        <Dialog open={open} onOpenChange={setOpen}>
             {open && (
                 <div className="fixed inset-0 bg-black/50 z-40" />
             )}
@@ -37,39 +43,47 @@ const NewMeetingDialog = ({ trigger }: NewMeetingDialogProps) => {
                 {trigger}
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
-                <DialogHeader>
+                {/* <DialogHeader>
                     <DialogTitle>Create a Meeting</DialogTitle>
-                </DialogHeader>
+                </DialogHeader> */}
                 <div className="grid grid-cols-1 gap-4 py-4">
                     <Button
-                        onClick={createInstantMeeting}
+                        onClick={handleIsJoiningMeeting}
                         className="flex items-center justify-start gap-3 h-auto py-6 text-left"
                         variant="outline"
                     >
-                        <Clock className="h-8 w-8 text-blue-500" />
-                        <div>
-                            <h3 className="font-semibold text-lg mb-1">Instant Meeting</h3>
-                            <p className="text-sm text-muted-foreground">
-                                Start a meeting right now
-                            </p>
+                        <div className="flex items-center justify-center bg-muted size-10 rounded-xl">
+                            <Link size={27} />
                         </div>
-                    </Button>
-
-                    <Button
-                        onClick={scheduleMeeting}
-                        className="flex items-center justify-start gap-3 h-auto py-6 text-left"
-                        variant="outline"
-                    >
-                        <Calendar className="h-8 w-8 text-green-500" />
                         <div>
-                            <h3 className="font-semibold text-lg mb-1">Schedule for Later</h3>
+                            <h3 className="font-semibold text-lg mb-1">Join A Meeting</h3>
                             <p className="text-sm text-muted-foreground">
-                                Plan a meeting for a future date and time
+                                Via Invitation link
                             </p>
                         </div>
                     </Button>
                 </div>
             </DialogContent>
+            <MeetingModal
+                isOpen={meetingState === 'isJoiningMeeting'}
+                onClose={() => setMeetingState(undefined)}
+                title="Type the link here"
+                className="text-center"
+                buttonText="Join Meeting"
+                // handleClick={() => navigate(values.link)}
+                handleClick={() => {
+                    const meetingId = values.link.split('/').pop(); // Extract UUID from full link
+                    let role = user?.role?.toLowerCase() || 'student'; // default fallback                  
+                    if (role === 'coach') role = 'mentor'; // normalize 'coach' to 'mentor'                  
+                    navigate(`/${role}/dashboard/meeting/${meetingId}`);
+                }}
+            >
+                <Input
+                    placeholder="Meeting link"
+                    className="border-none bg-popover focus-visible:ring-0 focus-visible:ring-offset-0"
+                    onChange={(e) => setValues({ ...values, link: e.target.value })}
+                />
+            </MeetingModal>
         </Dialog>
     );
 };
