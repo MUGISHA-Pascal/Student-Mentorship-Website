@@ -184,16 +184,30 @@ export default function LayoutCoach() {
     return titles[path as keyof typeof titles] || 'Dashboard'
   }
 
+  // const isInMeeting = location.pathname.startsWith('/meeting/');
+  const isInMeeting = location.pathname.includes('/meeting/');
+
+
+
   return (
     <div className="flex h-screen bg-background text-foreground">
+      {/* <Sidebar
+        expanded={expanded}
+        setExpanded={setExpanded}
+        activeSection={location.pathname}
+        onSectionChange={onSectionChange}
+      /> */}
+      {!isInMeeting && (
       <Sidebar
         expanded={expanded}
         setExpanded={setExpanded}
         activeSection={location.pathname}
         onSectionChange={onSectionChange}
       />
+    )}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Header title={getTitle(location.pathname)} />
+        {/* <Header title={getTitle(location.pathname)} /> */}
+        {!isInMeeting && <Header title={getTitle(location.pathname)} />}
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-4">
           <Outlet />
         </main>

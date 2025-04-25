@@ -23,7 +23,10 @@ const Meeting = () => {
     const [isSetupComplete, setIsSetupComplete] = useState(false);
     const { call, isCallLoading } = useGetCallById(id ?? '');
 
-    if (loading || !user || isCallLoading) return <Levels />;
+    if (loading || !user || isCallLoading) return
+    <div className='w-full h-full flex items-center justify-center'>
+        <Levels speed={0.9} />
+    </div>;
 
     return (
         <main className="h-screen w-full">
