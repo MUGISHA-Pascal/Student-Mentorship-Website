@@ -26,7 +26,7 @@ const MeetingTypeList = () => {
     // const { user } = useUser();
     const { user, fetchUser } = useUserStore();
     // console.log('user:', user);
-    
+
     const userId = user?.id || null;
 
     useEffect(() => {
@@ -84,9 +84,14 @@ const MeetingTypeList = () => {
         }
     }
 
-    const meetingLink = `http://localhost:3000/api/v1/meeting/${callDetails?.id}`;
+    // const meetingLink = `http://localhost:3000/api/v1/meeting/${callDetails?.id}`;
+    const role = user?.role; // e.g., "mentor" or "student"
+    const baseURL = window.location.origin; // Automatically gets http://localhost:5173
+    const meetingLink = `${baseURL}/${role}/dashboard/meeting/${callDetails?.id}`;
+
+
     return (
-        <section className='grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4'>
+        <section className='grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3'>
             <HomeCard
                 icon='Plus'
                 title="New Meeting"
@@ -105,12 +110,12 @@ const MeetingTypeList = () => {
                 description="Plan your meeting"
                 handleClick={() => setMeetingState('isScheduleMeeting')}
             />
-            <HomeCard
+            {/* <HomeCard
                 icon='Video'
                 title="View Recordings"
                 description="Meeting Recordings"
                 handleClick={() => navigate('/recordings')}
-            />
+            /> */}
 
             {!callDetails ? (
                 <MeetingModal
@@ -124,7 +129,7 @@ const MeetingTypeList = () => {
                             Add a description
                         </label>
                         <Textarea
-                            className="border-none bg-dark-3 focus-visible:ring-0 focus-visible:ring-offset-0"
+                            className="border-none bg-popover focus-visible:ring-0 focus-visible:ring-offset-0"
                             onChange={(e) =>
                                 setValues({ ...values, description: e.target.value })
                             }
@@ -142,7 +147,7 @@ const MeetingTypeList = () => {
                             timeIntervals={15}
                             timeCaption="time"
                             dateFormat="MMMM d, yyyy h:mm aa"
-                            className="w-full rounded bg-dark-3 p-2 focus:outline-none"
+                            className="w-full rounded bg-popover p-2 focus:outline-none"
                         />
                     </div>
                 </MeetingModal>
@@ -177,11 +182,19 @@ const MeetingTypeList = () => {
                 title="Type the link here"
                 className="text-center"
                 buttonText="Join Meeting"
-                handleClick={() => navigate(values.link)}
+                // handleClick={() => navigate(values.link)}
+                handleClick={() => {
+                    const meetingId = values.link.split('/').pop(); // Extract UUID from full link
+                    let role = user?.role?.toLowerCase() || 'student'; // default fallback                  
+                    if (role === 'coach') role = 'mentor'; // normalize 'coach' to 'mentor'                  
+                    navigate(`/${role}/dashboard/meeting/${meetingId}`);
+                  }}
+                  
+                  
             >
                 <Input
                     placeholder="Meeting link"
-                    className="border-none bg-dark-3 focus-visible:ring-0 focus-visible:ring-offset-0"
+                    className="border-none bg-popover focus-visible:ring-0 focus-visible:ring-offset-0"
                     onChange={(e) => setValues({ ...values, link: e.target.value })}
                 />
             </MeetingModal>

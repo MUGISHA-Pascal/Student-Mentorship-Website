@@ -10,7 +10,7 @@ interface MeetingModalProps {
     title: string;
     className?: string;
     children?: ReactNode;
-    handleClick?: () => void;
+    handleClick?: () => void | Promise<void>;
     buttonText?: string;
     instantMeeting?: boolean;
     image?: string;
@@ -55,7 +55,7 @@ const MeetingModal = ({
                     {children}
                     <Button
                         className={
-                            "focus-visible:ring-0 focus-visible:ring-offset-0"
+                            "focus-visible:ring-0 focus-visible:ring-offset-0 text-popover-foreground rounded-full"
                         }
                         onClick={handleClick}
                     >

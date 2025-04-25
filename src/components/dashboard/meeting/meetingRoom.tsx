@@ -36,7 +36,10 @@ const MeetingRoom = () => {
   // for more detail about types of CallingState see: https://getstream.io/video/docs/react/ui-cookbook/ringing-call/#incoming-call-panel
   const callingState = useCallCallingState();
 
-  if (callingState !== CallingState.JOINED) return <Levels />;
+  if (callingState !== CallingState.JOINED) return
+  <div className='w-full h-full flex items-center justify-center'>
+    <Levels speed={0.5} />
+  </div>;
 
   const CallLayout = () => {
     switch (layout) {
@@ -51,8 +54,12 @@ const MeetingRoom = () => {
 
   return (
     <section className="relative h-screen w-full overflow-hidden pt-4 text-white">
+      {/* Logo in top-left */}
+      {/* <div className="absolute top-4 left-4 z-50">
+        <img src="/icons/logo.svg" alt="Logo" className="" />
+      </div> */}
       <div className="relative flex size-full items-center justify-center">
-        <div className=" flex size-full max-w-[1000px] items-center">
+        <div className=" flex size-full max-w-[1200px] items-center">
           <CallLayout />
         </div>
         <div
