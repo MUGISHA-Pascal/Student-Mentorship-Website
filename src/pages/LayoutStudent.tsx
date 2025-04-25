@@ -5,6 +5,7 @@ import { Video, BellDot, Home, Users, Calendar, MessageSquare, FileText } from '
 import axios from 'axios'
 import StudentProfilSetup from './Student/StudentProfilSetup'
 import DarkModeToggle from './DarkModeToggle'
+import NewMeetingDialog from '@/components/dashboard/meeting/newMeetingDialog'
 
 const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange }: { expanded: boolean; setExpanded: (expanded: boolean) => void; activeSection: string; onSectionChange: (section: string) => void }) => {
 
@@ -40,6 +41,7 @@ const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange }: { ex
         <SidebarLink icon={<Home />} label="Home" isActive={activeSection === '/student/dashboard'} onClick={() => onSectionChange('/student/dashboard')} to="/student/dashboard" expanded={expanded} />
         <SidebarLink icon={<Users />} label="Mentor" isActive={activeSection === '/student/dashboard/mentor'} onClick={() => onSectionChange('/student/dashboard/mentor')} to="/student/dashboard/mentor" expanded={expanded} />
         <SidebarLink icon={<Calendar />} label="Calendar" isActive={activeSection === '/student/dashboard/calendar'} onClick={() => onSectionChange('/student/dashboard/calendar')} to="/student/dashboard/calendar" expanded={expanded} />
+        <SidebarLink icon={<Video />} label="Meetings" isActive={activeSection === '/student/dashboard/meetings'} onClick={() => onSectionChange('/student/dashboard/meetings')} to="/student/dashboard/meetings" expanded={expanded} />
         <SidebarLink icon={<MessageSquare />} label="Chats" isActive={activeSection === '/student/dashboard/chat'} onClick={() => onSectionChange('/student/dashboard/chat')} to="/student/dashboard/chat" badge="2" expanded={expanded} />
         <SidebarLink icon={<FileText />} label="Docs" isActive={activeSection === '/student/dashboard/docs'} onClick={() => onSectionChange('/student/dashboard/docs')} to="/student/dashboard/docs" expanded={expanded} />
         {/* <SidebarLink icon={<FileText />} label="Parent" isActive={activeSection === '/dashboard/docs'} onClick={() => onSectionChange('/dashboard/docs')} to="/dashboard/docs" expanded={expanded} /> */}
@@ -77,12 +79,13 @@ function SidebarLink({ icon, label, to, isActive, badge, onClick, expanded }: { 
 }
 
 function Header({ title }: { title: string }) {
+  const [isMeetingDialogOpen, setIsMeetingDialogOpen] = useState(false);
   const navigate = useNavigate();
   return (
     <header className="flex justify-between items-center p-4 border-b border-border bg-background">
       <h1 className="text-2xl font-semibold">{title}</h1>
       <div className="flex items-center space-x-4">
-        <button
+        {/* <button
           title='meeting'
           className="p-2 bg-background rounded-full shadow-sm border border-border"
           onClick={() => {
@@ -90,7 +93,17 @@ function Header({ title }: { title: string }) {
           }}
         >
           <Video className="w-6 h-6 text-destructive" />
-        </button>
+        </button> */}
+        <NewMeetingDialog
+          trigger={
+            <button
+              onClick={() => setIsMeetingDialogOpen(true)}
+              className="p-2 bg-background rounded-full shadow-sm border border-border"
+            >
+              <Video className="w-6 h-6 text-destructive" />
+            </button>
+          }
+        />
         {/* <Button variant="default" className="text-primary-foreground bg-primary hover:bg-primary/90">
           <Plus className="mr-2 h-4 w-4" />New Action
         </Button> */}
@@ -147,22 +160,27 @@ export default function LayoutStudent() {
     '/student/dashboard/calendar': 'Your Calendar',
     '/student/dashboard/chat': 'Chats',
     '/student/dashboard/docs': 'Your Documents',
+    '/student/dashboard/meetings': 'Your Meetings',
     '/student/dashboard/settings': 'Your Profile',
   }
   const getTitle = (path: string) => {
     return titles[path as keyof typeof titles] || 'Dashboard'
   }
 
+  const isInMeeting = location.pathname.includes('/meeting/');
+
   return (
     <div className="flex h-screen bg-background text-foreground">
-      <Sidebar
-        expanded={expanded}
-        setExpanded={setExpanded}
-        activeSection={location.pathname}
-        onSectionChange={onSectionChange}
-      />
+      {!isInMeeting && (
+        <Sidebar
+          expanded={expanded}
+          setExpanded={setExpanded}
+          activeSection={location.pathname}
+          onSectionChange={onSectionChange}
+        />
+      )}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Header title={getTitle(location.pathname)} />
+        {!isInMeeting && <Header title={getTitle(location.pathname)} />}
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-4">
           <Outlet />
         </main>
