@@ -41,7 +41,6 @@ const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange }: { ex
         <SidebarLink icon={<Home />} label="Home" isActive={activeSection === '/student/dashboard'} onClick={() => onSectionChange('/student/dashboard')} to="/student/dashboard" expanded={expanded} />
         <SidebarLink icon={<Users />} label="Mentor" isActive={activeSection === '/student/dashboard/mentor'} onClick={() => onSectionChange('/student/dashboard/mentor')} to="/student/dashboard/mentor" expanded={expanded} />
         <SidebarLink icon={<Calendar />} label="Calendar" isActive={activeSection === '/student/dashboard/calendar'} onClick={() => onSectionChange('/student/dashboard/calendar')} to="/student/dashboard/calendar" expanded={expanded} />
-        <SidebarLink icon={<Video />} label="Meetings" isActive={activeSection === '/student/dashboard/meetings'} onClick={() => onSectionChange('/student/dashboard/meetings')} to="/student/dashboard/meetings" expanded={expanded} />
         <SidebarLink icon={<MessageSquare />} label="Chats" isActive={activeSection === '/student/dashboard/chat'} onClick={() => onSectionChange('/student/dashboard/chat')} to="/student/dashboard/chat" badge="2" expanded={expanded} />
         <SidebarLink icon={<FileText />} label="Docs" isActive={activeSection === '/student/dashboard/docs'} onClick={() => onSectionChange('/student/dashboard/docs')} to="/student/dashboard/docs" expanded={expanded} />
         {/* <SidebarLink icon={<FileText />} label="Parent" isActive={activeSection === '/dashboard/docs'} onClick={() => onSectionChange('/dashboard/docs')} to="/dashboard/docs" expanded={expanded} /> */}
@@ -160,7 +159,6 @@ export default function LayoutStudent() {
     '/student/dashboard/calendar': 'Your Calendar',
     '/student/dashboard/chat': 'Chats',
     '/student/dashboard/docs': 'Your Documents',
-    '/student/dashboard/meetings': 'Your Meetings',
     '/student/dashboard/settings': 'Your Profile',
   }
   const getTitle = (path: string) => {
@@ -181,7 +179,7 @@ export default function LayoutStudent() {
       )}
       <div className="flex-1 flex flex-col overflow-hidden">
         {!isInMeeting && <Header title={getTitle(location.pathname)} />}
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-4">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background">
           <Outlet />
         </main>
         {isProfileSetupOpen && (

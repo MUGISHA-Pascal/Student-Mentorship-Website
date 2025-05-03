@@ -52,6 +52,9 @@ import CoachMeetingsPage from "./pages/Coach/coachMeetingsPage";
 import Meeting from "./pages/Meeting/meeting";
 import StreamVideoProvider from "./providers/streamClientProvider";
 import StudentsMeetingsPage from "./pages/Student/studentMeetingsPage";
+import AdminCohortsPage from "./pages/Admin/adminCohortsPage";
+import CohortDetailsPage from "./pages/Admin/cohorts/cohortDetailsPage";
+import EditCohortPage from "./pages/Admin/cohorts/editCohortPage";
 
 interface LayoutProps {
   children: ReactNode;
@@ -185,14 +188,14 @@ const App = () => {
           <Route path="calendar" element={<StudentCalendarPage />} />
           <Route path="settings" element={<StudentSettingsPage />} />
 
-          <Route
+          {/* <Route
             path="meetings"
             element={
               <StreamVideoProvider>
                 <StudentsMeetingsPage />
               </StreamVideoProvider>
             }
-          />
+          /> */}
           {/* <Route path="meeting/:id" element={<Meeting />} /> */}
           <Route
             path="meeting/:id"
@@ -244,6 +247,9 @@ const App = () => {
           <Route path="blogs" element={<AdminBlogsPage />} />
           <Route path="blogs/new" element={<BlogEditor />} />
           <Route path="blogs/edit/:slug" element={<BlogEditor />} />
+          <Route path="cohorts" element={<AdminCohortsPage />} />
+          <Route path="cohorts/:id" element={<CohortDetailsPage />} />
+          <Route path="cohorts/:id/edit" element={<EditCohortPage />} />
           <Route path="chats" element={<AdminChatsPage />} />
         </Route>
 

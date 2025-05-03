@@ -122,9 +122,9 @@ function Header({ title }: { title: string }) {
           }
         />
 
-        <Button variant="default" className="text-primary-foreground bg-primary hover:bg-primary/90">
+        {/* <Button variant="default" className="text-primary-foreground bg-primary hover:bg-primary/90">
           <Plus className="mr-2 h-4 w-4" />New Action
-        </Button>
+        </Button> */}
         <button className="p-2 bg-background rounded-full shadow-sm border border-border">
           <BellDot className="w-6 h-6 text-foreground" />
         </button>
@@ -208,7 +208,7 @@ export default function LayoutCoach() {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* <Header title={getTitle(location.pathname)} /> */}
         {!isInMeeting && <Header title={getTitle(location.pathname)} />}
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-4">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background">
           <Outlet />
         </main>
         {isProfileSetupOpen && (
