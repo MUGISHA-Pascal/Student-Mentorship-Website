@@ -91,7 +91,7 @@ const MeetingTypeList = () => {
 
 
     return (
-        <section className='grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3'>
+        <section className='grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 p-4'>
             <HomeCard
                 icon='Plus'
                 title="New Meeting"
@@ -110,12 +110,6 @@ const MeetingTypeList = () => {
                 description="Plan your meeting"
                 handleClick={() => setMeetingState('isScheduleMeeting')}
             />
-            {/* <HomeCard
-                icon='Video'
-                title="View Recordings"
-                description="Meeting Recordings"
-                handleClick={() => navigate('/recordings')}
-            /> */}
 
             {!callDetails ? (
                 <MeetingModal
@@ -182,7 +176,6 @@ const MeetingTypeList = () => {
                 title="Type the link here"
                 className="text-center"
                 buttonText="Join Meeting"
-                // handleClick={() => navigate(values.link)}
                 handleClick={() => {
                     const meetingId = values.link.split('/').pop(); // Extract UUID from full link
                     let role = user?.role?.toLowerCase() || 'student'; // default fallback                  

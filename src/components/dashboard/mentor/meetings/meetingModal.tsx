@@ -55,7 +55,7 @@ const MeetingModal = ({
                     {children}
                     <Button
                         className={
-                            "focus-visible:ring-0 focus-visible:ring-offset-0 text-popover-foreground rounded-full"
+                            "focus-visible:ring-0 focus-visible:ring-offset-0 text-white rounded-full"
                         }
                         onClick={handleClick}
                     >

@@ -188,7 +188,8 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
         }
       );
       toast.success("Profile updated successfully!");
-      navigate("/mentor/waiting")
+      // navigate("/mentor/dashboard/")
+      onClose();
     } catch (error) {
       toast.error("Failed to update profile.");
       // console.log("Error while updating profile: ", error);

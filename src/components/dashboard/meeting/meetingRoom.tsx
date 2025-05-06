@@ -53,13 +53,13 @@ const MeetingRoom = () => {
   };
 
   return (
-    <section className="relative h-screen w-full overflow-hidden pt-4 text-white">
+    <section className="relative h-screen w-full overflow-hidden pt-4 px-3 text-white">
       {/* Logo in top-left */}
       {/* <div className="absolute top-4 left-4 z-50">
         <img src="/icons/logo.svg" alt="Logo" className="" />
       </div> */}
       <div className="relative flex size-full items-center justify-center">
-        <div className=" flex size-full max-w-[1200px] items-center">
+        <div className="flex size-full max-w-[1050px] items-center">
           <CallLayout />
         </div>
         <div
@@ -71,7 +71,8 @@ const MeetingRoom = () => {
         </div>
       </div>
       {/* video layout and call controls */}
-      <div className="fixed bottom-0 flex w-full items-center justify-center gap-5">
+      {/* <div className="fixed bottom-0 flex w-full items-center justify-center gap-5"> */}
+      <div className="fixed bottom-0 flex w-full flex-wrap items-center justify-center gap-3 md:gap-5 backdrop-blur-sm">
         <CallControls onLeave={() => navigate(`../`)} />
 
         <DropdownMenu>
