@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useCallback, useEffect, useState } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { Video, BellDot, Home, Users, Calendar, MessageSquare, Plus, FileText } from 'lucide-react'
+import { Video, BellDot, Home, Users, Calendar, MessageSquare, Plus, FileText, Puzzle } from 'lucide-react'
 import axios from 'axios'
 import DarkModeToggle from './DarkModeToggle'
 import { Button } from '@/components/ui/button'
@@ -43,6 +43,7 @@ const Sidebar = ({ expanded, setExpanded, activeSection, onSectionChange }: { ex
         <SidebarLink icon={<Users />} label="Students" isActive={activeSection === '/admin/dashboard/students'} onClick={() => onSectionChange('/admin/dashboard/students')} to="/admin/dashboard/students" expanded={expanded} />
         <SidebarLink icon={<Users />} label="Mentors" isActive={activeSection === '/admin/dashboard/mentors'} onClick={() => onSectionChange('/admin/dashboard/mentors')} to="/admin/dashboard/mentors" expanded={expanded} />
         <SidebarLink icon={<FileText />} label="Blogs" isActive={activeSection.startsWith('/admin/dashboard/blogs')} onClick={() => onSectionChange('/admin/dashboard/blogs')} to="/admin/dashboard/blogs" expanded={expanded} />
+        <SidebarLink icon={<Puzzle />} label="Cohorts" isActive={activeSection.startsWith('/admin/dashboard/cohorts')} onClick={() => onSectionChange('/admin/dashboard/cohorts')} to="/admin/dashboard/cohorts" expanded={expanded} />
         <SidebarLink icon={<Calendar />} label="Calendar" isActive={activeSection === '/admin/dashboard/calendar'} onClick={() => onSectionChange('/admin/dashboard/calendar')} to="/admin/dashboard/calendar" expanded={expanded} />
         <SidebarLink icon={<Users />} label="Assessments" isActive={activeSection === '/admin/dashboard/assessments'} onClick={() => onSectionChange('/admin/dashboard/assessments')} to="/admin/dashboard/assessments" expanded={expanded} />
         <SidebarLink icon={<MessageSquare />} label="Chats" isActive={activeSection === '/admin/dashboard/chats'} onClick={() => onSectionChange('/admin/dashboard/chats')} to="/admin/dashboard/chats" expanded={expanded} />
@@ -109,7 +110,7 @@ function Header({ title }: { title: string }) {
     <header className="flex justify-between items-center p-4 border-b border-border bg-background">
       <h1 className="text-2xl font-semibold">{title}</h1>
       <div className="flex items-center space-x-4">
-        <Dialog>
+        {/* <Dialog>
           <DialogTrigger asChild>
             <button className="p-2 bg-background rounded-full shadow-sm border border-border">
               <Video className="w-6 h-6 text-destructive" />
@@ -145,10 +146,10 @@ function Header({ title }: { title: string }) {
               </Button>
             </div>
           </DialogContent>
-        </Dialog>
-        <Button variant="default" className="text-primary-foreground bg-primary hover:bg-primary/90">
+        </Dialog> */}
+        {/* <Button variant="default" className="text-primary-foreground bg-primary hover:bg-primary/90">
           <Plus className="mr-2 h-4 w-4" />New Action
-        </Button>
+        </Button> */}
         <button className="p-2 bg-background rounded-full shadow-sm border border-border">
           <BellDot className="w-6 h-6 text-foreground" />
         </button>
@@ -199,6 +200,7 @@ export default function LayoutAdmin() {
     '/admin/dashboard/calendar': 'Calendar',
     '/admin/dashboard/blogs': 'Blogs',
     '/admin/dashboard/blogs/new': 'Create New Blog',
+    '/admin/dashboard/cohorts': 'Cohorts',
     '/admin/dashboard/assessments': 'Assessments',
     '/admin/dashboard/chats': 'Chats',
     '/admin/dashboard/docs': 'Documents',

@@ -48,6 +48,13 @@ import Blogs from "./pages/blogs/blogs";
 import Blog from "./pages/blogs/blog";
 import AdminBlogsPage from "./pages/Admin/adminBlogsPage";
 import BlogEditor from "./pages/Admin/blogs/blogEditor";
+import CoachMeetingsPage from "./pages/Coach/coachMeetingsPage";
+import Meeting from "./pages/Meeting/meeting";
+import StreamVideoProvider from "./providers/streamClientProvider";
+import StudentsMeetingsPage from "./pages/Student/studentMeetingsPage";
+import AdminCohortsPage from "./pages/Admin/adminCohortsPage";
+import CohortDetailsPage from "./pages/Admin/cohorts/cohortDetailsPage";
+import EditCohortPage from "./pages/Admin/cohorts/editCohortPage";
 
 interface LayoutProps {
   children: ReactNode;
@@ -160,7 +167,7 @@ const App = () => {
             </Layout>
           }
         />
-        <Route  path="/blogs/:slug"
+        <Route path="/blogs/:slug"
           element={
             <Layout>
               <Blog />
@@ -180,6 +187,24 @@ const App = () => {
           <Route path="docs" element={<StudentDocsPage />} />
           <Route path="calendar" element={<StudentCalendarPage />} />
           <Route path="settings" element={<StudentSettingsPage />} />
+
+          {/* <Route
+            path="meetings"
+            element={
+              <StreamVideoProvider>
+                <StudentsMeetingsPage />
+              </StreamVideoProvider>
+            }
+          /> */}
+          {/* <Route path="meeting/:id" element={<Meeting />} /> */}
+          <Route
+            path="meeting/:id"
+            element={
+              <StreamVideoProvider>
+                <Meeting />
+              </StreamVideoProvider>
+            }
+          />
         </Route>
 
         <Route path="student/welcome" element={<ProtectedRoute element={<StudentWaitingPage />} />} />
@@ -189,6 +214,24 @@ const App = () => {
           <Route index element={<HomePage />} />
           <Route path="students" element={<StudentsPage />} />
           <Route path="calendar" element={<CalendarPage />} />
+          {/* <Route path="meetings" element={<CoachMeetingsPage />} /> */}
+          <Route
+            path="meetings"
+            element={
+              <StreamVideoProvider>
+                <CoachMeetingsPage />
+              </StreamVideoProvider>
+            }
+          />
+          {/* <Route path="meeting/:id" element={<Meeting />} /> */}
+          <Route
+            path="meeting/:id"
+            element={
+              <StreamVideoProvider>
+                <Meeting />
+              </StreamVideoProvider>
+            }
+          />
           <Route path="chats" element={<ChatsPage />} />
           <Route path="docs" element={<DocsPage />} />
           <Route path="settings" element={<SettingsPage />} />
@@ -204,6 +247,9 @@ const App = () => {
           <Route path="blogs" element={<AdminBlogsPage />} />
           <Route path="blogs/new" element={<BlogEditor />} />
           <Route path="blogs/edit/:slug" element={<BlogEditor />} />
+          <Route path="cohorts" element={<AdminCohortsPage />} />
+          <Route path="cohorts/:id" element={<CohortDetailsPage />} />
+          <Route path="cohorts/:id/edit" element={<EditCohortPage />} />
           <Route path="chats" element={<AdminChatsPage />} />
         </Route>
 
