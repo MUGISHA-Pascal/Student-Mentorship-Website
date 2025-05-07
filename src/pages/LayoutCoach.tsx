@@ -155,7 +155,7 @@ export default function LayoutCoach() {
         // console.log("The token is ", token);
 
 
-        const response = await axios.get('http://localhost:3000/api/v1/user', {
+        const response = await axios.get('https://api.goyoungafrica.org/api/v1/user', {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -198,13 +198,13 @@ export default function LayoutCoach() {
         onSectionChange={onSectionChange}
       /> */}
       {!isInMeeting && (
-      <Sidebar
-        expanded={expanded}
-        setExpanded={setExpanded}
-        activeSection={location.pathname}
-        onSectionChange={onSectionChange}
-      />
-    )}
+        <Sidebar
+          expanded={expanded}
+          setExpanded={setExpanded}
+          activeSection={location.pathname}
+          onSectionChange={onSectionChange}
+        />
+      )}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* <Header title={getTitle(location.pathname)} /> */}
         {!isInMeeting && <Header title={getTitle(location.pathname)} />}

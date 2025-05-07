@@ -26,7 +26,7 @@ const Footer: React.FC = () => {
         setIsSubmitting(true);
 
         try {
-            const response = await fetch('http://localhost:3000/api/v1/subscription/subscribe', {
+            const response = await fetch('https://api.goyoungafrica.org/api/v1/subscription/subscribe', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

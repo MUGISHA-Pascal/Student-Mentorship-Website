@@ -84,7 +84,7 @@ const MeetingTypeList = () => {
         }
     }
 
-    // const meetingLink = `http://localhost:3000/api/v1/meeting/${callDetails?.id}`;
+    // const meetingLink = `https://api.goyoungafrica.org/api/v1/meeting/${callDetails?.id}`;
     const role = user?.role; // e.g., "mentor" or "student"
     const baseURL = window.location.origin; // Automatically gets http://localhost:5173
     const meetingLink = `${baseURL}/${role}/dashboard/meeting/${callDetails?.id}`;
@@ -181,9 +181,9 @@ const MeetingTypeList = () => {
                     let role = user?.role?.toLowerCase() || 'student'; // default fallback                  
                     if (role === 'coach') role = 'mentor'; // normalize 'coach' to 'mentor'                  
                     navigate(`/${role}/dashboard/meeting/${meetingId}`);
-                  }}
-                  
-                  
+                }}
+
+
             >
                 <Input
                     placeholder="Meeting link"

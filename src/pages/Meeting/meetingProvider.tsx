@@ -50,7 +50,7 @@
 //   // Fetch the token from your backend
 //   const fetchToken = async (userId: string | undefined) => {
 //     try {
-//       const response = await axios.post(`http://localhost:3000/api/stream/generate-stream-token`, {
+//       const response = await axios.post(`https://api.goyoungafrica.org/api/stream/generate-stream-token`, {
 //         userId,
 //       });
 //       return response.data.token;
@@ -94,7 +94,7 @@ export const initializeMeetingClient = async () => {
 
   const fetchToken = async (userId: string | undefined) => {
     try {
-      const response = await axios.post(`http://localhost:3000/api/stream/generate-stream-token`, {
+      const response = await axios.post(`https://api.goyoungafrica.org/api/stream/generate-stream-token`, {
         userId,
       });
       return response.data.token;

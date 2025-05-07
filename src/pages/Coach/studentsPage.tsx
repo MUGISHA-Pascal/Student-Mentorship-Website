@@ -91,7 +91,7 @@
 //   const [selectedWaitlistStudents, setSelectedWaitlistStudents] = useState<number[]>([])
 
 //   useEffect(() => {
-//     fetch(`http://localhost:3000/api/v1/coach/students/988784a2-7b03-473e-b221-1ee62a34da18`)
+//     fetch(`https://api.goyoungafrica.org/api/v1/coach/students/988784a2-7b03-473e-b221-1ee62a34da18`)
 //       .then(res => res.json())
 //       .then(data => {
 //         const approved = data.filter((student: Student) => student.status === 'APPROVED');
@@ -143,7 +143,7 @@
 //     try {
 //       // Send API request to update the student's status
 //       const response = await fetch(
-//         `http://localhost:3000/api/v1/coach/988784a2-7b03-473e-b221-1ee62a34da18/student/status`,
+//         `https://api.goyoungafrica.org/api/v1/coach/988784a2-7b03-473e-b221-1ee62a34da18/student/status`,
 //         {
 //           method: 'PUT',
 //           headers: { 'Content-Type': 'application/json' },
