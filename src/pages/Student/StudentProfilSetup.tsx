@@ -43,7 +43,8 @@ const NewProfileSetupPopup: React.FC<{
   const { user, role, fetchUser, loading, error } = useUserStore();
   const [step, setStep] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCourse,
+  const [
+    selectedCourse,
     // setSelectedCourse
   ] = useState<Course | null>(null);
   const [selectedCoach, setSelectedCoach] = useState<Coach | null>(null);
@@ -74,7 +75,8 @@ const NewProfileSetupPopup: React.FC<{
       setLoadingState(true);
       try {
         const response = await axios.get(
-          "https://api.goyoungafrica.org/api/v1/student/careers"
+          // "https://api.goyoungafrica.org/api/v1/student/careers"
+          "http://localhost:3000/api/v1/student/careers"
         );
         setCourses(response.data);
         setLoadingState(false);
@@ -117,7 +119,8 @@ const NewProfileSetupPopup: React.FC<{
     }
     try {
       await axios.put(
-        `https://api.goyoungafrica.org/api/v1/student/update/${user!.id}`,
+        // `https://api.goyoungafrica.org/api/v1/student/update/${user!.id}`,
+        `http://localhost:3000/api/v1/student/update/${user!.id}`,
         formData,
         {
           headers: {
@@ -147,8 +150,9 @@ const NewProfileSetupPopup: React.FC<{
       .map((_, i) => (
         <Star
           key={i}
-          className={`w-4 h-4 ${i < rating ? "text-yellow-400 fill-current" : "text-gray-300"
-            }`}
+          className={`w-4 h-4 ${
+            i < rating ? "text-yellow-400 fill-current" : "text-gray-300"
+          }`}
         />
       ));
   };
@@ -235,7 +239,8 @@ const NewProfileSetupPopup: React.FC<{
   const sendRequest = async (studentId: string, coachId: string) => {
     try {
       const response = await axios.put(
-        "https://api.goyoungafrica.org/api/v1/student/sendRequest",
+        // "https://api.goyoungafrica.org/api/v1/student/sendRequest",
+        "http://localhost:3000/api/v1/student/sendRequest",
         {
           studentId: studentId,
           coachId: coachId,
@@ -260,10 +265,14 @@ const NewProfileSetupPopup: React.FC<{
     }
 
     try {
-      const response = await axios.post("https://api.goyoungafrica.org/api/v1/student/enroll", {
-        studentId: role.id,
-        careerId: careerId,
-      });
+      // const response = await axios.post("https://api.goyoungafrica.org/api/v1/student/enroll", {
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/student/enroll",
+        {
+          studentId: role.id,
+          careerId: careerId,
+        }
+      );
       toast.success(`${response.data.message}!`);
       // Navigate to a dashboard or welcome page after enrollment
       // toast.success("You've successfully enrolled in ");
@@ -305,7 +314,10 @@ const NewProfileSetupPopup: React.FC<{
     }
 
     return (
-      <div key={course.id} className={`${course.color} p-4 rounded-lg border border-gray-500 mr-1`}>
+      <div
+        key={course.id}
+        className={`${course.color} p-4 rounded-lg border border-gray-500 mr-1`}
+      >
         <div className="flex items-start justify-between">
           <div>
             <div className="flex items-center space-x-2">
@@ -342,7 +354,11 @@ const NewProfileSetupPopup: React.FC<{
               <div className="w-8 h-8 bg-[#132F43] rounded-full flex items-center justify-center">
                 <File color="white" />
               </div>
-              <button title="Hide details" className="rounded-full w-8 h-8 p-0 flex items-center justify-center bg-gray-100 hover:bg-gray-200" onClick={() => setShowCourseDetails(null)}>
+              <button
+                title="Hide details"
+                className="rounded-full w-8 h-8 p-0 flex items-center justify-center bg-gray-100 hover:bg-gray-200"
+                onClick={() => setShowCourseDetails(null)}
+              >
                 <X size={16} />
               </button>
             </div>
@@ -351,9 +367,7 @@ const NewProfileSetupPopup: React.FC<{
               <div className="w-full border border-blue-200 shadow-sm shadow-blue-200 rounded-lg py-4 px-2 flex">
                 <div className="">
                   <p className="font-semibold mb-2">Course description</p>
-                  <p className="text-sm text-gray-600">
-                    {course.description}
-                  </p>
+                  <p className="text-sm text-gray-600">{course.description}</p>
                 </div>
               </div>
               <div className="flex justify-end mt-2 gap-x-3">
@@ -500,7 +514,11 @@ const NewProfileSetupPopup: React.FC<{
                         <div className="w-8 h-8 bg-[#132F43] rounded-full flex items-center justify-center p-2">
                           <File color="white" />
                         </div>
-                        <button title="Hide details" className="rounded-full w-8 h-8 p-0 flex items-center justify-center bg-gray-100 hover:bg-gray-200" onClick={() => setShowCourseDetails(null)}>
+                        <button
+                          title="Hide details"
+                          className="rounded-full w-8 h-8 p-0 flex items-center justify-center bg-gray-100 hover:bg-gray-200"
+                          onClick={() => setShowCourseDetails(null)}
+                        >
                           <X size={16} />
                         </button>
                       </div>
@@ -524,7 +542,9 @@ const NewProfileSetupPopup: React.FC<{
                             />
                           </div>
                           <div className="w-3/5">
-                            <p className="font-semibold mb-2">Course description</p>
+                            <p className="font-semibold mb-2">
+                              Course description
+                            </p>
                             <p className="text-sm text-gray-600">
                               {
                                 courses?.find(
@@ -544,7 +564,7 @@ const NewProfileSetupPopup: React.FC<{
                               if (selected) {
                                 // setSelectedCourse(selected);
                                 // handleCourseSelect(selected);
-                                enrollStudent(selected.id)
+                                enrollStudent(selected.id);
                               }
                             }}
                           >
@@ -591,10 +611,11 @@ const NewProfileSetupPopup: React.FC<{
                     .map((coach) => (
                       <div
                         key={coach.id}
-                        className={`bg-white p-4 rounded-lg shadow ${selectedCoach?.id === coach.id
-                          ? "border border-blue-500 bg-zinc-200"
-                          : ""
-                          }`}
+                        className={`bg-white p-4 rounded-lg shadow ${
+                          selectedCoach?.id === coach.id
+                            ? "border border-blue-500 bg-zinc-200"
+                            : ""
+                        }`}
                       >
                         <div className="flex items-center space-x-4">
                           <img
@@ -699,7 +720,11 @@ const NewProfileSetupPopup: React.FC<{
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[95vw] w-[1200px] h-[95vh] p-0 overflow-hidden backdrop-blur-sm bg-blue-100 bg-opacity-60" onInteractOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
+      <DialogContent
+        className="max-w-[95vw] w-[1200px] h-[95vh] p-0 overflow-hidden backdrop-blur-sm bg-blue-100 bg-opacity-60"
+        onInteractOutside={(e) => e.preventDefault()}
+        onEscapeKeyDown={(e) => e.preventDefault()}
+      >
         <div className="relative h-full flex flex-col">
           <div className="p-4 flex items-center justify-center shadow-sm">
             <Button

@@ -1,12 +1,17 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Search, Filter, MoreVertical, Upload } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import UploadModal from './components/uploadCourse';
-import { useUserStore } from '@/store/userStore';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Search, Filter, MoreVertical, Upload } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import UploadModal from "./components/uploadCourse";
+import { useUserStore } from "@/store/userStore";
 import { toast } from "react-toastify";
 
 type Course = {
@@ -19,11 +24,10 @@ type Course = {
   dateCreated: string;
 };
 
-
 export default function StudentDocsPage() {
   const [showAll, setShowAll] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [sortType, setSortType] = useState<string | null>(null);
   const [filterType, setFilterType] = useState<string | null>(null);
   const [courses, setCourses] = useState<Course[]>([]);
@@ -53,50 +57,66 @@ export default function StudentDocsPage() {
   const fetchDocuments = async () => {
     if (!userId) return;
     try {
-      const response = await axios.get(`https://api.goyoungafrica.org/api/v1/document/get-course-docs/${userId}`);
-      const docs = response.data.map((doc: { course: { name: string, id: string }; fileType: string; fileName: string; uploadDate: string }): Course => ({
-        id: doc.course.id,
-        title: doc.course?.name || 'Untitled',
-        image: doc.fileType.startsWith('video') ? '/svgs/video_course.svg' : '/svgs/file_course.svg',
-        extension: doc.fileType.split('/').pop()?.toUpperCase(),
-        downloadLink: `https://api.goyoungafrica.org/api/v1/document/download-course-doc/${doc.fileName}`,
-        courseType: doc.fileType.startsWith('video') ? 'video' : 'file',
-        dateCreated: doc.uploadDate,
-      }));
+      // const response = await axios.get(`https://api.goyoungafrica.org/api/v1/document/get-course-docs/${userId}`);
+      const response = await axios.get(
+        `http://localhost:3000/api/v1/document/get-course-docs/${userId}`
+      );
+      const docs = response.data.map(
+        (doc: {
+          course: { name: string; id: string };
+          fileType: string;
+          fileName: string;
+          uploadDate: string;
+        }): Course => ({
+          id: doc.course.id,
+          title: doc.course?.name || "Untitled",
+          image: doc.fileType.startsWith("video")
+            ? "/svgs/video_course.svg"
+            : "/svgs/file_course.svg",
+          extension: doc.fileType.split("/").pop()?.toUpperCase(),
+          // downloadLink: `https://api.goyoungafrica.org/api/v1/document/download-course-doc/${doc.fileName}`,
+          downloadLink: `http://localhost:3000/api/v1/document/download-course-doc/${doc.fileName}`,
+          courseType: doc.fileType.startsWith("video") ? "video" : "file",
+          dateCreated: doc.uploadDate,
+        })
+      );
 
       setCourses(docs);
-
     } catch (error) {
-      console.error('Error fetching documents:', error);
+      console.error("Error fetching documents:", error);
     }
   };
 
   useEffect(() => {
     fetchDocuments();
-  }, [userId])
-
+  }, [userId]);
 
   const filteredCourses = courses
     .filter((course) =>
       course.title.toLowerCase().includes(searchTerm.toLowerCase())
     )
-    .filter((course) =>
-      filterType ? course.courseType === filterType : true
-    )
+    .filter((course) => (filterType ? course.courseType === filterType : true))
     .sort((a, b) => {
-      if (sortType === 'name') {
+      if (sortType === "name") {
         return a.title.localeCompare(b.title);
-      } else if (sortType === 'date') {
-        return new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime();
+      } else if (sortType === "date") {
+        return (
+          new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()
+        );
       }
       return 0;
     });
 
-  const visibleCourses = showAll ? filteredCourses : filteredCourses.slice(0, 4);
+  const visibleCourses = showAll
+    ? filteredCourses
+    : filteredCourses.slice(0, 4);
 
   const handleDeleteDocument = async (documentId: string) => {
     try {
-      await axios.delete(`https://api.goyoungafrica.org/api/v1/document/delete-course-doc/${documentId}`);
+      // await axios.delete(`https://api.goyoungafrica.org/api/v1/document/delete-course-doc/${documentId}`);
+      await axios.delete(
+        `http://localhost:3000/api/v1/document/delete-course-doc/${documentId}`
+      );
 
       // Remove the deleted course from the state
       setCourses((prevCourses) =>
@@ -104,32 +124,38 @@ export default function StudentDocsPage() {
       );
 
       // Show success toast notification
-      toast.success('Document deleted successfully.');
+      toast.success("Document deleted successfully.");
     } catch (error) {
-      console.error('Error deleting document:', error);
+      console.error("Error deleting document:", error);
       // Show error toast notification
-      toast.error('Failed to delete document.');
+      toast.error("Failed to delete document.");
     }
   };
 
-  const handleDownload = async (downloadLink: string, fileName: string, extension?: string) => {
+  const handleDownload = async (
+    downloadLink: string,
+    fileName: string,
+    extension?: string
+  ) => {
     try {
       const response = await axios.get(downloadLink, {
-        responseType: 'blob', // Important for binary data
+        responseType: "blob", // Important for binary data
       });
 
       // Use the provided extension, fallback to extracting from fileName, or default to "unknown"
       const finalExtension = extension?.toLowerCase();
 
       // Construct the final file name
-      const baseName = fileName.includes('.') ? fileName.split('.').slice(0, -1).join('.') : fileName; // Strip existing extension if present
+      const baseName = fileName.includes(".")
+        ? fileName.split(".").slice(0, -1).join(".")
+        : fileName; // Strip existing extension if present
       const finalFileName = `${baseName}.${finalExtension}`;
 
       // Create a URL and trigger download
       const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.setAttribute('download', finalFileName);
+      link.setAttribute("download", finalFileName);
       document.body.appendChild(link);
       link.click();
 
@@ -137,16 +163,12 @@ export default function StudentDocsPage() {
       link.parentNode?.removeChild(link);
       window.URL.revokeObjectURL(url);
 
-      toast.success('File downloaded successfully!');
+      toast.success("File downloaded successfully!");
     } catch (error) {
-      console.error('Error downloading file:', error);
-      toast.error('Failed to download file.');
+      console.error("Error downloading file:", error);
+      toast.error("Failed to download file.");
     }
   };
-
-
-
-
 
   return (
     <div className="p-4 sm:p-6 bg-background text-foreground min-h-screen">
@@ -179,19 +201,31 @@ export default function StudentDocsPage() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => setFilterType(null)}>All</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setFilterType('file')}>Files</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setFilterType('video')}>Videos</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setFilterType(null)}>
+                All
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setFilterType("file")}>
+                Files
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setFilterType("video")}>
+                Videos
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="w-full sm:w-auto">Sort</Button>
+              <Button variant="outline" className="w-full sm:w-auto">
+                Sort
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => setSortType('name')}>Name</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setSortType('date')}>Date</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSortType("name")}>
+                Name
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSortType("date")}>
+                Date
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -202,16 +236,21 @@ export default function StudentDocsPage() {
           onClick={handleSeeAllClick}
           className="text-blue-400 hover:text-blue-600 font-semibold transition duration-700"
         >
-          {showAll ? 'Show Less' : 'See All'}
+          {showAll ? "Show Less" : "See All"}
         </button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {filteredCourses.length === 0 ? (
-          <p className="text-gray-500 col-span-full text-center">No courses available.</p>
+          <p className="text-gray-500 col-span-full text-center">
+            No courses available.
+          </p>
         ) : (
           visibleCourses.map((course, index) => (
-            <Card key={index} className="shadow-md rounded-lg py-4 px-2 cursor-pointer">
+            <Card
+              key={index}
+              className="shadow-md rounded-lg py-4 px-2 cursor-pointer"
+            >
               <img
                 src={course.image}
                 alt={course.title}
@@ -219,7 +258,9 @@ export default function StudentDocsPage() {
               />
               <h3 className="text-lg font-semibold mb-2">{course.title}</h3>
               <p className="text-sm text-gray-600 mb-2">{course.extension}</p>
-              <p className="text-sm text-gray-600 mb-2">Created: {new Date(course.dateCreated).toLocaleDateString()}</p>
+              <p className="text-sm text-gray-600 mb-2">
+                Created: {new Date(course.dateCreated).toLocaleDateString()}
+              </p>
               <div className="flex justify-between">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -229,12 +270,24 @@ export default function StudentDocsPage() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem>View</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleDeleteDocument(course.id)}>Delete</DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => handleDeleteDocument(course.id)}
+                    >
+                      Delete
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
                 {/* <a href={course.downloadLink} download target="_blank" rel="noopener noreferrer" className="hover:text-blue-500">
                 </a> */}
-                <button onClick={() => handleDownload(course.downloadLink, course.title, course.extension)}>
+                <button
+                  onClick={() =>
+                    handleDownload(
+                      course.downloadLink,
+                      course.title,
+                      course.extension
+                    )
+                  }
+                >
                   <img src="/svgs/download.svg" alt="Download" />
                 </button>
               </div>
@@ -242,7 +295,12 @@ export default function StudentDocsPage() {
           ))
         )}
       </div>
-      <UploadModal isOpen={isUploadModalOpen} onClose={closeUploadModal} userId={userId} onCourseUploaded={fetchDocuments} />
+      <UploadModal
+        isOpen={isUploadModalOpen}
+        onClose={closeUploadModal}
+        userId={userId}
+        onCourseUploaded={fetchDocuments}
+      />
     </div>
   );
 }

@@ -48,7 +48,8 @@ const Register: React.FC = () => {
       // console.log(payload);
 
       // const response = await axios.post('https://api.goyoungafrica.org/api/v1/auth/register', payload);
-      const response = await axios.post('https://api.goyoungafrica.org/api/v1/auth/register', payload);
+      // const response = await axios.post('https://api.goyoungafrica.org/api/v1/auth/register', payload);
+      const response = await axios.post('http://localhost:3000/api/v1/auth/register', payload);
       // const { user } = response.data;
 
       // console.log(response.data);

@@ -1,12 +1,15 @@
-import { create } from 'zustand';
-import axios from 'axios';
+import { create } from "zustand";
+import axios from "axios";
 
 interface AuthState {
   email: string;
   password: string;
   isAuthenticated: boolean;
   isSubmitting: boolean;
-  login: (email: string, password: string) => Promise<{ user: { role: string } }>;
+  login: (
+    email: string,
+    password: string
+  ) => Promise<{ user: { role: string } }>;
   logout: () => void;
   setEmail: (email: string) => void;
   setPassword: (password: string) => void;
@@ -14,18 +17,22 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-  email: '',
-  password: '',
-  isAuthenticated: !!localStorage.getItem('authToken'), // Check if token exists
+  email: "",
+  password: "",
+  isAuthenticated: !!localStorage.getItem("authToken"), // Check if token exists
   isSubmitting: false,
 
   login: async (email, password) => {
     set({ isSubmitting: true });
     try {
-      const response = await axios.post('https://api.goyoungafrica.org/api/v1/auth/login', { email, password });
+      // const response = await axios.post('https://api.goyoungafrica.org/api/v1/auth/login', { email, password });
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/auth/login",
+        { email, password }
+      );
       const { token, user } = response.data;
-      localStorage.setItem('email', email);
-      localStorage.setItem('authToken', token);
+      localStorage.setItem("email", email);
+      localStorage.setItem("authToken", token);
       set({ isAuthenticated: true });
 
       return { user };
@@ -39,8 +46,8 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   logout: () => {
-    localStorage.removeItem('authToken');
-    set({ isAuthenticated: false, email: '', password: '' });
+    localStorage.removeItem("authToken");
+    set({ isAuthenticated: false, email: "", password: "" });
   },
 
   setEmail: (email) => set({ email }),
@@ -48,7 +55,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   // Function to check if user is authenticated on app start
   checkAuth: () => {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem("authToken");
     set({ isAuthenticated: !!token });
   },
 }));

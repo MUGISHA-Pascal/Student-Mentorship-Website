@@ -41,12 +41,13 @@ const ProgressBar = ({
       {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step) => (
         <React.Fragment key={step}>
           <div
-            className={`w-10 h-10 rounded-full flex items-center justify-center ${step === currentStep
-              ? "bg-blue-500 text-white"
-              : step < currentStep
+            className={`w-10 h-10 rounded-full flex items-center justify-center ${
+              step === currentStep
+                ? "bg-blue-500 text-white"
+                : step < currentStep
                 ? "bg-blue-500 text-white cursor-pointer"
                 : "bg-gray-300 text-white cursor-not-allowed"
-              }`}
+            }`}
             onClick={() => {
               if (step < currentStep) {
                 onStepClick(step); // Only allow clicking steps before the current step
@@ -57,8 +58,9 @@ const ProgressBar = ({
           </div>
           {step < totalSteps && (
             <div
-              className={`flex-1 h-1 ${step < currentStep ? "bg-blue-500" : "bg-gray-300"
-                }`}
+              className={`flex-1 h-1 ${
+                step < currentStep ? "bg-blue-500" : "bg-gray-300"
+              }`}
             />
           )}
         </React.Fragment>
@@ -66,7 +68,6 @@ const ProgressBar = ({
     </div>
   );
 };
-
 
 const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
   isOpen,
@@ -99,8 +100,6 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
     }
   }, [userId, fetchUser]);
 
-
-
   const handleNext = () => {
     if (step < 3) {
       setStep(step + 1);
@@ -114,7 +113,6 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
     setStartDate("");
     setEndDate("");
   };
-
 
   const handleAddExperience = () => {
     if (selectedCareer && startDate && endDate && careerCampany) {
@@ -144,8 +142,6 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
       toast.error("The image and CV cannot be the same file!");
       return;
     }
-
-
 
     if (type === "cv") {
       setSelectedFile(file);
@@ -179,7 +175,8 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
       // console.log("Updating data: ", formData);
 
       await axios.put(
-        `https://api.goyoungafrica.org/api/v1/coach/coaches/${userId}`,
+        // `https://api.goyoungafrica.org/api/v1/coach/coaches/${userId}`,
+        `http://localhost:3000/api/v1/coach/coaches/${userId}`,
         formData,
         {
           headers: {
@@ -461,7 +458,11 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
   return (
     <>
       <Dialog open={isOpen && !showSubmitted} onOpenChange={onClose}>
-        <DialogContent className="max-w-[95vw] w-[1200px] h-[95vh] p-0 overflow-hidden backdrop-blur-sm bg-blue-100 bg-opacity-60" onInteractOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
+        <DialogContent
+          className="max-w-[95vw] w-[1200px] h-[95vh] p-0 overflow-hidden backdrop-blur-sm bg-blue-100 bg-opacity-60"
+          onInteractOutside={(e) => e.preventDefault()}
+          onEscapeKeyDown={(e) => e.preventDefault()}
+        >
           <div className="relative h-full flex flex-col">
             <div className="absolute top-0 left-0 right-0 p-4 z-10">
               <ProgressBar

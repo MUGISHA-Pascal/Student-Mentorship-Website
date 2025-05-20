@@ -1,7 +1,6 @@
 // import { StreamVideoClient } from '@stream-io/video-react-sdk';
 // import { useUserStore } from '@/store/userStore';
 
-
 // export const initializeMeetingClient = async () => {
 //   const { user, role, fetchUser } = useUserStore.getState();
 
@@ -29,7 +28,6 @@
 
 //   return client;
 // };
-
 
 // import { StreamVideoClient } from '@stream-io/video-react-sdk';
 // import { useUserStore } from '@/store/userStore';
@@ -76,10 +74,9 @@
 //   return client;
 // };
 
-
-import { StreamVideoClient } from '@stream-io/video-react-sdk';
-import { useUserStore } from '@/store/userStore';
-import axios from 'axios';
+import { StreamVideoClient } from "@stream-io/video-react-sdk";
+import { useUserStore } from "@/store/userStore";
+import axios from "axios";
 
 export const initializeMeetingClient = async () => {
   const { user, role, fetchUser } = useUserStore.getState();
@@ -89,18 +86,24 @@ export const initializeMeetingClient = async () => {
   const apiKey = import.meta.env.VITE_APP_STREAM_API_KEY;
   if (!apiKey) {
     console.log("No api key");
-    throw new Error('Missing VITE_APP_STREAM_API_KEY in environment variables.');
+    throw new Error(
+      "Missing VITE_APP_STREAM_API_KEY in environment variables."
+    );
   }
 
   const fetchToken = async (userId: string | undefined) => {
     try {
-      const response = await axios.post(`https://api.goyoungafrica.org/api/stream/generate-stream-token`, {
-        userId,
-      });
+      // const response = await axios.post(`https://api.goyoungafrica.org/api/stream/generate-stream-token`, {
+      const response = await axios.post(
+        `http://localhost:3000/api/v1/stream/generate-stream-token`,
+        {
+          userId,
+        }
+      );
       return response.data.token;
     } catch (error) {
-      console.error('Error fetching token from backend:', error);
-      throw new Error('Failed to fetch Stream token from backend.');
+      console.error("Error fetching token from backend:", error);
+      throw new Error("Failed to fetch Stream token from backend.");
     }
   };
 
@@ -110,9 +113,9 @@ export const initializeMeetingClient = async () => {
   const client = StreamVideoClient.getOrCreateInstance({
     apiKey,
     user: {
-      id: user?.id ?? '',
+      id: user?.id ?? "",
       name: `${user?.firstName} ${user?.lastName}`,
-      image: role?.image ?? '',
+      image: role?.image ?? "",
     },
     token,
   });

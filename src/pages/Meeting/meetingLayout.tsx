@@ -12,7 +12,6 @@
 //     const callingState = useCallCallingState();
 //     const participantCount = useParticipantCount();
 
-
 //   if (callingState !== CallingState.JOINED) {
 //     return <div>Loading call state...</div>;
 //   }
@@ -54,10 +53,6 @@
 // //   image: 'https://getstream.io/random_svg/?id=oliver&name=Oliver',
 // // };
 
-
-
-
-
 // const apiKeyy = import.meta.env.VITE_APP_STREAM_API_KEY;
 
 // const fetchToken = async (userId: string | undefined) => {
@@ -81,9 +76,6 @@
 //   name: `${user?.firstName}`,
 //   image: 'https://getstream.io/random_svg/?id=oliver&name=Oliver',
 // };
-
-
-
 
 // const client = new StreamVideoClient({ apiKeyy, userrr, tokenn });
 // const call = client.call('default', user?.id);
@@ -210,7 +202,7 @@
 //   const callingState = useCallCallingState();
 
 //   if (callingState !== CallingState.JOINED) {
-//     console.log(callingState);    
+//     console.log(callingState);
 //     return <div>Loading...</div>;
 //   }
 
@@ -222,7 +214,6 @@
 //   );
 // };
 
-
 import {
   CallControls,
   CallingState,
@@ -233,29 +224,36 @@ import {
   StreamVideoClient,
   useCallStateHooks,
   User,
-} from '@stream-io/video-react-sdk';
+} from "@stream-io/video-react-sdk";
 
-import '@stream-io/video-react-sdk/dist/css/styles.css';
-import './style.css';
-import axios from 'axios';
-import { useUserStore } from '@/store/userStore';
-import { useEffect, useState } from 'react';
+import "@stream-io/video-react-sdk/dist/css/styles.css";
+import "./style.css";
+import axios from "axios";
+import { useUserStore } from "@/store/userStore";
+import { useEffect, useState } from "react";
 
 const apiKey = import.meta.env.VITE_APP_STREAM_API_KEY;
 
 const fetchToken = async (userId: string | undefined): Promise<string> => {
   try {
-    const response = await axios.post(`https://api.goyoungafrica.org/api/stream/generate-stream-token`, {
-      userId,
-    });
+    // const response = await axios.post(`https://api.goyoungafrica.org/api/stream/generate-stream-token`, {
+    const response = await axios.post(
+      `http://localhost:3000/api/v1/stream/generate-stream-token`,
+      {
+        userId,
+      }
+    );
     return response.data.token;
   } catch (error) {
-    console.error('Error fetching token from backend:', error);
-    throw new Error('Failed to fetch Stream token from backend.');
+    console.error("Error fetching token from backend:", error);
+    throw new Error("Failed to fetch Stream token from backend.");
   }
 };
 
-const initializeClient = async (): Promise<{ client: StreamVideoClient; callId: string }> => {
+const initializeClient = async (): Promise<{
+  client: StreamVideoClient;
+  callId: string;
+}> => {
   const { user, fetchUser } = useUserStore.getState();
 
   if (!user) {
@@ -265,11 +263,10 @@ const initializeClient = async (): Promise<{ client: StreamVideoClient; callId: 
   const token = await fetchToken(user?.id);
   // console.log('Generated token:', token);
 
-
   const userObject: User = {
-    id: user?.id ?? '',
-    name: user?.firstName ?? 'Unknown User',
-    image: 'https://getstream.io/random_svg/?id=oliver&name=Oliver',
+    id: user?.id ?? "",
+    name: user?.firstName ?? "Unknown User",
+    image: "https://getstream.io/random_svg/?id=oliver&name=Oliver",
   };
 
   const client = StreamVideoClient.getOrCreateInstance({
@@ -278,19 +275,18 @@ const initializeClient = async (): Promise<{ client: StreamVideoClient; callId: 
     token,
   });
 
-  const callId = user?.id ?? 'default-call-id'; // Use user.id as callId
+  const callId = user?.id ?? "default-call-id"; // Use user.id as callId
   // const call = client.call('default', callId);
   // await call.join({ create: true });
-  const call = client.call('default', callId);
+  const call = client.call("default", callId);
   // console.log('Call state before join:', call.state);
   try {
     const joinResult = await call.join({ create: true });
     // console.log('Join result:', joinResult);
     // console.log('Call state after join:', call.state);
   } catch (error) {
-    console.error('Error during call.join:', error);
+    console.error("Error during call.join:", error);
   }
-
 
   return { client, callId };
 };
@@ -302,11 +298,12 @@ export default function App() {
   useEffect(() => {
     const setupClient = async () => {
       try {
-        const { client: initializedClient, callId: initializedCallId } = await initializeClient();
+        const { client: initializedClient, callId: initializedCallId } =
+          await initializeClient();
         setClient(initializedClient);
         setCallId(initializedCallId);
       } catch (error) {
-        console.error('Error initializing Stream client:', error);
+        console.error("Error initializing Stream client:", error);
       }
     };
 
@@ -319,7 +316,7 @@ export default function App() {
 
   return (
     <StreamVideo client={client}>
-      <StreamCall call={client.call('default', callId)}>
+      <StreamCall call={client.call("default", callId)}>
         <MyUILayout />
       </StreamCall>
     </StreamVideo>
@@ -342,4 +339,3 @@ export const MyUILayout = () => {
     </StreamTheme>
   );
 };
-
