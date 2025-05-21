@@ -10,7 +10,8 @@ import { useAuthStore } from "../store/authStore";
 import { useEffect, useState } from "react";
 
 const Login = () => {
-  const { email, password, isSubmitting, login, setEmail, setPassword } = useAuthStore();
+  const { email, password, isSubmitting, login, setEmail, setPassword } =
+    useAuthStore();
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
 
@@ -21,7 +22,7 @@ const Login = () => {
       // const { user }: { user: { role: string; filledForm?: boolean; approved?: boolean } } = response;
 
       const {
-        user
+        user,
       }: {
         user: {
           role: string;
@@ -30,58 +31,81 @@ const Login = () => {
           student?: {
             currentEnrollmentId?: string | null;
           };
-        }
+        };
       } = response;
-
-
+      localStorage.setItem("user", JSON.stringify({ ...response }));
+      console.log("user in localstorage", localStorage.getItem("user"));
       // console.log("The user role is", user.role);
 
       if (rememberMe == true) {
         localStorage.setItem("email", email);
         // console.log("Email is", email);
-
       } else {
         localStorage.removeItem("email");
       }
-      if (user.role === 'ADMIN') {
-        toast.success("Login successful!", { position: "top-right", autoClose: 5000 });
-        navigate('/admin/dashboard');
-      } else if (user.role === 'STUDENT') {
-        toast.success("Login successful!", { position: "top-right", autoClose: 5000 });
+      if (user.role === "ADMIN") {
+        toast.success("Login successful!", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+        navigate("/admin/dashboard");
+      } else if (user.role === "STUDENT") {
+        toast.success("Login successful!", {
+          position: "top-right",
+          autoClose: 5000,
+        });
         if (!user.filledForm) {
-          navigate("/student/form")
+          navigate("/student/form");
         } else if (user.student?.currentEnrollmentId) {
           navigate("/student/welcome");
         } else {
           navigate("/student/dashboard");
         }
-      }
-      else if (user.role === 'EMPLOYER') {
-        toast.success("Login successful!", { position: "top-right", autoClose: 5000 });
-        navigate('/employer/dashboard');
-      }
-      else if (user.role === 'FAMILY') {
-        toast.success("Login successful!", { position: "top-right", autoClose: 5000 });
-        navigate('/family/dashboard');
-      }
-      else if (user.role === 'MENTOR') {
+      } else if (user.role === "EMPLOYER") {
+        toast.success("Login successful!", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+        navigate("/employer/dashboard");
+      } else if (user.role === "FAMILY") {
+        toast.success("Login successful!", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+        navigate("/family/dashboard");
+      } else if (user.role === "MENTOR") {
         if (!user.filledForm) {
-          toast.info("Please complete the mentor form.", { position: "top-right", autoClose: 5000 });
-          navigate('/mentor/form');
+          toast.info("Please complete the mentor form.", {
+            position: "top-right",
+            autoClose: 5000,
+          });
+          navigate("/mentor/form");
         } else if (!user.approved) {
-          toast.info("Your account is awaiting approval.", { position: "top-right", autoClose: 5000 });
-          navigate('/mentor/waiting-approval');
+          toast.info("Your account is awaiting approval.", {
+            position: "top-right",
+            autoClose: 5000,
+          });
+          navigate("/mentor/waiting-approval");
         } else {
-          toast.success("Login successful!", { position: "top-right", autoClose: 5000 });
-          navigate('/mentor/dashboard');
+          toast.success("Login successful!", {
+            position: "top-right",
+            autoClose: 5000,
+          });
+          navigate("/mentor/dashboard");
         }
         // navigate('/mentor/dashboard');
       } else {
-        toast.error("Login Failed!", { position: "top-right", autoClose: 5000 });
-        navigate('/notfound');
+        toast.error("Login Failed!", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+        navigate("/notfound");
       }
     } catch (error) {
-      toast.error("Login failed. Incorrect email or password.", { position: "top-right", autoClose: 5000 });
+      toast.error("Login failed. Incorrect email or password.", {
+        position: "top-right",
+        autoClose: 5000,
+      });
     }
   };
 
@@ -101,11 +125,13 @@ const Login = () => {
         <div className="w-full lg:w-1/2 px-2 lg:px-10">
           <div className="flex flex-col items-center">
             <div className="flex items-center flex-col gap-y-2">
-              <Link to='/'>
+              <Link to="/">
                 <img src="/icons/logo.svg" />
               </Link>
               <h2 className="text-2xl text-blue-500 font-bold">Sign In</h2>
-              <h2 className="text-gray-500 font-semibold">Welcome back, You have been missed!</h2>
+              <h2 className="text-gray-500 font-semibold">
+                Welcome back, You have been missed!
+              </h2>
             </div>
             <TextInput
               label="Email"
@@ -131,21 +157,22 @@ const Login = () => {
                 <p className="text-gray-500 font-semibold">Remember me</p>
               </div>
               <div>
-                <Link to='/forgot' className="text-blue-600 font-semibold float-right text-end">
+                <Link
+                  to="/forgot"
+                  className="text-blue-600 font-semibold float-right text-end"
+                >
                   Forgot Password?
                 </Link>
               </div>
             </div>
             <button
-              className={`w-full py-3 px-[10 text-center rounded-2xl mt-10 mb-4 ${isButtonDisabled ? 'bg-gray-400' : 'bg-blue-600 cursor-pointer'} text-white text-lg font-semibold`}
+              className={`w-full py-3 px-[10 text-center rounded-2xl mt-10 mb-4 ${
+                isButtonDisabled ? "bg-gray-400" : "bg-blue-600 cursor-pointer"
+              } text-white text-lg font-semibold`}
               onClick={handleLogin}
               disabled={isButtonDisabled || isSubmitting}
             >
-              {isSubmitting ? (
-                <Levels speed={0.5} />
-              ) : (
-                <span>Sign In</span>
-              )}
+              {isSubmitting ? <Levels speed={0.5} /> : <span>Sign In</span>}
             </button>
             {/* <button
               className={`w-full py-3 px-10 flex items-center justify-center gap-x-5 border border-gray-400 rounded-2xl mt-10 mb-4 text-lg font-semibold`}
@@ -167,7 +194,7 @@ const Login = () => {
         <SlideShow />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

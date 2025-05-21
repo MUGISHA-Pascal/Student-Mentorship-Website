@@ -1,15 +1,15 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Users } from 'lucide-react'
-import { useState } from "react"
-import DashboardOverview from "@/components/dashboard/student/dashboardOverview"
-import StudentGraph from "@/components/dashboard/student/studentGraph"
-import Courses from "@/components/dashboard/student/courses"
-import { FaPlus } from "react-icons/fa"
-
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Users } from "lucide-react";
+import { useState } from "react";
+import DashboardOverview from "@/components/dashboard/student/dashboardOverview";
+import StudentGraph from "@/components/dashboard/student/studentGraph";
+import Courses from "@/components/dashboard/student/courses";
+import { FaPlus } from "react-icons/fa";
 
 export default function HomePageStudent() {
+  const { user } = JSON.parse(localStorage.getItem("user") || "{}");
+  console.log("user in appropriate format", user);
 
-  const [name] = useState("John Doe");
   const [ongoingCourse] = useState("Intermediate Piano Course");
   const [startDate] = useState("4th/September/2024");
   const [currentDate] = useState("9th/October/2024");
@@ -46,7 +46,7 @@ export default function HomePageStudent() {
         </CardContent>
       </Card> */}
       <DashboardOverview
-        name={name}
+        name={user.firstName + " " + user.lastName}
         ongoingCourse={ongoingCourse}
         startDate={startDate}
         currentDate={currentDate}
@@ -122,7 +122,12 @@ export default function HomePageStudent() {
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Upcoming</CardTitle>
             {/* <Button variant="ghost">Full Calendar</Button> */}
-            <a href="/student/dashboard/calendar" className="text-blue-500 font-medium">Full Calendar</a>
+            <a
+              href="/student/dashboard/calendar"
+              className="text-blue-500 font-medium"
+            >
+              Full Calendar
+            </a>
           </CardHeader>
           <CardContent>
             {[1, 2, 3, 4, 5].map((_, i) => (
@@ -133,12 +138,17 @@ export default function HomePageStudent() {
                   </div>
                   <div>
                     <h3 className="font-semibold">Meeting With The Students</h3>
-                    <p className="text-sm text-muted-foreground">More Students this year</p>
+                    <p className="text-sm text-muted-foreground">
+                      More Students this year
+                    </p>
                   </div>
                 </CardContent>
               </Card>
             ))}
-            <button className="fixed bottom-10 right-10 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition-colors" title='New Action'>
+            <button
+              className="fixed bottom-10 right-10 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition-colors"
+              title="New Action"
+            >
               <FaPlus size={20} />
             </button>
           </CardContent>
@@ -149,7 +159,12 @@ export default function HomePageStudent() {
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>What is New?</CardTitle>
           {/* <Button variant="ghost">Full Calendar</Button> */}
-          <a href="/student/dashboard/calendar" className="text-blue-500 font-medium">Full Calendar</a>
+          <a
+            href="/student/dashboard/calendar"
+            className="text-blue-500 font-medium"
+          >
+            Full Calendar
+          </a>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -163,7 +178,9 @@ export default function HomePageStudent() {
                   />
                   <div className="p-4">
                     <h4 className="font-semibold">Event Title</h4>
-                    <p className="text-sm text-muted-foreground">Event description</p>
+                    <p className="text-sm text-muted-foreground">
+                      Event description
+                    </p>
                   </div>
                 </CardContent>
               </Card>
@@ -193,5 +210,5 @@ export default function HomePageStudent() {
         <Courses />
       </Card>
     </div>
-  )
+  );
 }

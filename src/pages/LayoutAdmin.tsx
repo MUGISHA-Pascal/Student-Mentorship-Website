@@ -11,6 +11,7 @@ import {
   Plus,
   FileText,
   Puzzle,
+  WorkflowIcon,
 } from "lucide-react";
 import axios from "axios";
 import DarkModeToggle from "./DarkModeToggle";
@@ -137,6 +138,14 @@ const Sidebar = ({
           isActive={activeSection === "/admin/dashboard/chats"}
           onClick={() => onSectionChange("/admin/dashboard/chats")}
           to="/admin/dashboard/chats"
+          expanded={expanded}
+        />
+        <SidebarLink
+          icon={<WorkflowIcon />}
+          label="Careers"
+          isActive={activeSection === "/admin/dashboard/careers"}
+          onClick={() => onSectionChange("/admin/dashboard/careers")}
+          to="/admin/dashboard/careers"
           expanded={expanded}
         />
       </nav>
@@ -325,6 +334,7 @@ export default function LayoutAdmin() {
     "/admin/dashboard/blogs": "Blogs",
     "/admin/dashboard/blogs/new": "Create New Blog",
     "/admin/dashboard/cohorts": "Cohorts",
+    "/admin/dashboard/careers": "Careers",
     "/admin/dashboard/assessments": "Assessments",
     "/admin/dashboard/chats": "Chats",
     "/admin/dashboard/docs": "Documents",
