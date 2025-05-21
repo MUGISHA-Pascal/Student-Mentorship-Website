@@ -216,6 +216,8 @@ export default function AdminCohorts() {
     status: CohortStatus.UPCOMING,
     capacity: 30,
   });
+  // Add a state to trigger refetching
+  const [refetchTrigger, setRefetchTrigger] = useState(0);
 
   // Fetch careers and cohorts data
   useEffect(() => {
@@ -251,8 +253,18 @@ export default function AdminCohorts() {
         setCohorts(cohortsData);
 
         // Set the first career as selected if available
-        if (careersData.length > 0) {
+        if (careersData.length > 0 && !selectedCareer) {
           setSelectedCareer(careersData[0]);
+        }
+
+        // If we have a selected cohort, update it with fresh data
+        if (selectedCohort) {
+          const updatedSelectedCohort = cohortsData.find(
+            (c: Cohort) => c.id === selectedCohort.id
+          );
+          if (updatedSelectedCohort) {
+            setSelectedCohort(updatedSelectedCohort);
+          }
         }
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -270,7 +282,7 @@ export default function AdminCohorts() {
           }))
         );
 
-        if (sampleCareers.length > 0) {
+        if (sampleCareers.length > 0 && !selectedCareer) {
           setSelectedCareer(sampleCareers[0]);
         }
       } finally {
@@ -279,7 +291,19 @@ export default function AdminCohorts() {
     };
 
     fetchData();
-  }, []);
+
+    // Removed polling interval setup and replace with more targeted updates
+    // In the useEffect function, remove this code:
+    // Set up polling for real-time updates
+    // const pollingInterval = setInterval(() => {
+    //   // Only poll if we're not in the middle of editing or creating
+    //   if (!isEditing && !isCreating) {
+    //     fetchData()
+    //   }
+    // }, 10000) // Poll every 10 seconds
+
+    // return () => clearInterval(pollingInterval) // Clean up on unmount
+  }, [refetchTrigger]); // Removed selectedCohort.id from dependencies to fix lint error
 
   // Filter cohorts based on selected career and search query
   const filteredCohorts = cohorts.filter(
@@ -295,6 +319,9 @@ export default function AdminCohorts() {
     setSelectedCohort(null);
     setIsEditing(false);
     setIsCreating(false);
+
+    // Trigger a refetch to get cohorts for this career
+    setRefetchTrigger((prev) => prev + 1);
   };
 
   // Handle selecting a cohort
@@ -359,12 +386,31 @@ export default function AdminCohorts() {
     });
   };
 
+  // And modify the handleSaveCohort function to implement optimistic UI updates:
   // Handle saving a cohort (create or update)
   const handleSaveCohort = async () => {
     try {
       if (isEditing) {
-        // Update existing cohort
-        // In a real application, this would be an API call
+        // Optimistic UI update for editing
+        const optimisticUpdatedCohort = {
+          ...selectedCohort,
+          name: formData.name,
+          careerId: formData.careerId,
+          startDate: new Date(formData.startDate),
+          endDate: new Date(formData.endDate),
+          status: formData.status,
+          capacity: formData.capacity,
+          updatedAt: new Date(),
+        };
+
+        // Update local state immediately
+        const updatedCohorts = cohorts.map((cohort) =>
+          cohort.id === formData.id ? optimisticUpdatedCohort : cohort
+        );
+        setCohorts(updatedCohorts);
+        setSelectedCohort(optimisticUpdatedCohort);
+
+        // Make the API call
         const response = await fetch(
           `http://localhost:3000/api/v1/coach/update-cohort/${formData.id}`,
           {
@@ -373,29 +419,22 @@ export default function AdminCohorts() {
             body: JSON.stringify(formData),
           }
         );
-        const updatedCohort = await response.json();
 
-        // Simulate API response
-        // const updatedCohort = {
-        //   ...formData,
-        //   id: formData.id,
-        //   startDate: new Date(formData.startDate),
-        //   endDate: new Date(formData.endDate),
-        //   createdAt: selectedCohort?.createdAt || new Date(),
-        //   updatedAt: new Date(),
-        //   enrollments: selectedCohort?.enrollments || [],
-        // };
+        if (!response.ok) {
+          throw new Error(`Failed to update cohort: ${response.statusText}`);
+        }
 
-        // Update local state
-        const updatedCohorts = cohorts.map((cohort) =>
-          cohort.id === formData.id ? updatedCohort : cohort
+        const serverUpdatedCohort = await response.json();
+
+        // Update with server data to ensure consistency
+        const finalUpdatedCohorts = cohorts.map((cohort) =>
+          cohort.id === formData.id ? serverUpdatedCohort : cohort
         );
-
-        setCohorts(updatedCohorts);
-        setSelectedCohort(updatedCohort);
+        setCohorts(finalUpdatedCohorts);
+        setSelectedCohort(serverUpdatedCohort);
       } else if (isCreating) {
-        // Create new cohort
-        // In a real application, this would be an API call
+        // For creation, we can't do optimistic UI updates as easily since we don't have an ID
+        // Make the API call
         const response = await fetch(
           "http://localhost:3000/api/v1/coach/add-cohort",
           {
@@ -404,21 +443,15 @@ export default function AdminCohorts() {
             body: JSON.stringify(formData),
           }
         );
+
+        if (!response.ok) {
+          throw new Error(`Failed to create cohort: ${response.statusText}`);
+        }
+
         const newCohort = await response.json();
 
-        // Simulate API response
-        // const newCohort = {
-        //   ...formData,
-        //   id: `new-${Date.now()}`,
-        //   startDate: new Date(formData.startDate),
-        //   endDate: new Date(formData.endDate),
-        //   createdAt: new Date(),
-        //   updatedAt: new Date(),
-        //   enrollments: [],
-        // };
-
-        const updatedCohorts = [...cohorts, newCohort];
-        setCohorts(updatedCohorts);
+        // Update local state with the new cohort
+        setCohorts((prevCohorts) => [...prevCohorts, newCohort]);
         setSelectedCohort(newCohort);
       }
 
@@ -430,32 +463,53 @@ export default function AdminCohorts() {
       setError(
         err instanceof Error ? err.message : "An unknown error occurred"
       );
+
+      // If there was an error, refetch to ensure data consistency
+      setRefetchTrigger((prev) => prev + 1);
     }
   };
 
+  // Also update the handleDeleteCohort function to be more robust:
   // Handle deleting a cohort
   const handleDeleteCohort = async (id: string) => {
     try {
-      // In a real application, this would be an API call
-      await fetch(`http://localhost:3000/api/v1/coach/delete-cohort/${id}`, {
-        method: "DELETE",
-      });
+      // Store the cohort being deleted in case we need to restore it
+      const cohortToDelete = cohorts.find((c) => c.id === id);
 
-      // Update local state
-      //   const updatedCohorts = cohorts.filter((cohort) => cohort.id !== id);
-      //   setCohorts(updatedCohorts);
+      // Optimistic UI update - remove from local state immediately
+      setCohorts((prevCohorts) =>
+        prevCohorts.filter((cohort) => cohort.id !== id)
+      );
 
-      // Update selected cohort if needed
+      // If the deleted cohort was selected, clear selection
       if (selectedCohort && selectedCohort.id === id) {
         setSelectedCohort(null);
       }
 
+      // Make the API call
+      const response = await fetch(
+        `http://localhost:3000/api/v1/coach/delete-cohort/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete cohort: ${response.statusText}`);
+      }
+
+      await response.json();
+
+      // No need to refetch if deletion was successful
       setError(null);
     } catch (err) {
       console.error("Error deleting cohort:", err);
       setError(
         err instanceof Error ? err.message : "An unknown error occurred"
       );
+
+      // If the delete failed, refetch to restore correct state
+      setRefetchTrigger((prev) => prev + 1);
     }
   };
 
@@ -928,7 +982,10 @@ export default function AdminCohorts() {
                               <img
                                 src={
                                   enrollment.student.avatar ||
-                                  "/placeholder.svg?height=50&width=50"
+                                  "/placeholder.svg?height=50&width=50" ||
+                                  "/placeholder.svg" ||
+                                  "/placeholder.svg" ||
+                                  "/placeholder.svg"
                                 }
                                 alt={enrollment.student.name}
                               />
