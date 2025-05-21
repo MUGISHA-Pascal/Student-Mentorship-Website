@@ -47,7 +47,6 @@ enum CohortStatus {
   UPCOMING = "UPCOMING",
   ONGOING = "ONGOING",
   COMPLETED = "COMPLETED",
-  CANCELLED = "CANCELLED",
 }
 
 interface Cohort {
@@ -229,20 +228,24 @@ export default function AdminCohorts() {
         // For now, we'll simulate API responses with our sample data
 
         // Simulate API call to fetch careers
-        // const careersResponse = await fetch("http://localhost:3000/api/v1/careers")
-        // const careersData = await careersResponse.json()
-        const careersData = sampleCareers;
+        const careersResponse = await fetch(
+          "http://localhost:3000/api/v1/coach/get-careers"
+        );
+        const careersData = await careersResponse.json();
+        // const careersData = sampleCareers;
 
         // Simulate API call to fetch cohorts
-        // const cohortsResponse = await fetch("http://localhost:3000/api/v1/cohorts")
-        // const cohortsData = await cohortsResponse.json()
-        const cohortsData = sampleCohorts.map((cohort) => ({
-          ...cohort,
-          startDate: new Date(cohort.startDate),
-          endDate: new Date(cohort.endDate),
-          createdAt: new Date(cohort.createdAt),
-          updatedAt: new Date(cohort.updatedAt),
-        }));
+        const cohortsResponse = await fetch(
+          "http://localhost:3000/api/v1/coach/cohorts"
+        );
+        const cohortsData = await cohortsResponse.json();
+        // const cohortsData = sampleCohorts.map((cohort) => ({
+        //   ...cohort,
+        //   startDate: new Date(cohort.startDate),
+        //   endDate: new Date(cohort.endDate),
+        //   createdAt: new Date(cohort.createdAt),
+        //   updatedAt: new Date(cohort.updatedAt),
+        // }));
 
         setCareers(careersData);
         setCohorts(cohortsData);
@@ -362,23 +365,26 @@ export default function AdminCohorts() {
       if (isEditing) {
         // Update existing cohort
         // In a real application, this would be an API call
-        // const response = await fetch(`http://localhost:3000/api/v1/cohorts/${formData.id}`, {
-        //   method: "PUT",
-        //   headers: { "Content-Type": "application/json" },
-        //   body: JSON.stringify(formData),
-        // })
-        // const updatedCohort = await response.json()
+        const response = await fetch(
+          `http://localhost:3000/api/v1/coach/update-cohort/${formData.id}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+          }
+        );
+        const updatedCohort = await response.json();
 
         // Simulate API response
-        const updatedCohort = {
-          ...formData,
-          id: formData.id,
-          startDate: new Date(formData.startDate),
-          endDate: new Date(formData.endDate),
-          createdAt: selectedCohort?.createdAt || new Date(),
-          updatedAt: new Date(),
-          enrollments: selectedCohort?.enrollments || [],
-        };
+        // const updatedCohort = {
+        //   ...formData,
+        //   id: formData.id,
+        //   startDate: new Date(formData.startDate),
+        //   endDate: new Date(formData.endDate),
+        //   createdAt: selectedCohort?.createdAt || new Date(),
+        //   updatedAt: new Date(),
+        //   enrollments: selectedCohort?.enrollments || [],
+        // };
 
         // Update local state
         const updatedCohorts = cohorts.map((cohort) =>
@@ -390,23 +396,26 @@ export default function AdminCohorts() {
       } else if (isCreating) {
         // Create new cohort
         // In a real application, this would be an API call
-        // const response = await fetch("http://localhost:3000/api/v1/cohorts", {
-        //   method: "POST",
-        //   headers: { "Content-Type": "application/json" },
-        //   body: JSON.stringify(formData),
-        // })
-        // const newCohort = await response.json()
+        const response = await fetch(
+          "http://localhost:3000/api/v1/coach/add-cohort",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+          }
+        );
+        const newCohort = await response.json();
 
         // Simulate API response
-        const newCohort = {
-          ...formData,
-          id: `new-${Date.now()}`,
-          startDate: new Date(formData.startDate),
-          endDate: new Date(formData.endDate),
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          enrollments: [],
-        };
+        // const newCohort = {
+        //   ...formData,
+        //   id: `new-${Date.now()}`,
+        //   startDate: new Date(formData.startDate),
+        //   endDate: new Date(formData.endDate),
+        //   createdAt: new Date(),
+        //   updatedAt: new Date(),
+        //   enrollments: [],
+        // };
 
         const updatedCohorts = [...cohorts, newCohort];
         setCohorts(updatedCohorts);
@@ -428,13 +437,13 @@ export default function AdminCohorts() {
   const handleDeleteCohort = async (id: string) => {
     try {
       // In a real application, this would be an API call
-      // const response = await fetch(`http://localhost:3000/api/v1/cohorts/${id}`, {
-      //   method: "DELETE",
-      // })
+      await fetch(`http://localhost:3000/api/v1/coach/delete-cohort/${id}`, {
+        method: "DELETE",
+      });
 
       // Update local state
-      const updatedCohorts = cohorts.filter((cohort) => cohort.id !== id);
-      setCohorts(updatedCohorts);
+      //   const updatedCohorts = cohorts.filter((cohort) => cohort.id !== id);
+      //   setCohorts(updatedCohorts);
 
       // Update selected cohort if needed
       if (selectedCohort && selectedCohort.id === id) {
@@ -481,8 +490,6 @@ export default function AdminCohorts() {
         return "bg-green-100 text-green-800";
       case CohortStatus.COMPLETED:
         return "bg-purple-100 text-purple-800";
-      case CohortStatus.CANCELLED:
-        return "bg-red-100 text-red-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
@@ -808,18 +815,6 @@ export default function AdminCohorts() {
                           className="text-sm font-normal"
                         >
                           Completed
-                        </Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem
-                          value={CohortStatus.CANCELLED}
-                          id="cancelled"
-                        />
-                        <Label
-                          htmlFor="cancelled"
-                          className="text-sm font-normal"
-                        >
-                          Cancelled
                         </Label>
                       </div>
                     </RadioGroup>
