@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Search, Filter, MoreVertical, Upload } from "lucide-react";
@@ -57,7 +59,6 @@ export default function StudentDocsPage() {
   const fetchDocuments = async () => {
     if (!userId) return;
     try {
-      // const response = await axios.get(`https://api.goyoungafrica.org/api/v1/document/get-course-docs/${userId}`);
       const response = await axios.get(
         `http://localhost:3000/api/v1/document/get-course-docs/${userId}`
       );
@@ -74,7 +75,6 @@ export default function StudentDocsPage() {
             ? "/svgs/video_course.svg"
             : "/svgs/file_course.svg",
           extension: doc.fileType.split("/").pop()?.toUpperCase(),
-          // downloadLink: `https://api.goyoungafrica.org/api/v1/document/download-course-doc/${doc.fileName}`,
           downloadLink: `http://localhost:3000/api/v1/document/download-course-doc/${doc.fileName}`,
           courseType: doc.fileType.startsWith("video") ? "video" : "file",
           dateCreated: doc.uploadDate,
@@ -113,7 +113,6 @@ export default function StudentDocsPage() {
 
   const handleDeleteDocument = async (documentId: string) => {
     try {
-      // await axios.delete(`https://api.goyoungafrica.org/api/v1/document/delete-course-doc/${documentId}`);
       await axios.delete(
         `http://localhost:3000/api/v1/document/delete-course-doc/${documentId}`
       );
@@ -252,7 +251,7 @@ export default function StudentDocsPage() {
               className="shadow-md rounded-lg py-4 px-2 cursor-pointer"
             >
               <img
-                src={course.image}
+                src={course.image || "/placeholder.svg"}
                 alt={course.title}
                 className="w-4/5 object-contain rounded-md mb-4"
               />
@@ -277,8 +276,6 @@ export default function StudentDocsPage() {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                {/* <a href={course.downloadLink} download target="_blank" rel="noopener noreferrer" className="hover:text-blue-500">
-                </a> */}
                 <button
                   onClick={() =>
                     handleDownload(
@@ -295,6 +292,7 @@ export default function StudentDocsPage() {
           ))
         )}
       </div>
+
       <UploadModal
         isOpen={isUploadModalOpen}
         onClose={closeUploadModal}

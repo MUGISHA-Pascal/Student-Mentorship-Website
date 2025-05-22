@@ -120,7 +120,7 @@ export default function StudentMentorProfile() {
   const fetchCohorts = async (careerId: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/v1/coach/cohorts?careerId=${careerId}`
+        `http://localhost:3000/api/v1/coach/cohortByCareerId/${careerId}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch cohorts");
@@ -137,7 +137,7 @@ export default function StudentMentorProfile() {
   const fetchCourses = async (careerId: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/v1/coach/courses?careerId=${careerId}`
+        `http://localhost:3000/api/v1/coach/coursesByCareerId/${careerId}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch courses");
@@ -269,7 +269,7 @@ export default function StudentMentorProfile() {
 
   // If user doesn't have a mentor, show the mentor selection process
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className=" mx-auto px-4 py-8 max-w-4xl">
       <h1 className="text-2xl font-bold mb-6">Find Your Mentor</h1>
 
       {error && (

@@ -1,351 +1,262 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Progress } from "@/components/ui/progress";
-import { XCircle, PauseCircle } from "lucide-react";
-import { v4 as uuidv4 } from "uuid";
+"use client";
+
+import { useState, useEffect, type ChangeEvent, type FormEvent } from "react";
 import axios from "axios";
+import { X, Upload } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "react-toastify";
 
-interface UploadedFile {
+interface Career {
   id: string;
-  name: string;
-  progress: number;
-  status: "initial" | "uploading" | "done" | "failed";
-  size: string;
-  timeRemaining?: string;
-  inputFile: File;
-  startTime?: number;
-  uploadedBytes?: number;
+  title: string;
+  description: string;
 }
 
-const UploadModal = ({
-  isOpen,
-  onClose,
-  userId,
-  onCourseUploaded,
-}: {
+interface UploadModalProps {
   isOpen: boolean;
   onClose: () => void;
   userId: string | null;
   onCourseUploaded: () => void;
-}) => {
-  const [step, setStep] = useState(1);
-  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
-  const [dragActive, setDragActive] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [courseDetails, setCourseDetails] = useState({
-    name: "",
-    description: "",
-  });
-  const [
-    ,
-    // status
-    setStatus,
-  ] = useState<"initial" | "uploading" | "done" | "failed">("initial");
+}
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setCourseDetails((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+export default function UploadModal({
+  isOpen,
+  onClose,
+  userId,
+  onCourseUploaded,
+}: UploadModalProps) {
+  const [file, setFile] = useState<File | null>(null);
+  const [courseName, setCourseName] = useState("");
+  const [courseDescription, setCourseDescription] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+  const [careers, setCareers] = useState<Career[]>([]);
+  const [selectedCareerId, setSelectedCareerId] = useState("");
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Fetch careers when the modal opens
+    if (isOpen) {
+      fetchCareers();
+      // Reset form when opening
+      setFile(null);
+      setCourseName("");
+      setCourseDescription("");
+      setSelectedCareerId("");
+      setError(null);
+    }
+  }, [isOpen]);
+
+  const fetchCareers = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:3000/api/v1/coach/get-careers"
+      );
+      setCareers(response.data);
+    } catch (error) {
+      console.error("Error fetching careers:", error);
+      setError("Failed to load careers. Please try again.");
+    }
   };
 
-  const handleFileUpload = async (files: FileList) => {
-    if (files.length > 1) {
-      toast.error("Please upload only one file at a time.", {
-        position: "top-right",
-        autoClose: 5000,
-      });
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile(e.target.files[0]);
+    }
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    if (!file) {
+      toast.error("Please select a file to upload");
       return;
     }
 
-    const file = files[0];
+    if (!courseName.trim()) {
+      toast.error("Please enter a course name");
+      return;
+    }
 
-    const newFile = {
-      id: uuidv4(),
-      name: file.name,
-      size: `${(file.size / (1024 * 1024)).toFixed(2)} MB`,
-      progress: 0,
-      status: "initial" as "initial" | "uploading" | "done" | "failed",
-      inputFile: file,
-      startTime: Date.now(),
-      uploadedBytes: 0,
-    };
+    if (!selectedCareerId) {
+      toast.error("Please select a career");
+      return;
+    }
 
-    setUploadedFiles([newFile]); // Replace any existing file
-  };
-
-  const handleSubmit = async () => {
     if (!userId) {
-      toast.error("User ID is required to submit!", {
-        position: "top-right",
-        autoClose: 5000,
-      });
+      toast.error("User ID is missing");
       return;
     }
 
-    if (uploadedFiles.length === 0) {
-      toast.error("Please upload a file before submitting.", {
-        position: "top-right",
-        autoClose: 5000,
-      });
-      return;
-    }
+    setIsUploading(true);
+    setError(null);
 
-    const file = uploadedFiles[0].inputFile; // Get the single file
     const formData = new FormData();
-
-    formData.append("file", file); // Ensure the field name matches the backend's expected name
-    formData.append("courseName", courseDetails.name);
-    formData.append("description", courseDetails.description);
+    formData.append("file", file);
+    formData.append("courseName", courseName);
+    formData.append("courseDescription", courseDescription);
     formData.append("coachId", userId);
+    formData.append("careerId", selectedCareerId);
 
     try {
-      setIsSubmitting(true);
-      setUploadedFiles((prev) =>
-        prev.map((f) => ({ ...f, status: "uploading", progress: 0 }))
-      );
-
-      // await axios.post('https://api.goyoungafrica.org/api/v1/document/upload-course-doc', formData, {
       await axios.post(
         "http://localhost:3000/api/v1/document/upload-course-doc",
         formData,
         {
-          headers: { "Content-Type": "multipart/form-data" },
-          onUploadProgress: (progressEvent) => {
-            if (progressEvent.total && progressEvent.loaded) {
-              const progress = Math.min(
-                (progressEvent.loaded / progressEvent.total) * 100,
-                100
-              );
-              setUploadedFiles((prev) =>
-                prev.map((f) =>
-                  f.id === uploadedFiles[0].id ? { ...f, progress } : f
-                )
-              );
-            }
+          headers: {
+            "Content-Type": "multipart/form-data",
           },
         }
       );
 
-      toast.success("Submission successful!", {
-        position: "top-right",
-        autoClose: 5000,
-      });
-      setUploadedFiles((prev) =>
-        prev.map((f) => ({ ...f, status: "done", progress: 100 }))
-      );
-
-      // Trigger the refresh of the courses list in the parent component
-      onCourseUploaded(); // <-- Call the parent function to update the courses
-
-      cancelAllProcesses();
+      toast.success("Course uploaded successfully!");
+      onClose();
+      onCourseUploaded();
     } catch (error) {
-      console.error("Submission error:", error);
-      setUploadedFiles((prev) => prev.map((f) => ({ ...f, status: "failed" })));
-
-      const errorMessage = "Submission failed. Please try again.";
-      toast.error(errorMessage, { position: "top-right", autoClose: 5000 });
+      console.error("Error uploading course:", error);
+      toast.error("Failed to upload course. Please try again.");
+      setError("Failed to upload course. Please try again.");
     } finally {
-      setIsSubmitting(false);
+      setIsUploading(false);
     }
   };
 
-  const cancelUpload = (id: string) => {
-    setUploadedFiles((prev) => prev.filter((file) => file.id !== id));
-  };
-
-  const cancelAllProcesses = () => {
-    setUploadedFiles([]);
-    setStatus("initial");
-    onClose();
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    setDragActive(true);
-  };
-
-  const handleDragLeave = () => {
-    setDragActive(false);
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setDragActive(false);
-    if (e.dataTransfer.files) {
-      handleFileUpload(e.dataTransfer.files);
-    }
-  };
-
-  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      handleFileUpload(e.target.files);
-    }
-  };
+  if (!isOpen) return null;
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
-        <DialogHeader>
-          <h2 className="text-xl font-semibold">
-            {step === 1 ? "Upload Files" : "Course Details"}
-          </h2>
-        </DialogHeader>
-
-        {step === 1 && (
-          <div
-            className={`border-2 border-dashed rounded-lg p-6 ${
-              dragActive ? "border-blue-500" : "border-gray-300"
-            }`}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold">Upload Course Document</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700"
           >
-            <input
-              type="file"
-              className="hidden"
-              id="file-upload"
-              multiple
-              onChange={handleFileInputChange}
-            />
-            <label
-              htmlFor="file-upload"
-              className="cursor-pointer text-center block"
+            <X className="h-6 w-6" />
+          </button>
+        </div>
+
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <Label
+              htmlFor="courseName"
+              className="block text-sm font-medium text-gray-700 mb-1"
             >
-              <p className="text-blue-500 mb-2">Drag and drop files here</p>
-              <p>or</p>
-              <Button>Browse Files</Button>
-            </label>
+              Course Name
+            </Label>
+            <Input
+              id="courseName"
+              type="text"
+              value={courseName}
+              onChange={(e) => setCourseName(e.target.value)}
+              placeholder="Enter course name"
+              required
+              className="w-full"
+            />
           </div>
-        )}
 
-        {step === 2 && (
-          <div className="mt-4 space-y-4">
-            <div>
-              <label htmlFor="title" className="block text-sm font-medium mb-1">
-                Course Title
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={courseDetails.name}
-                onChange={handleInputChange}
-                className="w-full border rounded px-3 py-2"
+          <div className="mb-4">
+            <Label
+              htmlFor="courseDescription"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Course Description
+            </Label>
+            <Textarea
+              id="courseDescription"
+              value={courseDescription}
+              onChange={(e) => setCourseDescription(e.target.value)}
+              placeholder="Enter course description"
+              className="w-full min-h-[100px]"
+            />
+          </div>
+
+          <div className="mb-4">
+            <Label
+              htmlFor="career"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Career
+            </Label>
+            <Select
+              value={selectedCareerId}
+              onValueChange={setSelectedCareerId}
+            >
+              <SelectTrigger id="career" className="w-full">
+                <SelectValue placeholder="Select a career" />
+              </SelectTrigger>
+              <SelectContent>
+                {careers.map((career) => (
+                  <SelectItem key={career.id} value={career.id}>
+                    {career.title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="mb-6">
+            <Label
+              htmlFor="file"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Document File
+            </Label>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+              <Input
+                id="file"
+                type="file"
+                onChange={handleFileChange}
+                className="hidden"
+                accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.jpg,.jpeg,.png,.mp4,.mov,.avi"
               />
-            </div>
-
-            <div>
               <label
-                htmlFor="description"
-                className="block text-sm font-medium mb-1"
+                htmlFor="file"
+                className="cursor-pointer flex flex-col items-center justify-center text-gray-500 hover:text-gray-700"
               >
-                Course Description
+                <Upload className="h-8 w-8 mb-2" />
+                <span className="text-sm font-medium">
+                  {file ? file.name : "Click to select a file or drag and drop"}
+                </span>
+                {file && (
+                  <span className="text-xs text-gray-500 mt-1">
+                    {(file.size / 1024 / 1024).toFixed(2)} MB
+                  </span>
+                )}
               </label>
-              <textarea
-                id="description"
-                name="description"
-                value={courseDetails.description}
-                onChange={handleInputChange}
-                className="w-full border rounded px-3 py-2 h-24"
-              />
             </div>
           </div>
-        )}
 
-        {uploadedFiles.length > 0 && step === 1 && (
-          <div className="mt-4">
-            <h3 className="font-semibold mb-2">Uploaded Files</h3>
-            <ul className="space-y-2">
-              {uploadedFiles.map((file, index) => (
-                <li
-                  key={index}
-                  className="flex items-center justify-between border p-2 rounded"
-                >
-                  <div className="flex-1">
-                    <p className="font-medium">{file.name}</p>
-                    <p className="text-sm text-gray-500">{file.size}</p>
-                    {file.status === "uploading" && (
-                      <p className="text-xs text-gray-400">
-                        {file.timeRemaining}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="w-1/3">
-                    <Progress value={file.progress} />
-                  </div>
-
-                  <div className="ml-4 flex items-center space-x-2">
-                    {file.status === "uploading" ? (
-                      <>
-                        <PauseCircle className="text-gray-500 w-5 h-5 cursor-pointer" />
-                        <XCircle
-                          onClick={() => cancelUpload(file.id)}
-                          className="text-red-500 w-5 h-5 cursor-pointer"
-                        />
-                      </>
-                    ) : (
-                      <XCircle
-                        onClick={() => cancelUpload(file.id)}
-                        className="text-gray-500 w-5 h-5 cursor-pointer"
-                      />
-                    )}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        <DialogFooter className="mt-4 flex justify-between">
-          {step === 1 && (
-            <Button onClick={cancelAllProcesses} variant="outline">
+          <div className="flex justify-end">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onClose}
+              className="mr-2"
+            >
               Cancel
             </Button>
-          )}
-
-          {step === 1 && (
-            <Button
-              onClick={() => setStep(2)}
-              disabled={uploadedFiles.some(
-                (file) => file.status === "uploading"
-              )}
-              className={
-                uploadedFiles.some((file) => file.status === "uploading")
-                  ? "opacity-50"
-                  : ""
-              }
-            >
-              Next
+            <Button type="submit" disabled={isUploading}>
+              {isUploading ? "Uploading..." : "Upload"}
             </Button>
-          )}
-
-          {step === 2 && (
-            <>
-              <Button onClick={() => setStep(1)} variant="outline">
-                Back
-              </Button>
-              <Button onClick={handleSubmit} disabled={isSubmitting}>
-                {isSubmitting ? "Submitting..." : "Submit"}
-              </Button>
-            </>
-          )}
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          </div>
+        </form>
+      </div>
+    </div>
   );
-};
-
-export default UploadModal;
+}
