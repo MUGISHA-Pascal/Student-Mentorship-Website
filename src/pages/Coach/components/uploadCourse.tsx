@@ -103,7 +103,7 @@ export default function UploadModal({
     const formData = new FormData();
     formData.append("file", file);
     formData.append("courseName", courseName);
-    formData.append("courseDescription", courseDescription);
+    formData.append("description", courseDescription);
     formData.append("coachId", userId);
     formData.append("careerId", selectedCareerId);
 

@@ -67,7 +67,7 @@ export default function StudentMentorProfile() {
   const [careers, setCareers] = useState<Career[]>([]);
   const [cohorts, setCohorts] = useState<Cohort[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
-  const [mentors, setMentors] = useState<Mentor[]>([]);
+  const [mentors, setMentors] = useState<any[]>([]);
 
   // Selected items
   const [selectedCareer, setSelectedCareer] = useState<string>("");
@@ -98,7 +98,7 @@ export default function StudentMentorProfile() {
     // Fetch careers on initial load
     fetchCareers();
   }, []);
-
+  console.log("user found", user);
   // Fetch careers from the backend
   const fetchCareers = async () => {
     try {
@@ -154,12 +154,13 @@ export default function StudentMentorProfile() {
   const fetchMentors = async (courseId: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/v1/coach/mentors?courseId=${courseId}`
+        `http://localhost:3000/api/v1/coach/mentorsByCourseId/${courseId}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch mentors");
       }
       const data = await response.json();
+      console.log("mentor ", data);
       setMentors(data);
     } catch (err) {
       console.error("Error fetching mentors:", err);
@@ -206,7 +207,7 @@ export default function StudentMentorProfile() {
       const response = await fetch(
         "http://localhost:3000/api/v1/student/assign-mentor",
         {
-          method: "POST",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
@@ -247,19 +248,28 @@ export default function StudentMentorProfile() {
       </div>
     );
   }
-
+  console.log("coach found ", user.student.coach);
+  console.log("coach user details found  ", user.student.coach.user);
   // If user has a mentor, show the mentor profile
-  if (user?.coach && user.coach.length > 0) {
+  if (user.student.coach.id) {
     return (
       <div className="container mx-auto px-4 py-8">
         <CoachIntro
-          image="/images/mentor_profile.png"
-          name="Dr. Marcus"
-          fullName="Dr. John Doe"
-          phoneNumber="+250 780 000 000"
-          specialization="IT Monetization"
-          bio="Bio info about the coach on his background and also some experience info to give the student more interest."
-          reviews={31}
+          image={user.student.coach.image}
+          name={
+            user.student.coach.user.firstName +
+            " " +
+            user.student.coach.user.lastName
+          }
+          fullName={
+            user.student.coach.user.firstName +
+            " " +
+            user.student.coach.user.lastName
+          }
+          email={user.student.coach.user.email}
+          specialization=""
+          bio={user.student.coach.bio}
+          // reviews={31}
         />
         <MentorExperience />
         <Reviews />
@@ -577,28 +587,28 @@ export default function StudentMentorProfile() {
                         <Avatar className="h-16 w-16 mr-4">
                           <img
                             src={
-                              mentor.avatar ||
-                              "/placeholder.svg?height=64&width=64"
+                              mentor.coach.image ||
+                              "/svgs/avatar1.svg?height=64&width=64"
                             }
-                            alt={mentor.name}
+                            alt={mentor.firstName}
                           />
                         </Avatar>
                         <div className="flex-1">
                           <div className="flex justify-between">
                             <div>
                               <div className="font-medium text-lg">
-                                {mentor.name}
+                                {mentor.firstName + " " + mentor.lastName}
                               </div>
                               <div className="text-sm text-gray-500">
                                 {mentor.specialization}
                               </div>
                             </div>
-                            <Badge className="bg-blue-100 text-blue-800">
+                            {/* <Badge className="bg-blue-100 text-blue-800">
                               {mentor.reviews} Reviews
-                            </Badge>
+                            </Badge> */}
                           </div>
                           <p className="text-sm text-gray-600 mt-2 line-clamp-2">
-                            {mentor.bio}
+                            {mentor.coach.bio ? mentor.coach.bio : "no bio"}
                           </p>
                         </div>
                       </div>
