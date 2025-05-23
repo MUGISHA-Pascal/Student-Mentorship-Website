@@ -68,7 +68,7 @@ export default function StudentMentorProfile() {
   const [cohorts, setCohorts] = useState<Cohort[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
   const [mentors, setMentors] = useState<any[]>([]);
-
+  const [userId, setUserId] = useState();
   // Selected items
   const [selectedCareer, setSelectedCareer] = useState<string>("");
   const [selectedCohort, setSelectedCohort] = useState<string>("");
@@ -80,6 +80,27 @@ export default function StudentMentorProfile() {
     window.location.reload();
   }, []);
 
+  // Fetch user data by ID - Define this function before it's used
+  const fetchUserId = async (userId: string) => {
+    if (!userId) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/v1/user/get-user/${userId}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch user data");
+      }
+      const data = await response.json();
+      console.log("user data ", data);
+
+      setUserId(data.student.coachId);
+    } catch (err) {
+      console.error("Error fetching user data:", err);
+      setError("Failed to load user data");
+    }
+  };
+
   useEffect(() => {
     // Get user from localStorage
     try {
@@ -87,6 +108,11 @@ export default function StudentMentorProfile() {
       if (userData) {
         const parsedUser = JSON.parse(userData);
         setUser(parsedUser.user);
+
+        // If user exists, fetch their data immediately
+        if (parsedUser.user?.id) {
+          fetchUserId(parsedUser.user.id);
+        }
       }
     } catch (err) {
       console.error("Error parsing user data:", err);
@@ -221,8 +247,12 @@ export default function StudentMentorProfile() {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to assign mentor");
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || "Failed to assign mentor");
       }
+
+      // Fetch updated user data
+      await fetchUserId(user.id);
 
       // Update local storage with the new mentor
       const updatedUser = { ...user, coach: selectedMentor };
@@ -233,7 +263,7 @@ export default function StudentMentorProfile() {
       refreshPage();
     } catch (err) {
       console.error("Error assigning mentor:", err);
-      setError("Failed to assign mentor");
+      setError(err instanceof Error ? err.message : "Failed to assign mentor");
     }
   };
 
@@ -248,10 +278,9 @@ export default function StudentMentorProfile() {
       </div>
     );
   }
-  console.log("coach found ", user.student.coach);
-  console.log("coach user details found  ", user.student.coach.user);
+
   // If user has a mentor, show the mentor profile
-  if (user.student.coach.id) {
+  if (userId != null) {
     return (
       <div className="container mx-auto px-4 py-8">
         <CoachIntro
@@ -588,7 +617,8 @@ export default function StudentMentorProfile() {
                           <img
                             src={
                               mentor.coach.image ||
-                              "/svgs/avatar1.svg?height=64&width=64"
+                              "/svgs/avatar1.svg?height=64&width=64" ||
+                              "/placeholder.svg"
                             }
                             alt={mentor.firstName}
                           />
