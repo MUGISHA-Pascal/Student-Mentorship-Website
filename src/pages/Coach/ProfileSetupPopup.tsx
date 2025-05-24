@@ -1,12 +1,18 @@
+"use client";
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
-import { X, Search, Upload } from "lucide-react";
+import { X, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import SelectMentorPhoto from "@/components/dashboard/mentor/selectMentorPhoto";
-import careersData from "@/utils/json/careers.json";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useUserStore } from "@/store/userStore";
@@ -69,6 +75,14 @@ const ProgressBar = ({
   );
 };
 
+interface Career {
+  id: string;
+  title: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
   isOpen,
   onClose,
@@ -94,11 +108,46 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
   const { user, fetchUser } = useUserStore();
   const userId = user?.id || null;
 
+  const [careersData, setCareersData] = useState<Career[]>([]);
+  const [loadingCareers, setLoadingCareers] = useState(false);
+  const [careersError, setCareersError] = useState<string | null>(null);
+
   useEffect(() => {
     if (!userId) {
       fetchUser(); // Fetch user data if not already available
     }
   }, [userId, fetchUser]);
+
+  // Fetch careers data from API
+  useEffect(() => {
+    const fetchCareers = async () => {
+      setLoadingCareers(true);
+      setCareersError(null);
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/api/v1/student/get-careers"
+        );
+        if (response.data && Array.isArray(response.data)) {
+          setCareersData(response.data);
+        } else if (
+          response.data.careers &&
+          Array.isArray(response.data.careers)
+        ) {
+          setCareersData(response.data.careers);
+        } else {
+          throw new Error("Invalid careers data format");
+        }
+      } catch (error) {
+        console.error("Error fetching careers:", error);
+        setCareersError("Failed to load careers. Please try again.");
+        toast.error("Failed to load careers data");
+      } finally {
+        setLoadingCareers(false);
+      }
+    };
+
+    fetchCareers();
+  }, []);
 
   const handleNext = () => {
     if (step < 3) {
@@ -228,14 +277,12 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
       case 2:
         return (
           <div className="space-y-8">
-            <h2 className="text-xl font-semibold text-gray-800">
-              Select the course To continue
-            </h2>
+            <h2 className="text-xl font-semibold text-gray-800">Upload CV</h2>
             <p className="text-sm text-gray-600">
               NB: This will determine the whole learning process within this
               platform
             </p>
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <label className="text-sm font-medium text-gray-800">
                 Search and select the careers that you are fit to coach in
               </label>
@@ -268,8 +315,8 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
                     ))}
                 </div>
               )}
-            </div>
-            <div className="mt-4">
+            </div> */}
+            {/* <div className="mt-4">
               <Button
                 onClick={() => {
                   if (
@@ -285,7 +332,7 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
               >
                 Add Career
               </Button>
-            </div>
+            </div> */}
             <div className="mt-4">
               <h4 className="font-medium text-gray-800">Selected Careers:</h4>
               <div className="flex flex-wrap gap-2">
@@ -359,14 +406,36 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
                   className="w-full p-2 border rounded bg-white text-gray-800"
                   value={selectedCareer}
                   onChange={(e) => setSelectedCareer(e.target.value)}
+                  disabled={loadingCareers}
                 >
-                  <option value="">Select Your Career</option>
-                  {careersData.map((career, index) => (
-                    <option key={index} value={career}>
-                      {career}
+                  <option value="">
+                    {loadingCareers
+                      ? "Loading careers..."
+                      : "Select Your Career"}
+                  </option>
+                  {careersError ? (
+                    <option value="" disabled>
+                      Error loading careers
                     </option>
-                  ))}
+                  ) : (
+                    careersData.map((career) => (
+                      <option key={career.id} value={career.title}>
+                        {career.title}
+                      </option>
+                    ))
+                  )}
                 </select>
+                {careersError && (
+                  <div className="text-red-500 text-sm mt-1">
+                    {careersError}
+                    <button
+                      onClick={() => window.location.reload()}
+                      className="ml-2 underline hover:no-underline"
+                    >
+                      Retry
+                    </button>
+                  </div>
+                )}
                 <label className="block text-gray-700">Company</label>
 
                 <input
@@ -463,6 +532,11 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
           onInteractOutside={(e) => e.preventDefault()}
           onEscapeKeyDown={(e) => e.preventDefault()}
         >
+          <DialogTitle className="sr-only">Setup Your Profile</DialogTitle>
+          <DialogDescription className="sr-only">
+            Complete your profile setup by entering personal details, uploading
+            your CV, and adding work experience.
+          </DialogDescription>
           <div className="relative h-full flex flex-col">
             <div className="absolute top-0 left-0 right-0 p-4 z-10">
               <ProgressBar

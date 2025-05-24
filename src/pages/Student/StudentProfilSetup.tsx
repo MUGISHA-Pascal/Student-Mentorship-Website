@@ -276,7 +276,8 @@ const NewProfileSetupPopup: React.FC<{
       toast.success(`${response.data.message}!`);
       // Navigate to a dashboard or welcome page after enrollment
       // toast.success("You've successfully enrolled in ");
-      navigate("/student/welcome");
+      window.location.reload();
+      navigate("/student/dashboard");
     } catch (error) {
       console.error("Enrollment failed:", error);
       toast.error("Enrollment failed. Please try again later.");
