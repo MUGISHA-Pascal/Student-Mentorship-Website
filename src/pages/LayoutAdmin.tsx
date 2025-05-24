@@ -132,14 +132,14 @@ const Sidebar = ({
           to="/admin/dashboard/assessments"
           expanded={expanded}
         />
-        <SidebarLink
+        {/* <SidebarLink
           icon={<MessageSquare />}
           label="Chats"
           isActive={activeSection === "/admin/dashboard/chats"}
           onClick={() => onSectionChange("/admin/dashboard/chats")}
           to="/admin/dashboard/chats"
           expanded={expanded}
-        />
+        /> */}
         <SidebarLink
           icon={<WorkflowIcon />}
           label="Careers"

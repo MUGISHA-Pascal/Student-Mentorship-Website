@@ -89,7 +89,7 @@ const Sidebar = ({
           to="/student/dashboard/calendar"
           expanded={expanded}
         />
-        <SidebarLink
+        {/* <SidebarLink
           icon={<MessageSquare />}
           label="Chats"
           isActive={activeSection === "/student/dashboard/chat"}
@@ -97,7 +97,7 @@ const Sidebar = ({
           to="/student/dashboard/chat"
           badge="2"
           expanded={expanded}
-        />
+        /> */}
         <SidebarLink
           icon={<FileText />}
           label="Docs"
@@ -246,7 +246,7 @@ export default function LayoutStudent() {
     "/student/dashboard/home": "Student",
     "/student/dashboard/mentor": "Your Mentor",
     "/student/dashboard/calendar": "Your Calendar",
-    "/student/dashboard/chat": "Chats",
+    // "/student/dashboard/chat": "Chats",
     "/student/dashboard/docs": "Your Documents",
     "/student/dashboard/settings": "Your Profile",
   };

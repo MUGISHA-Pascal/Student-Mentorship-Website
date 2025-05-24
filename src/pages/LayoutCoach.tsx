@@ -100,7 +100,7 @@ const Sidebar = ({
           to="/mentor/dashboard/meetings"
           expanded={expanded}
         />
-        <SidebarLink
+        {/* <SidebarLink
           icon={<MessageSquare />}
           label="Chats"
           isActive={activeSection === "/mentor/dashboard/chats"}
@@ -108,7 +108,7 @@ const Sidebar = ({
           to="/mentor/dashboard/chats"
           badge="2"
           expanded={expanded}
-        />
+        /> */}
         <SidebarLink
           icon={<FileText />}
           label="Docs"
@@ -277,7 +277,7 @@ export default function LayoutCoach() {
     "/mentor/dashboard/students": "Your Students",
     "/mentor/dashboard/calendar": "Your Calendar",
     "/mentor/dashboard/meetings": "Your Meetings",
-    "/mentor/dashboard/chats": "Chats",
+    // "/mentor/dashboard/chats": "Chats",
     "/mentor/dashboard/docs": "Your Documents",
     "/mentor/dashboard/settings": "Your Profile",
   };

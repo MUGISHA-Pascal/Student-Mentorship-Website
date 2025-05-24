@@ -65,9 +65,10 @@ const CoachIntro: React.FC<CoachIntroProps> = ({
             </div> */}
 
             <div className="flex">
-              <span className="font-bold">Bio</span>
-              <span className="ml-2">:</span>
-              <span className="ml-2 text-gray-500 max-w-sm">{bio}</span>
+              <span className="font-bold">Bio</span>z
+              <span className="ml-2 text-gray-500 max-w-sm">
+                {bio ? bio : "no bio "}
+              </span>
             </div>
           </div>
         </div>
