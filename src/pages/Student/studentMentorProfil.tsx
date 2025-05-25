@@ -9,6 +9,8 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "../Admin/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "../Admin/components/ui/alert";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Check,
   ChevronRight,
@@ -17,9 +19,11 @@ import {
   Users,
   BookOpen,
   User,
+  AlertCircle,
+  Loader2,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Avatar } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 // Define interfaces for our data types
 interface Career {
@@ -46,85 +50,147 @@ interface Course {
 
 interface Mentor {
   id: string;
-  name: string;
-  fullName: string;
-  phoneNumber: string;
-  specialization: string;
-  bio: string;
-  avatar: string;
-  courseIds: string[];
-  reviews: number;
-  rating: number;
+  firstName: string;
+  lastName: string;
+  specialization?: string;
+  coach: {
+    id: string;
+    bio: string;
+    image?: string;
+  };
+}
+
+interface UserData {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  student?: {
+    coachId?: string;
+    coach?: {
+      id: string;
+      bio: string;
+      image?: string;
+      user: {
+        firstName: string;
+        lastName: string;
+        email: string;
+      };
+    };
+  };
 }
 
 export default function StudentMentorProfile() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
+  const [success, setSuccess] = useState<string | null>(null);
+  const [addedForm, setAddedForm] = useState(false);
   // State for the selection process
   const [currentStep, setCurrentStep] = useState(1);
   const [careers, setCareers] = useState<Career[]>([]);
   const [cohorts, setCohorts] = useState<Cohort[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
-  const [mentors, setMentors] = useState<any[]>([]);
-  const [userId, setUserId] = useState();
+  const [mentors, setMentors] = useState<Mentor[]>([]);
+  const [hasMentor, setHasMentor] = useState(false);
+
   // Selected items
   const [selectedCareer, setSelectedCareer] = useState<string>("");
   const [selectedCohort, setSelectedCohort] = useState<string>("");
   const [selectedCourse, setSelectedCourse] = useState<string>("");
   const [selectedMentor, setSelectedMentor] = useState<string>("");
 
-  // Function to refresh the page that works in both Next.js and React
-  const refreshPage = useCallback(() => {
-    window.location.reload();
-  }, []);
+  // Loading states for each step
+  const [loadingCohorts, setLoadingCohorts] = useState(false);
+  const [loadingCourses, setLoadingCourses] = useState(false);
+  const [loadingMentors, setLoadingMentors] = useState(false);
 
-  // Fetch user data by ID - Define this function before it's used
-  const fetchUserId = async (userId: string) => {
+  // Clear error after 5 seconds
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => setError(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
+  // Clear success message after 3 seconds
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => setSuccess(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [success]);
+
+  // Fetch user data by ID with improved error handling
+  const fetchUserData = useCallback(async (userId: string) => {
     if (!userId) return;
 
     try {
       const response = await fetch(
         `http://localhost:3000/api/v1/user/get-user/${userId}`
       );
-      if (!response.ok) {
-        throw new Error("Failed to fetch user data");
-      }
-      const data = await response.json();
-      console.log("user data ", data);
 
-      setUserId(data.student.coachId);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch user data: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Updated user data:", data);
+
+      // Update user state with fresh data
+      setUser(data);
+
+      // Check if user has a mentor assigned
+      setHasMentor(!!data.student?.coachId);
+
+      // Update localStorage with fresh data
+      localStorage.setItem("user", JSON.stringify({ user: data }));
+
+      return data;
     } catch (err) {
       console.error("Error fetching user data:", err);
-      setError("Failed to load user data");
+      setError("Failed to load user data. Please try refreshing the page.");
+      throw err;
     }
-  };
-
-  useEffect(() => {
-    // Get user from localStorage
-    try {
-      const userData = localStorage.getItem("user");
-      if (userData) {
-        const parsedUser = JSON.parse(userData);
-        setUser(parsedUser.user);
-
-        // If user exists, fetch their data immediately
-        if (parsedUser.user?.id) {
-          fetchUserId(parsedUser.user.id);
-        }
-      }
-    } catch (err) {
-      console.error("Error parsing user data:", err);
-      setError("Failed to load user data");
-    } finally {
-      setLoading(false);
-    }
-
-    // Fetch careers on initial load
-    fetchCareers();
   }, []);
-  console.log("user found", user);
+
+  // Initialize component
+  useEffect(() => {
+    const initializeComponent = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Get user from localStorage
+        const userData = localStorage.getItem("user");
+        if (!userData) {
+          setError("No user data found. Please log in again.");
+          return;
+        }
+
+        const parsedUser = JSON.parse(userData);
+        if (!parsedUser.user?.id) {
+          setError("Invalid user data. Please log in again.");
+          return;
+        }
+
+        // Fetch fresh user data from server
+        await fetchUserData(parsedUser.user.id);
+
+        // Fetch careers for the selection process
+        await fetchCareers();
+      } catch (err) {
+        console.error("Error initializing component:", err);
+        setError("Failed to initialize. Please refresh the page.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initializeComponent();
+  }, [fetchUserData]);
+
   // Fetch careers from the backend
   const fetchCareers = async () => {
     try {
@@ -132,73 +198,108 @@ export default function StudentMentorProfile() {
         "http://localhost:3000/api/v1/coach/get-careers"
       );
       if (!response.ok) {
-        throw new Error("Failed to fetch careers");
+        throw new Error(`Failed to fetch careers: ${response.status}`);
       }
       const data = await response.json();
       setCareers(data);
     } catch (err) {
       console.error("Error fetching careers:", err);
-      setError("Failed to load careers");
+      setError("Failed to load careers. Please try again.");
     }
   };
 
   // Fetch cohorts based on selected career
   const fetchCohorts = async (careerId: string) => {
     try {
+      setLoadingCohorts(true);
+      setError(null);
+
       const response = await fetch(
         `http://localhost:3000/api/v1/coach/cohortByCareerId/${careerId}`
       );
       if (!response.ok) {
-        throw new Error("Failed to fetch cohorts");
+        throw new Error(`Failed to fetch cohorts: ${response.status}`);
       }
       const data = await response.json();
       setCohorts(data);
     } catch (err) {
       console.error("Error fetching cohorts:", err);
-      setError("Failed to load cohorts");
+      setError(
+        "Failed to load cohorts. Please try selecting a different career."
+      );
+    } finally {
+      setLoadingCohorts(false);
     }
   };
 
   // Fetch courses based on selected career
   const fetchCourses = async (careerId: string) => {
     try {
+      setLoadingCourses(true);
+      setError(null);
+
       const response = await fetch(
         `http://localhost:3000/api/v1/coach/coursesByCareerId/${careerId}`
       );
       if (!response.ok) {
-        throw new Error("Failed to fetch courses");
+        throw new Error(`Failed to fetch courses: ${response.status}`);
       }
       const data = await response.json();
       setCourses(data);
     } catch (err) {
       console.error("Error fetching courses:", err);
-      setError("Failed to load courses");
+      setError(
+        "Failed to load courses. Please try selecting a different career."
+      );
+    } finally {
+      setLoadingCourses(false);
     }
   };
 
-  // Fetch mentors based on selected course
-  const fetchMentors = async (courseId: string) => {
+  const handleCourseSelect = (courseId: string) => {
+    setSelectedCourse(courseId);
+  };
+  useEffect(() => {
+    fetchUserData(user?.id);
+    setAddedForm(user?.student?.addedMentor);
+    console.log("added form boolean", addedForm);
+    console.log("user data", user);
+  }, []);
+
+  const fetchMentors = async () => {
     try {
+      setLoadingMentors(true);
+      setError(null);
+
       const response = await fetch(
-        `http://localhost:3000/api/v1/coach/mentorsByCourseId/${courseId}`
+        `http://localhost:3000/api/v1/coach/get-mentors`
       );
       if (!response.ok) {
-        throw new Error("Failed to fetch mentors");
+        throw new Error(`Failed to fetch mentors: ${response.status}`);
       }
       const data = await response.json();
-      console.log("mentor ", data);
+      console.log("Mentors data:", data);
       setMentors(data);
     } catch (err) {
       console.error("Error fetching mentors:", err);
-      setError("Failed to load mentors");
+      setError("Failed to load mentors. Please try again.");
+    } finally {
+      setLoadingMentors(false);
     }
   };
 
-  // Handle career selection
-  const handleCareerSelect = (careerId: string) => {
+  const handleCareerSelect = async (careerId: string) => {
     setSelectedCareer(careerId);
-    fetchCohorts(careerId);
-    fetchCourses(careerId);
+    // Reset dependent selections
+    setSelectedCohort("");
+    setSelectedCourse("");
+    setSelectedMentor("");
+    setCohorts([]);
+    setCourses([]);
+    setMentors([]);
+
+    // Fetch cohorts and mentors in parallel
+    await Promise.all([fetchCohorts(careerId), fetchMentors()]);
   };
 
   // Handle cohort selection
@@ -206,30 +307,57 @@ export default function StudentMentorProfile() {
     setSelectedCohort(cohortId);
   };
 
-  // Handle course selection
-  const handleCourseSelect = (courseId: string) => {
-    setSelectedCourse(courseId);
-    fetchMentors(courseId);
-  };
-
   // Handle mentor selection
-  const handleMentorSelect = (mentorId: string) => {
+  const handleMentorSelect = async (mentorId: string) => {
     setSelectedMentor(mentorId);
+    // Reset course selection
+    setSelectedCourse("");
+    setCourses([]);
+
+    // Fetch courses after mentor selection
+    if (selectedCareer) {
+      await fetchCourses(selectedCareer);
+    }
   };
 
   // Move to the next step
   const handleNextStep = () => {
     setCurrentStep((prev) => prev + 1);
+    setError(null); // Clear any errors when moving to next step
   };
 
   // Move to the previous step
   const handlePrevStep = () => {
     setCurrentStep((prev) => prev - 1);
+    setError(null); // Clear any errors when moving back
   };
 
-  // Handle final submission
   const handleSubmit = async () => {
+    if (!user?.id) {
+      setError("User data is missing. Please refresh and try again.");
+      return;
+    }
+    if (!selectedCareer) {
+      setError("Please select a career path.");
+      return;
+    }
+    if (!selectedCohort) {
+      setError("Please select a cohort.");
+      return;
+    }
+    if (!selectedMentor) {
+      setError("Please select a mentor.");
+      return;
+    }
+    if (!selectedCourse) {
+      setError("Please select a course.");
+      return;
+    }
+
     try {
+      setSubmitting(true);
+      setError(null);
+
       const response = await fetch(
         "http://localhost:3000/api/v1/student/assign-mentor",
         {
@@ -238,7 +366,7 @@ export default function StudentMentorProfile() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            studentId: user?.id,
+            studentId: user.id,
             mentorId: selectedMentor,
             cohortId: selectedCohort,
             courseId: selectedCourse,
@@ -248,57 +376,80 @@ export default function StudentMentorProfile() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || "Failed to assign mentor");
+        throw new Error(
+          errorData.message || `Assignment failed: ${response.status}`
+        );
       }
 
-      // Fetch updated user data
-      await fetchUserId(user.id);
+      // const result = await response.json();
+      // console.log("Mentor assignment successful:", result);
 
-      // Update local storage with the new mentor
-      const updatedUser = { ...user, coach: selectedMentor };
-      localStorage.setItem("user", JSON.stringify({ user: updatedUser }));
-      setUser(updatedUser);
+      // setSuccess(
+      //   "Mentor assigned successfully! Loading your mentor profile..."
+      // );
 
-      // Refresh the page to show the mentor profile
-      refreshPage();
+      // Fetch updated user data to ensure everything is current
+      await fetchUserData(user.id);
+      setAddedForm(user?.student?.addedMentor);
+      // Small delay to show success message before transitioning
+      setTimeout(() => {
+        setHasMentor(true);
+        setSuccess(null);
+      }, 1500);
     } catch (err) {
       console.error("Error assigning mentor:", err);
-      setError(err instanceof Error ? err.message : "Failed to assign mentor");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to assign mentor. Please try again."
+      );
+    } finally {
+      setSubmitting(false);
     }
   };
 
   // Calculate progress percentage
   const progressPercentage = (currentStep / 4) * 100;
 
+  // Loading skeleton component
+  const LoadingSkeleton = () => (
+    <div className="space-y-4">
+      <Skeleton className="h-8 w-3/4" />
+      <Skeleton className="h-4 w-full" />
+      <Skeleton className="h-4 w-2/3" />
+      <div className="space-y-3">
+        {[1, 2, 3].map((i) => (
+          <Skeleton key={i} className="h-16 w-full" />
+        ))}
+      </div>
+    </div>
+  );
+
   // If still loading, show loading state
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        Loading...
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="flex justify-center items-center h-64">
+          <div className="text-center">
+            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+            <p>Loading your profile...</p>
+          </div>
+        </div>
       </div>
     );
   }
-
+  console.log("coach ", user?.student?.coach);
   // If user has a mentor, show the mentor profile
-  if (userId != null) {
+  if (hasMentor && user?.student?.coach && user?.student?.approved) {
     return (
       <div className="container mx-auto px-4 py-8">
         <CoachIntro
           image={user.student.coach.image}
-          name={
-            user.student.coach.user.firstName +
-            " " +
-            user.student.coach.user.lastName
-          }
-          fullName={
-            user.student.coach.user.firstName +
-            " " +
-            user.student.coach.user.lastName
-          }
+          name={`${user.student.coach.user.firstName} ${user.student.coach.user.lastName}`}
+          fullName={`${user.student.coach.user.firstName} ${user.student.coach.user.lastName}`}
           email={user.student.coach.user.email}
           specialization=""
           bio={user.student.coach.bio}
-          // reviews={31}
         />
         <MentorExperience />
         <Reviews />
@@ -307,14 +458,26 @@ export default function StudentMentorProfile() {
   }
 
   // If user doesn't have a mentor, show the mentor selection process
-  return (
-    <div className=" mx-auto px-4 py-8 max-w-4xl">
+  return addedForm ? (
+    <div className="mx-auto px-4 py-8 max-w-4xl">
       <h1 className="text-2xl font-bold mb-6">Find Your Mentor</h1>
 
+      {/* Error Alert */}
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error}
-        </div>
+        <Alert variant="destructive" className="mb-6">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
+      {/* Success Alert */}
+      {success && (
+        <Alert className="mb-6 border-green-200 bg-green-50">
+          <Check className="h-4 w-4 text-green-600" />
+          <AlertDescription className="text-green-800">
+            {success}
+          </AlertDescription>
+        </Alert>
       )}
 
       {/* Progress bar */}
@@ -322,7 +485,7 @@ export default function StudentMentorProfile() {
         <div className="flex justify-between mb-2">
           <span className="text-sm font-medium">Step {currentStep} of 4</span>
           <span className="text-sm font-medium">
-            {progressPercentage}% Complete
+            {Math.round(progressPercentage)}% Complete
           </span>
         </div>
         <Progress value={progressPercentage} className="h-2" />
@@ -357,8 +520,8 @@ export default function StudentMentorProfile() {
                 : step === 2
                 ? "Cohort"
                 : step === 3
-                ? "Course"
-                : "Mentor"}
+                ? "Mentor"
+                : "Course"}
             </span>
           </div>
         ))}
@@ -377,50 +540,63 @@ export default function StudentMentorProfile() {
               help us match you with the right mentor.
             </p>
 
-            <RadioGroup
-              value={selectedCareer}
-              onValueChange={handleCareerSelect}
-              className="space-y-3"
-            >
-              {careers.map((career) => (
-                <div
-                  key={career.id}
-                  className={`border rounded-lg p-4 cursor-pointer transition-colors ${
-                    selectedCareer === career.id
-                      ? "border-blue-500 bg-blue-50"
-                      : "border-gray-200 hover:border-blue-200"
-                  }`}
-                >
-                  <RadioGroupItem
-                    value={career.id}
-                    id={`career-${career.id}`}
-                    className="sr-only"
-                  />
-                  <Label
-                    htmlFor={`career-${career.id}`}
-                    className="flex justify-between items-center cursor-pointer"
+            {careers.length > 0 ? (
+              <RadioGroup
+                value={selectedCareer}
+                onValueChange={handleCareerSelect}
+                className="space-y-3"
+              >
+                {careers.map((career) => (
+                  <div
+                    key={career.id}
+                    className={`border rounded-lg p-4 cursor-pointer transition-colors ${
+                      selectedCareer === career.id
+                        ? "border-blue-500 bg-blue-50"
+                        : "border-gray-200 hover:border-blue-200"
+                    }`}
                   >
-                    <div>
-                      <div className="font-medium">{career.title}</div>
-                      <div className="text-sm text-gray-500 mt-1">
-                        {career.description}
+                    <RadioGroupItem
+                      value={career.id}
+                      id={`career-${career.id}`}
+                      className="sr-only"
+                    />
+                    <Label
+                      htmlFor={`career-${career.id}`}
+                      className="flex justify-between items-center cursor-pointer"
+                    >
+                      <div>
+                        <div className="font-medium">{career.title}</div>
+                        <div className="text-sm text-gray-500 mt-1">
+                          {career.description}
+                        </div>
                       </div>
-                    </div>
-                    {selectedCareer === career.id && (
-                      <ChevronRight className="h-5 w-5 text-blue-500" />
-                    )}
-                  </Label>
-                </div>
-              ))}
-            </RadioGroup>
+                      {selectedCareer === career.id && (
+                        <ChevronRight className="h-5 w-5 text-blue-500" />
+                      )}
+                    </Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            ) : (
+              <LoadingSkeleton />
+            )}
 
             <div className="mt-8 flex justify-end">
               <Button
                 onClick={handleNextStep}
-                disabled={!selectedCareer}
+                disabled={!selectedCareer || loadingCohorts || loadingCourses}
                 className="bg-blue-500 hover:bg-blue-600"
               >
-                Continue <ChevronRight className="ml-2 h-4 w-4" />
+                {loadingCohorts || loadingCourses ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  <>
+                    Continue <ChevronRight className="ml-2 h-4 w-4" />
+                  </>
+                )}
               </Button>
             </div>
           </div>
@@ -438,7 +614,9 @@ export default function StudentMentorProfile() {
               who learn together.
             </p>
 
-            {cohorts.length > 0 ? (
+            {loadingCohorts ? (
+              <LoadingSkeleton />
+            ) : cohorts.length > 0 ? (
               <RadioGroup
                 value={selectedCohort}
                 onValueChange={handleCohortSelect}
@@ -470,13 +648,13 @@ export default function StudentMentorProfile() {
                         </div>
                       </div>
                       <Badge
-                        className={`${
+                        variant={
                           cohort.status === "UPCOMING"
-                            ? "bg-blue-100 text-blue-800"
+                            ? "secondary"
                             : cohort.status === "ONGOING"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-purple-100 text-purple-800"
-                        }`}
+                            ? "default"
+                            : "outline"
+                        }
                       >
                         {cohort.status}
                       </Badge>
@@ -506,19 +684,125 @@ export default function StudentMentorProfile() {
           </div>
         )}
 
-        {/* Step 3: Choose Course */}
+        {/* Step 3: Choose Mentor */}
         {currentStep === 3 && (
+          <div>
+            <div className="flex items-center mb-4">
+              <User className="h-5 w-5 text-blue-500 mr-2" />
+              <h2 className="text-xl font-semibold">Select a Mentor</h2>
+            </div>
+            <p className="text-gray-600 mb-6">
+              Choose a mentor who will guide you through your learning journey.
+            </p>
+
+            {loadingMentors ? (
+              <LoadingSkeleton />
+            ) : mentors.length > 0 ? (
+              <RadioGroup
+                value={selectedMentor}
+                onValueChange={handleMentorSelect}
+                className="space-y-4"
+              >
+                {mentors.map((mentor) => (
+                  <div
+                    key={mentor.id}
+                    className={`border rounded-lg p-4 cursor-pointer transition-colors ${
+                      selectedMentor === mentor.id
+                        ? "border-blue-500 bg-blue-50"
+                        : "border-gray-200 hover:border-blue-200"
+                    }`}
+                  >
+                    <RadioGroupItem
+                      value={mentor.id}
+                      id={`mentor-${mentor.id}`}
+                      className="sr-only"
+                    />
+                    <Label
+                      htmlFor={`mentor-${mentor.id}`}
+                      className="cursor-pointer"
+                    >
+                      <div className="flex items-start">
+                        <Avatar className="h-16 w-16 mr-4">
+                          <AvatarImage
+                            src={
+                              mentor.coach.image ||
+                              "/placeholder.svg?height=64&width=64" ||
+                              "/placeholder.svg"
+                            }
+                            alt={`${mentor.firstName} ${mentor.lastName}`}
+                          />
+                          <AvatarFallback>
+                            {mentor.firstName.charAt(0)}
+                            {mentor.lastName.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                          <div className="flex justify-between">
+                            <div>
+                              <div className="font-medium text-lg">
+                                {mentor.firstName} {mentor.lastName}
+                              </div>
+                              {mentor.specialization && (
+                                <div className="text-sm text-gray-500">
+                                  {mentor.specialization}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+                            {mentor.coach.bio || "No bio available"}
+                          </p>
+                        </div>
+                      </div>
+                    </Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                No mentors available. Please select a different career.
+              </div>
+            )}
+
+            <div className="mt-8 flex justify-between">
+              <Button variant="outline" onClick={handlePrevStep}>
+                <ArrowLeft className="mr-2 h-4 w-4" /> Back
+              </Button>
+              <Button
+                onClick={handleNextStep}
+                disabled={!selectedMentor || loadingCourses}
+                className="bg-blue-500 hover:bg-blue-600"
+              >
+                {loadingCourses ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  <>
+                    Continue <ChevronRight className="ml-2 h-4 w-4" />
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 4: Choose Course */}
+        {currentStep === 4 && (
           <div>
             <div className="flex items-center mb-4">
               <BookOpen className="h-5 w-5 text-blue-500 mr-2" />
               <h2 className="text-xl font-semibold">Select a Course</h2>
             </div>
             <p className="text-gray-600 mb-6">
-              Choose the course you want to take. This will help us match you
-              with a mentor who specializes in this area.
+              Choose the course you want to take. This will complete your mentor
+              assignment.
             </p>
 
-            {courses.length > 0 ? (
+            {loadingCourses ? (
+              <LoadingSkeleton />
+            ) : courses.length > 0 ? (
               <RadioGroup
                 value={selectedCourse}
                 onValueChange={handleCourseSelect}
@@ -567,107 +851,195 @@ export default function StudentMentorProfile() {
                 <ArrowLeft className="mr-2 h-4 w-4" /> Back
               </Button>
               <Button
-                onClick={handleNextStep}
-                disabled={!selectedCourse}
-                className="bg-blue-500 hover:bg-blue-600"
-              >
-                Continue <ChevronRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {/* Step 4: Choose Mentor */}
-        {currentStep === 4 && (
-          <div>
-            <div className="flex items-center mb-4">
-              <User className="h-5 w-5 text-blue-500 mr-2" />
-              <h2 className="text-xl font-semibold">Select a Mentor</h2>
-            </div>
-            <p className="text-gray-600 mb-6">
-              Choose a mentor who will guide you through your learning journey.
-            </p>
-
-            {mentors.length > 0 ? (
-              <RadioGroup
-                value={selectedMentor}
-                onValueChange={handleMentorSelect}
-                className="space-y-4"
-              >
-                {mentors.map((mentor) => (
-                  <div
-                    key={mentor.id}
-                    className={`border rounded-lg p-4 cursor-pointer transition-colors ${
-                      selectedMentor === mentor.id
-                        ? "border-blue-500 bg-blue-50"
-                        : "border-gray-200 hover:border-blue-200"
-                    }`}
-                  >
-                    <RadioGroupItem
-                      value={mentor.id}
-                      id={`mentor-${mentor.id}`}
-                      className="sr-only"
-                    />
-                    <Label
-                      htmlFor={`mentor-${mentor.id}`}
-                      className="cursor-pointer"
-                    >
-                      <div className="flex items-start">
-                        <Avatar className="h-16 w-16 mr-4">
-                          <img
-                            src={
-                              mentor.coach.image ||
-                              "/svgs/avatar1.svg?height=64&width=64" ||
-                              "/placeholder.svg"
-                            }
-                            alt={mentor.firstName}
-                          />
-                        </Avatar>
-                        <div className="flex-1">
-                          <div className="flex justify-between">
-                            <div>
-                              <div className="font-medium text-lg">
-                                {mentor.firstName + " " + mentor.lastName}
-                              </div>
-                              <div className="text-sm text-gray-500">
-                                {mentor.specialization}
-                              </div>
-                            </div>
-                            {/* <Badge className="bg-blue-100 text-blue-800">
-                              {mentor.reviews} Reviews
-                            </Badge> */}
-                          </div>
-                          <p className="text-sm text-gray-600 mt-2 line-clamp-2">
-                            {mentor.coach.bio ? mentor.coach.bio : "no bio"}
-                          </p>
-                        </div>
-                      </div>
-                    </Label>
-                  </div>
-                ))}
-              </RadioGroup>
-            ) : (
-              <div className="text-center py-8 text-gray-500">
-                No mentors available for this course. Please select a different
-                course.
-              </div>
-            )}
-
-            <div className="mt-8 flex justify-between">
-              <Button variant="outline" onClick={handlePrevStep}>
-                <ArrowLeft className="mr-2 h-4 w-4" /> Back
-              </Button>
-              <Button
                 onClick={handleSubmit}
-                disabled={!selectedMentor}
+                disabled={!selectedCourse || submitting}
                 className="bg-blue-500 hover:bg-blue-600"
               >
-                Confirm Selection
+                {submitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Assigning Mentor...
+                  </>
+                ) : (
+                  "Confirm Selection"
+                )}
               </Button>
             </div>
           </div>
         )}
       </Card>
+    </div>
+  ) : (
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="text-center">
+        {/* Header Section */}
+        <div className="mb-8">
+          <div className="mx-auto w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-6">
+            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
+              <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+            </div>
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+            You're on the Waitlist! 🎉
+          </h1>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Great news! Your mentor selection has been submitted and is
+            currently being reviewed. You're one step closer to starting your
+            learning journey.
+          </p>
+        </div>
+
+        {/* Status Card */}
+        <Card className="max-w-2xl mx-auto mb-8">
+          <div className="p-8">
+            <div className="flex items-center justify-center mb-6">
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center">
+                  <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                    <Check className="w-5 h-5 text-white" />
+                  </div>
+                  <span className="ml-2 text-sm font-medium text-green-600">
+                    Application Submitted
+                  </span>
+                </div>
+                <div className="w-8 h-1 bg-gray-200 rounded">
+                  <div className="w-4 h-1 bg-blue-500 rounded animate-pulse"></div>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center animate-pulse">
+                    <Loader2 className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="ml-2 text-sm font-medium text-blue-600">
+                    Under Review
+                  </span>
+                </div>
+                <div className="w-8 h-1 bg-gray-200 rounded"></div>
+                <div className="flex items-center">
+                  <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                    <User className="w-4 h-4 text-gray-400" />
+                  </div>
+                  <span className="ml-2 text-sm font-medium text-gray-400">
+                    Mentor Assignment
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                Your Application is Being Reviewed
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Your selected mentor is reviewing your application. This
+                typically takes 1-3 business days.
+              </p>
+
+              {/* Selected Details */}
+              <div className="bg-gray-50 rounded-lg p-6 mb-6">
+                <h4 className="font-medium text-gray-900 mb-4">
+                  Your Selections:
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div className="flex items-center">
+                    <Briefcase className="w-4 h-4 text-blue-500 mr-2" />
+                    <span className="text-gray-600">Career:</span>
+                    <span className="ml-1 font-medium">
+                      {careers.find((c) => c.id === selectedCareer)?.title ||
+                        "Selected"}
+                    </span>
+                  </div>
+                  <div className="flex items-center">
+                    <Users className="w-4 h-4 text-blue-500 mr-2" />
+                    <span className="text-gray-600">Cohort:</span>
+                    <span className="ml-1 font-medium">
+                      {cohorts.find((c) => c.id === selectedCohort)?.name ||
+                        "Selected"}
+                    </span>
+                  </div>
+                  <div className="flex items-center">
+                    <User className="w-4 h-4 text-blue-500 mr-2" />
+                    <span className="text-gray-600">Mentor:</span>
+                    <span className="ml-1 font-medium">
+                      {mentors.find((m) => m.id === selectedMentor)
+                        ? `${
+                            mentors.find((m) => m.id === selectedMentor)
+                              ?.firstName
+                          } ${
+                            mentors.find((m) => m.id === selectedMentor)
+                              ?.lastName
+                          }`
+                        : "Selected"}
+                    </span>
+                  </div>
+                  <div className="flex items-center">
+                    <BookOpen className="w-4 h-4 text-blue-500 mr-2" />
+                    <span className="text-gray-600">Course:</span>
+                    <span className="ml-1 font-medium">
+                      {courses.find((c) => c.id === selectedCourse)?.name ||
+                        "Selected"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* What's Next Section */}
+        <div className="grid md:grid-cols-3 gap-6 mb-8">
+          <Card className="p-6">
+            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <AlertCircle className="w-6 h-6 text-blue-600" />
+            </div>
+            <h3 className="font-semibold text-gray-900 mb-2">Review Process</h3>
+            <p className="text-sm text-gray-600">
+              Your mentor will review your background and learning goals to
+              ensure a good match.
+            </p>
+          </Card>
+
+          <Card className="p-6">
+            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <Check className="w-6 h-6 text-green-600" />
+            </div>
+            <h3 className="font-semibold text-gray-900 mb-2">Approval</h3>
+            <p className="text-sm text-gray-600">
+              Once approved, you'll get access to your mentor's profile and can
+              start your journey.
+            </p>
+          </Card>
+
+          <Card className="p-6">
+            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <BookOpen className="w-6 h-6 text-purple-600" />
+            </div>
+            <h3 className="font-semibold text-gray-900 mb-2">Start Learning</h3>
+            <p className="text-sm text-gray-600">
+              Begin your personalized learning experience with your assigned
+              mentor.
+            </p>
+          </Card>
+        </div>
+
+        {/* Contact Support */}
+        <Card className="max-w-lg mx-auto">
+          <div className="p-6 text-center">
+            <h3 className="font-semibold text-gray-900 mb-2">Need Help?</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Have questions about your application or the review process?
+            </p>
+            <Button variant="outline" className="w-full">
+              Contact Support
+            </Button>
+          </div>
+        </Card>
+
+        {/* Auto-refresh notice */}
+        <p className="text-xs text-gray-500 mt-6">
+          This page will automatically update when your application status
+          changes.
+        </p>
+      </div>
     </div>
   );
 }

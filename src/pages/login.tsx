@@ -57,7 +57,8 @@ const Login = () => {
         if (!user.filledForm) {
           navigate("/student/form");
         } else if (user.student?.currentEnrollmentId) {
-          navigate("/student/welcome");
+          // navigate("/student/welcome");
+          navigate("/student/dashboard");
         } else {
           navigate("/student/dashboard");
         }
