@@ -67,6 +67,8 @@ interface UserData {
   email: string;
   student?: {
     coachId?: string;
+    addedMentor?: boolean;
+    approved?: boolean;
     coach?: {
       id: string;
       bio: string;
@@ -81,12 +83,13 @@ interface UserData {
 }
 
 export default function StudentMentorProfile() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [addedForm, setAddedForm] = useState(false);
+
   // State for the selection process
   const [currentStep, setCurrentStep] = useState(1);
   const [careers, setCareers] = useState<Career[]>([]);
@@ -124,7 +127,7 @@ export default function StudentMentorProfile() {
 
   // Fetch user data by ID with improved error handling
   const fetchUserData = useCallback(async (userId: string) => {
-    if (!userId) return;
+    if (!userId) return null;
 
     try {
       const response = await fetch(
@@ -141,11 +144,25 @@ export default function StudentMentorProfile() {
       // Update user state with fresh data
       setUser(data);
 
-      // Check if user has a mentor assigned
-      setHasMentor(!!data.student?.coachId);
+      // Update addedForm boolean from backend data
+      setAddedForm(!!data.student?.addedMentor);
+
+      // Check if user has a mentor assigned and approved
+      const hasAssignedMentor = !!(
+        data.student?.coachId && data.student?.coach
+      );
+      const isApproved = !!data.student?.approved;
+      setHasMentor(hasAssignedMentor && isApproved);
 
       // Update localStorage with fresh data
       localStorage.setItem("user", JSON.stringify({ user: data }));
+
+      console.log("Updated states:", {
+        addedForm: !!data.student?.addedMentor,
+        hasMentor: hasAssignedMentor && isApproved,
+        hasCoach: !!data.student?.coach,
+        isApproved: isApproved,
+      });
 
       return data;
     } catch (err) {
@@ -259,12 +276,6 @@ export default function StudentMentorProfile() {
   const handleCourseSelect = (courseId: string) => {
     setSelectedCourse(courseId);
   };
-  useEffect(() => {
-    fetchUserData(user?.id);
-    setAddedForm(user?.student?.addedMentor);
-    console.log("added form boolean", addedForm);
-    console.log("user data", user);
-  }, []);
 
   const fetchMentors = async () => {
     try {
@@ -381,19 +392,15 @@ export default function StudentMentorProfile() {
         );
       }
 
-      // const result = await response.json();
-      // console.log("Mentor assignment successful:", result);
-
-      // setSuccess(
-      //   "Mentor assigned successfully! Loading your mentor profile..."
-      // );
+      setSuccess(
+        "Mentor assigned successfully! Loading your updated profile..."
+      );
 
       // Fetch updated user data to ensure everything is current
       await fetchUserData(user.id);
-      setAddedForm(user?.student?.addedMentor);
+
       // Small delay to show success message before transitioning
       setTimeout(() => {
-        setHasMentor(true);
         setSuccess(null);
       }, 1500);
     } catch (err) {
@@ -438,8 +445,16 @@ export default function StudentMentorProfile() {
       </div>
     );
   }
-  console.log("coach ", user?.student?.coach);
-  // If user has a mentor, show the mentor profile
+
+  console.log("Current state check:", {
+    hasMentor,
+    hasCoach: !!user?.student?.coach,
+    isApproved: !!user?.student?.approved,
+    addedForm,
+    fullCondition: hasMentor && user?.student?.coach && user?.student?.approved,
+  });
+
+  // If user has a mentor assigned and is approved, show the mentor profile
   if (hasMentor && user?.student?.coach && user?.student?.approved) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -457,8 +472,151 @@ export default function StudentMentorProfile() {
     );
   }
 
-  // If user doesn't have a mentor, show the mentor selection process
-  return addedForm ? (
+  // If user has submitted the form but is not yet approved, show waitlist
+  if (addedForm && !user?.student?.approved) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="text-center">
+          {/* Header Section */}
+          <div className="mb-8">
+            <div className="mx-auto w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-6">
+              <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
+                <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+              </div>
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">
+              You're on the Waitlist! 🎉
+            </h1>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Great news! Your mentor selection has been submitted and is
+              currently being reviewed. You're one step closer to starting your
+              learning journey.
+            </p>
+          </div>
+
+          {/* Status Card */}
+          <Card className="max-w-2xl mx-auto mb-8">
+            <div className="p-8">
+              <div className="flex items-center justify-center mb-6">
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center">
+                    <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                      <Check className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="ml-2 text-sm font-medium text-green-600">
+                      Application Submitted
+                    </span>
+                  </div>
+                  <div className="w-8 h-1 bg-gray-200 rounded">
+                    <div className="w-4 h-1 bg-blue-500 rounded animate-pulse"></div>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center animate-pulse">
+                      <Loader2 className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="ml-2 text-sm font-medium text-blue-600">
+                      Under Review
+                    </span>
+                  </div>
+                  <div className="w-8 h-1 bg-gray-200 rounded"></div>
+                  <div className="flex items-center">
+                    <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                      <User className="w-4 h-4 text-gray-400" />
+                    </div>
+                    <span className="ml-2 text-sm font-medium text-gray-400">
+                      Mentor Assignment
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-center">
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  Your Application is Being Reviewed
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Your selected mentor is reviewing your application. This
+                  typically takes 1-3 business days.
+                </p>
+
+                {/* Refresh Button */}
+                <Button
+                  onClick={() => user?.id && fetchUserData(user.id)}
+                  variant="outline"
+                  className="mb-4"
+                >
+                  <Loader2 className="w-4 h-4 mr-2" />
+                  Check Status
+                </Button>
+              </div>
+            </div>
+          </Card>
+
+          {/* What's Next Section */}
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <Card className="p-6">
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <AlertCircle className="w-6 h-6 text-blue-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">
+                Review Process
+              </h3>
+              <p className="text-sm text-gray-600">
+                Your mentor will review your background and learning goals to
+                ensure a good match.
+              </p>
+            </Card>
+
+            <Card className="p-6">
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Check className="w-6 h-6 text-green-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Approval</h3>
+              <p className="text-sm text-gray-600">
+                Once approved, you'll get access to your mentor's profile and
+                can start your journey.
+              </p>
+            </Card>
+
+            <Card className="p-6">
+              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <BookOpen className="w-6 h-6 text-purple-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">
+                Start Learning
+              </h3>
+              <p className="text-sm text-gray-600">
+                Begin your personalized learning experience with your assigned
+                mentor.
+              </p>
+            </Card>
+          </div>
+
+          {/* Contact Support */}
+          <Card className="max-w-lg mx-auto">
+            <div className="p-6 text-center">
+              <h3 className="font-semibold text-gray-900 mb-2">Need Help?</h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Have questions about your application or the review process?
+              </p>
+              <Button variant="outline" className="w-full">
+                Contact Support
+              </Button>
+            </div>
+          </Card>
+
+          {/* Auto-refresh notice */}
+          <p className="text-xs text-gray-500 mt-6">
+            This page will automatically update when your application status
+            changes.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // If user hasn't submitted the form yet, show the mentor selection process
+  return (
     <div className="mx-auto px-4 py-8 max-w-4xl">
       <h1 className="text-2xl font-bold mb-6">Find Your Mentor</h1>
 
@@ -868,178 +1026,6 @@ export default function StudentMentorProfile() {
           </div>
         )}
       </Card>
-    </div>
-  ) : (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <div className="text-center">
-        {/* Header Section */}
-        <div className="mb-8">
-          <div className="mx-auto w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-6">
-            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
-              <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
-            </div>
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            You're on the Waitlist! 🎉
-          </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Great news! Your mentor selection has been submitted and is
-            currently being reviewed. You're one step closer to starting your
-            learning journey.
-          </p>
-        </div>
-
-        {/* Status Card */}
-        <Card className="max-w-2xl mx-auto mb-8">
-          <div className="p-8">
-            <div className="flex items-center justify-center mb-6">
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center">
-                  <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                    <Check className="w-5 h-5 text-white" />
-                  </div>
-                  <span className="ml-2 text-sm font-medium text-green-600">
-                    Application Submitted
-                  </span>
-                </div>
-                <div className="w-8 h-1 bg-gray-200 rounded">
-                  <div className="w-4 h-1 bg-blue-500 rounded animate-pulse"></div>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center animate-pulse">
-                    <Loader2 className="w-4 h-4 text-white" />
-                  </div>
-                  <span className="ml-2 text-sm font-medium text-blue-600">
-                    Under Review
-                  </span>
-                </div>
-                <div className="w-8 h-1 bg-gray-200 rounded"></div>
-                <div className="flex items-center">
-                  <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                    <User className="w-4 h-4 text-gray-400" />
-                  </div>
-                  <span className="ml-2 text-sm font-medium text-gray-400">
-                    Mentor Assignment
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="text-center">
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Your Application is Being Reviewed
-              </h3>
-              <p className="text-gray-600 mb-6">
-                Your selected mentor is reviewing your application. This
-                typically takes 1-3 business days.
-              </p>
-
-              {/* Selected Details */}
-              <div className="bg-gray-50 rounded-lg p-6 mb-6">
-                <h4 className="font-medium text-gray-900 mb-4">
-                  Your Selections:
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                  <div className="flex items-center">
-                    <Briefcase className="w-4 h-4 text-blue-500 mr-2" />
-                    <span className="text-gray-600">Career:</span>
-                    <span className="ml-1 font-medium">
-                      {careers.find((c) => c.id === selectedCareer)?.title ||
-                        "Selected"}
-                    </span>
-                  </div>
-                  <div className="flex items-center">
-                    <Users className="w-4 h-4 text-blue-500 mr-2" />
-                    <span className="text-gray-600">Cohort:</span>
-                    <span className="ml-1 font-medium">
-                      {cohorts.find((c) => c.id === selectedCohort)?.name ||
-                        "Selected"}
-                    </span>
-                  </div>
-                  <div className="flex items-center">
-                    <User className="w-4 h-4 text-blue-500 mr-2" />
-                    <span className="text-gray-600">Mentor:</span>
-                    <span className="ml-1 font-medium">
-                      {mentors.find((m) => m.id === selectedMentor)
-                        ? `${
-                            mentors.find((m) => m.id === selectedMentor)
-                              ?.firstName
-                          } ${
-                            mentors.find((m) => m.id === selectedMentor)
-                              ?.lastName
-                          }`
-                        : "Selected"}
-                    </span>
-                  </div>
-                  <div className="flex items-center">
-                    <BookOpen className="w-4 h-4 text-blue-500 mr-2" />
-                    <span className="text-gray-600">Course:</span>
-                    <span className="ml-1 font-medium">
-                      {courses.find((c) => c.id === selectedCourse)?.name ||
-                        "Selected"}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Card>
-
-        {/* What's Next Section */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <Card className="p-6">
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <AlertCircle className="w-6 h-6 text-blue-600" />
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">Review Process</h3>
-            <p className="text-sm text-gray-600">
-              Your mentor will review your background and learning goals to
-              ensure a good match.
-            </p>
-          </Card>
-
-          <Card className="p-6">
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <Check className="w-6 h-6 text-green-600" />
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">Approval</h3>
-            <p className="text-sm text-gray-600">
-              Once approved, you'll get access to your mentor's profile and can
-              start your journey.
-            </p>
-          </Card>
-
-          <Card className="p-6">
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <BookOpen className="w-6 h-6 text-purple-600" />
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">Start Learning</h3>
-            <p className="text-sm text-gray-600">
-              Begin your personalized learning experience with your assigned
-              mentor.
-            </p>
-          </Card>
-        </div>
-
-        {/* Contact Support */}
-        <Card className="max-w-lg mx-auto">
-          <div className="p-6 text-center">
-            <h3 className="font-semibold text-gray-900 mb-2">Need Help?</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Have questions about your application or the review process?
-            </p>
-            <Button variant="outline" className="w-full">
-              Contact Support
-            </Button>
-          </div>
-        </Card>
-
-        {/* Auto-refresh notice */}
-        <p className="text-xs text-gray-500 mt-6">
-          This page will automatically update when your application status
-          changes.
-        </p>
-      </div>
     </div>
   );
 }
