@@ -58,6 +58,7 @@ import Meeting from "./pages/Meeting/meeting";
 import StreamVideoProvider from "./providers/streamClientProvider";
 import AdminCareer from "./pages/Admin/adminCareer";
 import AdminCohorts from "./pages/Admin/adminCohorts";
+import CoachStudentApproval from "./pages/Coach/CoachStudentApproval";
 
 interface LayoutProps {
   children: ReactNode;
@@ -246,6 +247,7 @@ const App = () => {
           <Route index element={<HomePage />} />
           <Route path="students" element={<StudentsPage />} />
           <Route path="calendar" element={<CalendarPage />} />
+          <Route path="student-waitlist" element={<CoachStudentApproval />} />
           {/* <Route path="meetings" element={<CoachMeetingsPage />} /> */}
           <Route
             path="meetings"

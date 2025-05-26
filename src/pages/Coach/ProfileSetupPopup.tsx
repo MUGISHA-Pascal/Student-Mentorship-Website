@@ -15,7 +15,6 @@ import {
 import SelectMentorPhoto from "@/components/dashboard/mentor/selectMentorPhoto";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useUserStore } from "@/store/userStore";
 import { toast } from "react-toastify";
 import { Levels } from "react-activity";
 
@@ -105,8 +104,22 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const { user, fetchUser } = useUserStore();
-  const userId = user?.id || null;
+  // Get userId from localStorage
+  const getUserIdFromLocalStorage = () => {
+    try {
+      const userJson = localStorage.getItem("user");
+      if (userJson) {
+        const parsedUser = JSON.parse(userJson);
+        return parsedUser.user?.id || null;
+      }
+      return null;
+    } catch (error) {
+      console.error("Error parsing user from localStorage:", error);
+      return null;
+    }
+  };
+
+  const userId = getUserIdFromLocalStorage();
 
   const [careersData, setCareersData] = useState<Career[]>([]);
   const [loadingCareers, setLoadingCareers] = useState(false);
@@ -114,9 +127,12 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
 
   useEffect(() => {
     if (!userId) {
-      fetchUser(); // Fetch user data if not already available
+      // Optionally handle the case where userId is not available in localStorage
+      console.warn(
+        "User ID not found in localStorage. Some features may be unavailable."
+      );
     }
-  }, [userId, fetchUser]);
+  }, [userId]);
 
   // Fetch careers data from API
   useEffect(() => {

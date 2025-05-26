@@ -10,6 +10,7 @@ import {
   MessageSquare,
   FileText,
   Plus,
+  WaypointsIcon,
 } from "lucide-react";
 import axios from "axios";
 import DarkModeToggle from "./DarkModeToggle";
@@ -82,6 +83,14 @@ const Sidebar = ({
           isActive={activeSection === "/mentor/dashboard/students"}
           onClick={() => onSectionChange("/mentor/dashboard/students")}
           to="/mentor/dashboard/students"
+          expanded={expanded}
+        />
+        <SidebarLink
+          icon={<WaypointsIcon />}
+          label="Student waitlist"
+          isActive={activeSection === "/mentor/dashboard/student-waitlist"}
+          onClick={() => onSectionChange("/mentor/dashboard/student-waitlist")}
+          to="/mentor/dashboard/student-waitlist"
           expanded={expanded}
         />
         <SidebarLink
@@ -278,6 +287,7 @@ export default function LayoutCoach() {
     "/mentor/dashboard/calendar": "Your Calendar",
     "/mentor/dashboard/meetings": "Your Meetings",
     // "/mentor/dashboard/chats": "Chats",
+    "/mentor/dashboard/student-waitlist": "Student waitlist",
     "/mentor/dashboard/docs": "Your Documents",
     "/mentor/dashboard/settings": "Your Profile",
   };
