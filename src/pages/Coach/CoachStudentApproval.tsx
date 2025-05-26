@@ -109,20 +109,22 @@ export default function CoachStudentApproval() {
       }
 
       const parsedUser = JSON.parse(userData);
+      console.log("Parsed user data:", parsedUser);
+      console.log("coach", parsedUser.user.coach);
+
       if (!parsedUser.user?.id) {
         setError("Invalid user data. Please log in again.");
         return null;
       }
 
-      const response = await fetch(
-        `http://localhost:3000/api/v1/coach/get-coach-by-user/${parsedUser.user.id}`
-      );
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch coach data: ${response.status}`);
+      if (!parsedUser.user?.coach) {
+        setError(
+          "No coach data found. Please ensure you are logged in as a coach."
+        );
+        return null;
       }
 
-      const coachData = await response.json();
+      const coachData = parsedUser.user.coach;
       setCoach(coachData);
       return coachData;
     } catch (err) {
