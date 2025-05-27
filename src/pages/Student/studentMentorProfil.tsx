@@ -276,7 +276,7 @@ export default function StudentMentorProfile() {
   const handleCourseSelect = (courseId: string) => {
     setSelectedCourse(courseId);
   };
-
+  console.log("bool check", user?.student?.approved);
   const fetchMentors = async () => {
     try {
       setLoadingMentors(true);
@@ -884,8 +884,7 @@ export default function StudentMentorProfile() {
                           <AvatarImage
                             src={
                               mentor.coach.image ||
-                              "/placeholder.svg?height=64&width=64" ||
-                              "/placeholder.svg"
+                              "/svgs/avatar1.svg?height=64&width=64"
                             }
                             alt={`${mentor.firstName} ${mentor.lastName}`}
                           />
