@@ -18,25 +18,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Alert, AlertDescription } from "../Admin/components/ui/alert";
+import { toast } from "react-toastify";
 
-interface Course {
+type Course = {
   id: string;
-  name: string;
-  description: string;
-  careerId: string;
-}
-
-interface Document {
-  id: string;
-  coachId: string;
-  courseId: string;
-  fileName: string;
-  fileType: string;
-  fileSize: number;
-  uploadDate: string;
-  fileUrl: string;
-  course: Course;
-}
+  title: string;
+  image: string;
+  extension?: string;
+  downloadLink: string;
+  courseType: string;
+  dateCreated: string;
+};
 
 interface StudentDocsPageProps {
   studentId: string;
@@ -45,7 +37,7 @@ interface StudentDocsPageProps {
 export default function StudentDocsPage({
   studentId = "1",
 }: StudentDocsPageProps) {
-  const [documents, setDocuments] = useState<Document[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showAll, setShowAll] = useState(false);
@@ -65,28 +57,6 @@ export default function StudentDocsPage({
     }
   }, [studentId]);
 
-  // Helper function to get file extension from fileName
-  const getFileExtension = (fileName: string) => {
-    return fileName.split(".").pop()?.toUpperCase() || "FILE";
-  };
-
-  // Helper function to determine if file is video
-  const isVideoFile = (fileType: string) => {
-    return fileType.startsWith("video/");
-  };
-
-  // Helper function to format file size
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return "0 Bytes";
-    const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return (
-      Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
-    );
-  };
-
-  // Fetch documents from API
   const fetchDocuments = useCallback(async () => {
     if (!actualStudentId) {
       setError("Authentication required");
@@ -111,7 +81,25 @@ export default function StudentDocsPage({
       const data = await response.json();
       const documentsData = data.documents || data.data || data;
 
-      setDocuments(Array.isArray(documentsData) ? documentsData : []);
+      const transformedCourses = Array.isArray(documentsData)
+        ? documentsData.map(
+            (doc: any): Course => ({
+              id: doc.course?.id || doc.id,
+              title: doc.course?.name || "Untitled",
+              image: doc.fileType?.startsWith("video")
+                ? "/svgs/video_course.svg"
+                : "/svgs/file_course.svg",
+              extension: doc.fileType?.split("/").pop()?.toUpperCase(),
+              downloadLink:
+                doc.fileUrl ||
+                `http://localhost:3000/api/v1/document/download-course-doc/${doc.fileName}`,
+              courseType: doc.fileType?.startsWith("video") ? "video" : "file",
+              dateCreated: doc.uploadDate,
+            })
+          )
+        : [];
+
+      setCourses(transformedCourses);
     } catch (err) {
       setError("Unable to load documents. Please try again later.");
       console.error("Error fetching documents:", err);
@@ -133,35 +121,76 @@ export default function StudentDocsPage({
     fetchDocuments();
   };
 
-  // Filter based on search, filter type, and sort type
-  const filteredDocuments = documents
-    .filter(
-      (doc) =>
-        doc.course.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        doc.fileName.toLowerCase().includes(searchTerm.toLowerCase())
+  const handleDownload = async (
+    downloadLink: string,
+    fileName: string,
+    extension?: string
+  ) => {
+    try {
+      const response = await fetch(downloadLink, {
+        method: "GET",
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to download: ${response.status} ${response.statusText}`
+        );
+      }
+
+      const blob = await response.blob();
+
+      // Use the provided extension, fallback to extracting from fileName, or default to "unknown"
+      const finalExtension = extension?.toLowerCase();
+
+      // Construct the final file name
+      const baseName = fileName.includes(".")
+        ? fileName.split(".").slice(0, -1).join(".")
+        : fileName; // Strip existing extension if present
+      const finalFileName = `${baseName}.${finalExtension}`;
+
+      // Create a URL and trigger download
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", finalFileName);
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      link.parentNode?.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      toast.success("File downloaded successfully!");
+    } catch (error) {
+      console.error("Error downloading file:", error);
+      toast.error("Failed to download file.");
+    }
+  };
+
+  const filteredCourses = courses
+    .filter((course) =>
+      course.title.toLowerCase().includes(searchTerm.toLowerCase())
     )
-    .filter((doc) => {
+    .filter((course) => {
       if (!filterType) return true;
-      if (filterType === "video") return isVideoFile(doc.fileType);
-      if (filterType === "file") return !isVideoFile(doc.fileType);
+      if (filterType === "video") return course.courseType === "video";
+      if (filterType === "file") return course.courseType === "file";
       return true;
     })
     .sort((a, b) => {
       if (sortType === "name") {
-        return a.course.name.localeCompare(b.course.name);
+        return a.title.localeCompare(b.title);
       } else if (sortType === "date") {
         return (
-          new Date(b.uploadDate).getTime() - new Date(a.uploadDate).getTime()
+          new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()
         );
-      } else if (sortType === "size") {
-        return b.fileSize - a.fileSize;
       }
       return 0;
     });
 
-  const visibleDocuments = showAll
-    ? filteredDocuments
-    : filteredDocuments.slice(0, 5);
+  const visibleCourses = showAll
+    ? filteredCourses
+    : filteredCourses.slice(0, 5);
 
   // Loading state
   if (loading) {
@@ -247,16 +276,12 @@ export default function StudentDocsPage({
               <DropdownMenuItem onClick={() => setSortType("date")}>
                 Date
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setSortType("size")}>
-                Size
-              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </div>
 
-      {/* No documents message */}
-      {!loading && !error && documents.length === 0 && (
+      {!loading && !error && courses.length === 0 && (
         <div className="text-center py-12">
           <p className="text-muted-foreground">
             No documents found for this student.
@@ -264,11 +289,10 @@ export default function StudentDocsPage({
         </div>
       )}
 
-      {/* No filtered results message */}
       {!loading &&
         !error &&
-        documents.length > 0 &&
-        filteredDocuments.length === 0 && (
+        courses.length > 0 &&
+        filteredCourses.length === 0 && (
           <div className="text-center py-12">
             <p className="text-muted-foreground">
               No documents match your search criteria.
@@ -287,8 +311,7 @@ export default function StudentDocsPage({
           </div>
         )}
 
-      {/* See All / Show Less Button */}
-      {filteredDocuments.length > 5 && (
+      {filteredCourses.length > 5 && (
         <div className="flex justify-end mb-4">
           <button
             onClick={handleSeeAllClick}
@@ -299,21 +322,16 @@ export default function StudentDocsPage({
         </div>
       )}
 
-      {/* Document Cards */}
-      {!loading && !error && filteredDocuments.length > 0 && (
+      {!loading && !error && filteredCourses.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          {visibleDocuments.map((document) => (
+          {visibleCourses.map((course) => (
             <Card
-              key={document.id}
+              key={course.id}
               className="shadow-md rounded-lg py-4 px-2 cursor-pointer"
             >
               <img
-                src={
-                  isVideoFile(document.fileType)
-                    ? "/svgs/video_course.svg"
-                    : "/svgs/file_course.svg"
-                }
-                alt={document.course.name}
+                src={course.image || "/placeholder.svg"}
+                alt={course.title}
                 className="w-4/5 object-contain rounded-md mb-4"
                 onError={(e) => {
                   e.currentTarget.src = "/placeholder.svg?height=150&width=150";
@@ -322,18 +340,13 @@ export default function StudentDocsPage({
 
               <h3
                 className="text-lg font-semibold mb-2 truncate"
-                title={document.course.name}
+                title={course.title}
               >
-                {document.course.name}
+                {course.title}
               </h3>
-              <p className="text-sm text-gray-600 mb-1">
-                {getFileExtension(document.fileName)}
-              </p>
-              <p className="text-sm text-gray-600 mb-1">
-                {formatFileSize(document.fileSize)}
-              </p>
+              <p className="text-sm text-gray-600 mb-1">{course.extension}</p>
               <p className="text-sm text-gray-600 mb-2">
-                Uploaded: {new Date(document.uploadDate).toLocaleDateString()}
+                Created: {new Date(course.dateCreated).toLocaleDateString()}
               </p>
               <div className="flex justify-between">
                 <DropdownMenu>
@@ -344,21 +357,28 @@ export default function StudentDocsPage({
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem>View</DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <a
-                        href={document.fileUrl}
-                        download={document.fileName}
-                        className="w-full"
-                      >
-                        Download
-                      </a>
+                    <DropdownMenuItem
+                      onClick={() =>
+                        handleDownload(
+                          course.downloadLink,
+                          course.title,
+                          course.extension
+                        )
+                      }
+                    >
+                      Download
                     </DropdownMenuItem>
                     <DropdownMenuItem>Delete</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <a
-                  href={document.fileUrl}
-                  download={document.fileName}
+                <button
+                  onClick={() =>
+                    handleDownload(
+                      course.downloadLink,
+                      course.title,
+                      course.extension
+                    )
+                  }
                   className="hover:text-blue-500"
                 >
                   <img
@@ -368,7 +388,7 @@ export default function StudentDocsPage({
                       e.currentTarget.style.display = "none";
                     }}
                   />
-                </a>
+                </button>
               </div>
             </Card>
           ))}
