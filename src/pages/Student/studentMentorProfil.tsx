@@ -456,10 +456,15 @@ export default function StudentMentorProfile() {
 
   // If user has a mentor assigned and is approved, show the mentor profile
   if (hasMentor && user?.student?.coach && user?.student?.approved) {
+    console.log("Rendering mentor profile for user:", user);
     return (
       <div className="container mx-auto px-4 py-8">
         <CoachIntro
-          image={user.student.coach.image}
+          image={
+            user.student.coach.image
+              ? user.student.coach.image
+              : "/svgs/avatar1.svg?height=64&width=64"
+          }
           name={`${user.student.coach.user.firstName} ${user.student.coach.user.lastName}`}
           fullName={`${user.student.coach.user.firstName} ${user.student.coach.user.lastName}`}
           email={user.student.coach.user.email}

@@ -34,7 +34,7 @@ const CoachIntro: React.FC<CoachIntroProps> = ({
     <div className="w-full flex p-4 gap-x-5 rounded-lg">
       <div className="w-[35%] flex flex-col items-start">
         <img
-          src={image || "/svgs/avatar1.svg?height=64&width=64"}
+          src={image}
           alt={name}
           className="w-full rounded-lg object-cover border"
         />
