@@ -356,7 +356,7 @@ export default function StudentDocsPage({
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem>View</DropdownMenuItem>
+                    {/* <DropdownMenuItem>View</DropdownMenuItem> */}
                     <DropdownMenuItem
                       onClick={() =>
                         handleDownload(
@@ -368,7 +368,7 @@ export default function StudentDocsPage({
                     >
                       Download
                     </DropdownMenuItem>
-                    <DropdownMenuItem>Delete</DropdownMenuItem>
+                    {/* <DropdownMenuItem>Delete</DropdownMenuItem> */}
                   </DropdownMenuContent>
                 </DropdownMenu>
                 <button

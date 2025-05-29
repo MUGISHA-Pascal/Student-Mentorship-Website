@@ -268,7 +268,7 @@ export default function StudentDocsPage() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem>View</DropdownMenuItem>
+                    {/* <DropdownMenuItem>View</DropdownMenuItem> */}
                     <DropdownMenuItem
                       onClick={() => handleDeleteDocument(course.id)}
                     >
