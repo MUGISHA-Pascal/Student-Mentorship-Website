@@ -860,7 +860,7 @@ export default function StudentsPage() {
       const assignment: CourseAssignment = {
         studentId: courseAssignmentDialog.student.id,
         courseId,
-        message,
+        // message,
       };
       console.log("📤 Sending Course Assignment:", assignment);
 
@@ -872,11 +872,14 @@ export default function StudentsPage() {
         headers.Authorization = `Bearer ${authData.token}`;
       }
 
-      const response = await fetch(`${API_BASE_URL}/api/v1/course/assign`, {
-        method: "POST",
-        headers,
-        body: JSON.stringify(assignment),
-      });
+      const response = await fetch(
+        `${API_BASE_URL}/api/v1/coach/assign-course`,
+        {
+          method: "PUT",
+          headers,
+          body: JSON.stringify(assignment),
+        }
+      );
 
       console.log("📥 Course Assignment Response Status:", response.status);
 
