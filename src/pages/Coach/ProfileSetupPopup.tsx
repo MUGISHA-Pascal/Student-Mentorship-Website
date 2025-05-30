@@ -386,7 +386,7 @@ const ProfileSetupPopup: React.FC<ProfileSetupPopupProps> = ({
                     size="sm"
                     className="bg-blue-500 text-white ml-3"
                   >
-                    <Upload className="w-4 h-4 mr-2" />
+                    <ad className="w-4 h-4 mr-2" />
                     {selectedFileName ? (
                       <p className="text-sm text-gray-600">
                         <span className="font-medium">{selectedFileName}</span>

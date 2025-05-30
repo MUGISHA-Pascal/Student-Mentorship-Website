@@ -464,11 +464,7 @@ export default function StudentMentorProfile() {
     return (
       <div className="container mx-auto px-4 py-8">
         <CoachIntro
-          image={
-            user.student.coach.image
-              ? user.student.coach.image
-              : "/svgs/avatar1.svg"
-          }
+          image={"/svgs/avatar1.svg"}
           name={`${user.student.coach.user.firstName} ${user.student.coach.user.lastName}`}
           fullName={`${user.student.coach.user.firstName} ${user.student.coach.user.lastName}`}
           email={user.student.coach.user.email}

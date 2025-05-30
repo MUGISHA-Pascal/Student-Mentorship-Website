@@ -5,7 +5,7 @@ export const getCoachStatistics = async (coachId: string) => {
     const response = await apiClient.get(`/coach/${coachId}/statistics`);
     return response.data;
   } catch (error: unknown) {
-    console.error('Failed to fetch coach statistics:', error);
+    console.error("Failed to fetch coach statistics:", error);
     throw error;
   }
 };
@@ -15,20 +15,31 @@ export const getCoachActivities = async (coachId: string) => {
     const response = await apiClient.get(`/coach/${coachId}/activity`);
     return response.data;
   } catch (error) {
-    console.error('Failed to fetch coach activities:', error);
+    console.error("Failed to fetch coach activities:", error);
     throw error;
   }
 };
 
-export const getAllBlogs = async (params: { sortBy?: string; order?: string; page?: number; limit?: number }) => {
+export const getAllBlogs = async (params: {
+  sortBy?: string;
+  order?: string;
+  page?: number;
+  limit?: number;
+}) => {
   try {
-    const { sortBy = 'dateCreated', order = 'asc', page = 1, limit = 10 } = params;
-    const response = await apiClient.get('/blog/get-blogs', {
+    const {
+      sortBy = "dateCreated",
+      order = "asc",
+      page = 1,
+      limit = 10,
+    } = params;
+    const response = await apiClient.get("/blog/get-blogs", {
       params: { sortBy, order, page, limit },
     });
+    console.log(response.data);
     return response.data;
   } catch (error: unknown) {
-    console.error('Failed to fetch blogs:', error);
+    console.error("Failed to fetch blogs:", error);
     throw error;
   }
 };
