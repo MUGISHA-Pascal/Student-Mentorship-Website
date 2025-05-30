@@ -161,23 +161,19 @@ function SidebarLink({
     </Link>
   );
 }
-
 function Header({ title }: { title: string }) {
   const [isMeetingDialogOpen, setIsMeetingDialogOpen] = useState(false);
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
+
   return (
     <header className="flex justify-between items-center p-4 border-b border-border bg-background">
       <h1 className="text-2xl font-semibold">{title}</h1>
       <div className="flex items-center space-x-4">
-        {/* <button
-          title='meeting'
-          className="p-2 bg-background rounded-full shadow-sm border border-border"
-          onClick={() => {
-            navigate('/meeting')
-          }}
-        >
-          <Video className="w-6 h-6 text-destructive" />
-        </button> */}
         <NewMeetingDialog
           trigger={
             <button
@@ -188,9 +184,6 @@ function Header({ title }: { title: string }) {
             </button>
           }
         />
-        {/* <Button variant="default" className="text-primary-foreground bg-primary hover:bg-primary/90">
-          <Plus className="mr-2 h-4 w-4" />New Action
-        </Button> */}
         <button
           title="Notifications"
           className="p-2 bg-background rounded-full shadow-sm border border-border"
@@ -203,6 +196,12 @@ function Header({ title }: { title: string }) {
           alt="Profile"
           className="w-10 h-10 rounded-full"
         />
+        <button
+          onClick={handleLogout}
+          className="ml-2 px-3 py-1 rounded-md bg-destructive text-white hover:bg-destructive/90 text-sm"
+        >
+          Logout
+        </button>
       </div>
     </header>
   );

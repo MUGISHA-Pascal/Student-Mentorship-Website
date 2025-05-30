@@ -183,38 +183,13 @@ function SidebarLink({
 
 function Header({ title }: { title: string }) {
   const [isMeetingDialogOpen, setIsMeetingDialogOpen] = useState(false);
-  const [
-    ,
-    // client
-    setClient,
-  ] = useState<StreamVideoClient | null>(null);
-  const [
-    ,
-    // call
-    setCall,
-  ] = useState<unknown>(null);
   const navigate = useNavigate();
-  const { user } = useUserStore();
-  const handleCreateInstantMeeting = async () => {
-    try {
-      const clientInstance = await initializeMeetingClient();
-      const callInstance = clientInstance.call(
-        "default",
-        user?.id || "default-call-id"
-      );
 
-      await callInstance.join({ create: true });
-
-      // Set Stream video client and call to state
-      setClient(clientInstance);
-      setCall(callInstance);
-
-      // Optionally navigate to the meeting page (if required)
-      navigate(`/meeting/${callInstance.id}`);
-    } catch (error) {
-      console.error("Error creating meeting:", error);
-    }
+  const handleLogout = () => {
+    localStorage.removeItem("user"); // or remove user data as needed
+    navigate("/login");
   };
+
   return (
     <header className="flex justify-between items-center p-4 border-b border-border bg-background">
       <h1 className="text-2xl font-semibold">{title}</h1>
@@ -229,11 +204,10 @@ function Header({ title }: { title: string }) {
             </button>
           }
         />
-
-        {/* <Button variant="default" className="text-primary-foreground bg-primary hover:bg-primary/90">
-          <Plus className="mr-2 h-4 w-4" />New Action
-        </Button> */}
-        <button className="p-2 bg-background rounded-full shadow-sm border border-border">
+        <button
+          title="Notifications"
+          className="p-2 bg-background rounded-full shadow-sm border border-border"
+        >
           <BellDot className="w-6 h-6 text-foreground" />
         </button>
         <DarkModeToggle />
@@ -242,6 +216,12 @@ function Header({ title }: { title: string }) {
           alt="Profile"
           className="w-10 h-10 rounded-full"
         />
+        <button
+          onClick={handleLogout}
+          className="ml-2 px-3 py-1 rounded-md bg-destructive text-white hover:bg-destructive/90 text-sm"
+        >
+          Logout
+        </button>
       </div>
     </header>
   );
