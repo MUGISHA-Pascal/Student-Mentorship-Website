@@ -1,52 +1,108 @@
 import { Card, CardContent } from "@/components/ui/card";
 import React, { useState } from "react";
 import { FaPlus, FaStar, FaTimes, FaUpload } from "react-icons/fa";
+import { toast } from "react-toastify";
 
-const StarRating: React.FC<{ rating: number; setRating: (rating: number) => void }> = ({ rating, setRating }) => {
+const StarRating: React.FC<{
+  rating: number;
+  setRating: (rating: number) => void;
+}> = ({ rating, setRating }) => {
   return (
     <div className="flex items-center">
       {Array.from({ length: 5 }, (_, i) => (
         <FaStar
           key={i}
-          className={`cursor-pointer ${i < rating ? "text-yellow-400" : "text-gray-300"}`}
+          className={`cursor-pointer ${
+            i < rating ? "text-yellow-400" : "text-gray-300"
+          }`}
           onClick={() => setRating(i + 1)}
         />
       ))}
     </div>
   );
 };
-
-const MentorExperience: React.FC = () => {
+interface MentorProps {
+  activitiesNumber: number;
+  downloadLink: string;
+  fileExtension?: string;
+}
+const MentorExperience: React.FC<MentorProps> = ({
+  activitiesNumber,
+  downloadLink,
+  fileExtension,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rating, setRating] = useState(0);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  const handleDownload = async (downloadLink: string, extension?: string) => {
+    try {
+      console.log("downloadLink", downloadLink);
+      const response = await fetch(`${downloadLink}`, {
+        method: "GET",
+      });
 
+      if (!response.ok) {
+        throw new Error(
+          `Failed to download: ${response.status} ${response.statusText}`
+        );
+      }
+
+      const blob = await response.blob();
+
+      // Use the provided extension, fallback to extracting from fileName, or default to "unknown"
+      const finalExtension = extension?.toLowerCase();
+
+      // Construct the final file name
+      const baseName = "cv".includes(".")
+        ? "cv".split(".").slice(0, -1).join(".")
+        : "cv"; // Strip existing extension if present
+      const finalFileName = `${baseName}.${finalExtension}`;
+
+      // Create a URL and trigger download
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", finalFileName);
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      link.parentNode?.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      toast.success("File downloaded successfully!");
+    } catch (error) {
+      console.error("Error downloading file:", error);
+      toast.error("Failed to download file.");
+    }
+  };
   const stats = [
     {
-      image: '/svgs/activities.svg',
-      value: 12,
-      color: 'text-orange-500',
-      title: 'Activities',
-      status: 'Last week',
+      image: "/svgs/activities.svg",
+      value: activitiesNumber,
+      // value: 0,
+      color: "text-orange-500",
+      title: "Activities",
+      status: "currently",
     },
     {
-      image: '/svgs/mentors.svg',
+      image: "/svgs/mentors.svg",
       value: `80%`,
-      color: 'text-green-500',
-      title: 'Mentor-rate',
-      status: 'Last week',
+      color: "text-green-500",
+      title: "Mentor-rate",
+      status: "Last week",
     },
-  ]
+  ];
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 px-10 mt-10">
       <div className="flex flex-col-reverse lg:flex-row gap-5">
         <div className="flex flex-col">
-          <h3 className="font-semibold mb-6">Experience Timeline</h3>
-          <ul className="space-y-4">
+          {/* <h3 className="font-semibold mb-6">Experience Timeline</h3> */}
+          {/* <ul className="space-y-4">
             {[...Array(5)].map((_, index) => (
               <li key={index} className="flex items-center gap-2">
                 <span className="bg-blue-500 w-7 h-7 rounded-full font-semibold flex items-center justify-center text-sm">{index + 1}</span>
@@ -56,19 +112,26 @@ const MentorExperience: React.FC = () => {
                 </div>
               </li>
             ))}
-          </ul>
+          </ul> */}
         </div>
         <div className="flex flex-col gap-8">
           {stats.map((stat, index) => (
-            <Card key={index} className="flex items-center justify-center px-8 py-4 gap-x-3 rounded-lg text-center">
+            <Card
+              key={index}
+              className="flex items-center justify-center px-8 py-4 gap-x-3 rounded-lg text-center"
+            >
               <CardContent className="flex items-center p-6">
                 <div>
                   <img src={stat.image} alt={stat.title} className="" />
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-orange-500">{stat.value}</div>
+                  <div className="text-2xl font-bold text-orange-500">
+                    {stat.value}
+                  </div>
                   <div className="text-sm font-medium">{stat.title}</div>
-                  <div className="text-xs text-muted-foreground">{stat.status}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {stat.status}
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -78,7 +141,7 @@ const MentorExperience: React.FC = () => {
 
       <div className="flex flex-col gap-8 ml-10">
         <button
-          onClick={openModal}
+          onClick={() => handleDownload(downloadLink, fileExtension)}
           className="w-[65%] flex items-center gap-2 bg-blue-500 text-white py-2 px-3 rounded-lg hover:bg-blue-600"
         >
           <FaUpload />
@@ -107,7 +170,10 @@ const MentorExperience: React.FC = () => {
                   className="border p-2 rounded-md focus:outline-none focus:border-blue-500"
                 />
                 <div className="bg-blue-400 cursor-pointer rounded-md flex items-center">
-                  <input type="file" className="border px-2 py-1 rounded-md opacity-0 cursor-pointer" />
+                  <input
+                    type="file"
+                    className="border px-2 py-1 rounded-md opacity-0 cursor-pointer"
+                  />
                   <p className="text-white font-semibold">Choose a file</p>
                 </div>
                 <button
@@ -137,7 +203,10 @@ const MentorExperience: React.FC = () => {
           </div>
         </div>
       </div>
-      <button className="fixed bottom-10 right-10 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition-colors" title='New Action'>
+      <button
+        className="fixed bottom-10 right-10 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition-colors"
+        title="New Action"
+      >
         <FaPlus size={20} />
       </button>
     </div>

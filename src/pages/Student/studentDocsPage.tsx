@@ -77,8 +77,9 @@ export default function StudentDocsPage({
           `Failed to fetch documents: ${response.status} ${response.statusText}`
         );
       }
-
       const data = await response.json();
+      console.log("course for students", data);
+
       const documentsData = data.documents || data.data || data;
 
       const transformedCourses = Array.isArray(documentsData)
@@ -90,9 +91,7 @@ export default function StudentDocsPage({
                 ? "/svgs/video_course.svg"
                 : "/svgs/file_course.svg",
               extension: doc.fileType?.split("/").pop()?.toUpperCase(),
-              downloadLink:
-                doc.fileUrl ||
-                `http://localhost:3000/api/v1/document/download-course-doc/${doc.fileName}`,
+              downloadLink: `http://localhost:3000/api/v1/document/download-course-doc/${doc.fileName}`,
               courseType: doc.fileType?.startsWith("video") ? "video" : "file",
               dateCreated: doc.uploadDate,
             })
@@ -127,7 +126,15 @@ export default function StudentDocsPage({
     extension?: string
   ) => {
     try {
-      const response = await fetch(downloadLink, {
+      console.log(
+        "download link",
+        downloadLink,
+        "file name",
+        fileName,
+        "extension",
+        extension
+      );
+      const response = await fetch(`${downloadLink}`, {
         method: "GET",
       });
 

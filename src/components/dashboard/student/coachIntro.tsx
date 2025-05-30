@@ -36,11 +36,8 @@ const CoachIntro: React.FC<CoachIntroProps> = ({
         <img
           src={image}
           alt={name}
-          className="w-full rounded-lg object-cover border"
+          className="w-[300px] h-[300px] rounded-lg object-cover border"
         />
-        <p className="text-center mt-2 font-bold text-lg text-blue-600 px-3">
-          {name}
-        </p>
       </div>
       <div className="border border-blue-400 ml-10" />
       <div className="w-[65%] flex-grow">

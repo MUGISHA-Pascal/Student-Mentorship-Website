@@ -83,7 +83,7 @@ interface UserData {
 }
 
 export default function StudentMentorProfile() {
-  const [user, setUser] = useState<UserData | null>(null);
+  const [user, setUser] = useState<UserData | null | any>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -456,14 +456,18 @@ export default function StudentMentorProfile() {
 
   // If user has a mentor assigned and is approved, show the mentor profile
   if (hasMentor && user?.student?.coach && user?.student?.approved) {
-    console.log("Rendering mentor profile for user:", user);
+    console.log(
+      "Rendering mentor profile for user:",
+      user,
+      user.student.coach.activities.length
+    );
     return (
       <div className="container mx-auto px-4 py-8">
         <CoachIntro
           image={
             user.student.coach.image
               ? user.student.coach.image
-              : "/svgs/avatar1.svg?height=64&width=64"
+              : "/svgs/avatar1.svg"
           }
           name={`${user.student.coach.user.firstName} ${user.student.coach.user.lastName}`}
           fullName={`${user.student.coach.user.firstName} ${user.student.coach.user.lastName}`}
@@ -471,7 +475,14 @@ export default function StudentMentorProfile() {
           specialization=""
           bio={user.student.coach.bio}
         />
-        <MentorExperience />
+        <MentorExperience
+          activitiesNumber={user.student.coach.activities.length}
+          downloadLink={`http://localhost:3000/api/v1/document/download-course-doc/${user.student.coach.cv[0].fileName}`}
+          fileExtension={user.student.coach.cv[0].fileType
+            .split("/")
+            .pop()
+            ?.toUpperCase()}
+        />
         <Reviews />
       </div>
     );
